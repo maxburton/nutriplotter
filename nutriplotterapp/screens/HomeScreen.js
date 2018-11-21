@@ -75,7 +75,7 @@ export default class HomeScreen extends React.Component {
       return (
         <Text style={styles.developmentModeText}>
           Development mode is enabled, your app will be slower but you can use useful development
-          tools. {learnMoreButton}
+          tools.{learnMoreButton}
         </Text>
       );
     } else {
