@@ -22,9 +22,11 @@ export default class HomeScreen extends React.Component {
   onChangeText = name => this.setState({ name });
   render() {
     return (
-      <View>
+      <View style={styles.container}>
+      <View style={styles.image}>
 	    <Image source={require('../assets/images/plate.png')}/>
-	    <Text style={styles.title}>Enter a food:</Text> 
+	    </View>
+      <Text style={styles.title}>Enter a food:</Text> 
         <TextInput
 		  onChangeText={this.onChangeText}
           style={styles.nameInput}
@@ -43,6 +45,9 @@ export default class HomeScreen extends React.Component {
 
 const offset = 24;
 const styles = StyleSheet.create({
+  container:{
+    flex:1
+  },
   nameInput: {
     height: offset * 2,
     margin: offset,
@@ -60,7 +65,8 @@ const styles = StyleSheet.create({
     fontSize: offset,
   },
   image: {
-    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     width: null,
     height: null,
     resizeMode: 'contain'
