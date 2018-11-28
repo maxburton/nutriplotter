@@ -1,19 +1,30 @@
 import { ExpoConfigView } from '@expo/samples';
 import React, { Component } from 'react';
 import {
+  createStackNavigator,
+} from 'react-navigation';
+
+import {
   StyleSheet,
   Text,
   View,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
+
+import StatsScreen from '../screens/StatsScreen';
+
+const statsStack = createStackNavigator({
+  Stats: { screen: StatsScreen },
+});
 
 export default class ProfileScreen extends Component {
 	static navigationOptions = {
-    title: 'app.json',
+    title: 'My Profile',
   };
 
   render() {
+	const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
           <View style={styles.header}></View>
@@ -24,9 +35,11 @@ export default class ProfileScreen extends Component {
               <Text style={styles.info}>UX Designer / Mobile developer</Text>
               <Text style={styles.description}>Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum electram expetendis, omittam deseruisse consequuntur ius an,</Text>
               <TouchableOpacity style={styles.buttonContainer}>
-                <Text>Shoppping List</Text>  
+                <Text>Shopping List</Text>  
               </TouchableOpacity>              
-              <TouchableOpacity style={styles.buttonContainer}>
+              <TouchableOpacity style={styles.buttonContainer}
+				onPress={() => navigate('Stats')
+				}>
                 <Text>User Stats</Text> 
               </TouchableOpacity>
             </View>
