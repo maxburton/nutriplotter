@@ -68,11 +68,11 @@ export default class HomeScreen extends React.Component {
 			console.log(dbOut.rows.length);
 			if(dbOut.rows.length > 0){
 				this.setState({
-				test: "Food Found"
+				test: "Food Found",
 				})
 			}else{
 				this.setState({
-				test: "Food Not Found"
+				test: "Food Not Found",
 				})
 			}
 	  });
@@ -105,5 +105,6 @@ const styles = StyleSheet.create({
   },
   checkDB: {
 	  textAlign: 'center',
+	  color: 'red',
   },
 });
