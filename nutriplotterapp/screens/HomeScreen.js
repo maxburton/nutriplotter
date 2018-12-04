@@ -21,7 +21,7 @@ export default class HomeScreen extends React.Component {
 	title: 'Build A Plate',
   };
   
-  state = { name: '' }
+  state = { name: '' , test: '', }
   onChangeText = name => this.setState({ name });
   render() {
     return (
@@ -37,21 +37,46 @@ export default class HomeScreen extends React.Component {
 		<TouchableOpacity onPress={this.onPress}>
           <Text style={styles.buttonText}>Search</Text>
         </TouchableOpacity>
+		<Text style={styles.checkDB}>{this.state.test}</Text>
       </View>
 	  );
   };
   
-  add(text) {
-    db.transaction(
-      tx => {
-        tx.executeSql('select name from foods', [], (_, { rows }) =>
-          console.log(JSON.stringify(rows))
-        );
-      },
-    );
+  onPress = () => {
+		var dbQuery = 'select * from foods where name="' + this.state.name.toLowerCase() + '";';
+		var promise = new Promise(function (resolve, reject) {
+			db.transaction(function (transaction) {
+				transaction.executeSql(dbQuery, [], function (transaction, result) {
+					resolve(JSON.stringify(result)); // here the returned Promise is resolved
+				}, nullHandler, errorHandler);
+			});
+		});
+		
+		function nullHandler(result){
+			console.log("Null Log : " + JSON.stringfy(result));
+		}
+
+		function errorHandler(error){
+			console.log("Error Log : " + error);
+		}
+	  
+		promise.then((results) => {
+		    var dbOut = JSON.parse(results);
+			console.log("results:");
+			console.log(dbOut);
+			console.log("length:");
+			console.log(dbOut.rows.length);
+			if(dbOut.rows.length > 0){
+				this.setState({
+				test: "Food Found"
+				})
+			}else{
+				this.setState({
+				test: "Food Not Found"
+				})
+			}
+	  });
   }
-  
-  
 };
 
 const offset = 24;
@@ -77,5 +102,8 @@ const styles = StyleSheet.create({
     width: null,
     height: null,
     resizeMode: 'contain'
+  },
+  checkDB: {
+	  textAlign: 'center',
   },
 });
