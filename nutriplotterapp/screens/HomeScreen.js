@@ -9,9 +9,11 @@ import {
   View,
   TextInput,
 } from 'react-native';
-import { WebBrowser } from 'expo';
+import { WebBrowser, SQLite } from 'expo';
 
 import { MonoText } from '../components/StyledText';
+
+const db = SQLite.openDatabase('db.db');
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -38,6 +40,16 @@ export default class HomeScreen extends React.Component {
       </View>
 	  );
   };
+  
+  add(text) {
+    db.transaction(
+      tx => {
+        tx.executeSql('select name from foods', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
+      },
+    );
+  }
   
   
 };

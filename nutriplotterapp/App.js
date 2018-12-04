@@ -10,6 +10,39 @@ export default class App extends React.Component {
     isLoadingComplete: false,
   };
   
+  componentDidMount() {
+    db.transaction(tx => {
+/*
+		tx.executeSql(
+			'create table if not exists test(name varchar(255) primary key not null);'
+		);
+		tx.executeSql(
+			'insert or ignore into test (name) values ("apple");'
+		);
+		tx.executeSql('select * from test', [], (_, { rows }) =>
+			console.log(JSON.stringify(rows)),
+			console.log("test")
+        );
+*/
+		tx.executeSql(
+			'create table if not exists foods (name varchar(255) primary key not null, calories int, carbs int, fats int, protein int);'
+		);
+		tx.executeSql(
+			'insert or ignore into foods (name, calories, carbs, fats, protein) values ("haggis", 200, 20, 5, 9);'
+		);
+		tx.executeSql(
+			'insert or ignore into foods (name, calories, carbs, fats, protein) values ("neeps", 300, 30, 8, 21);'
+		);
+		tx.executeSql(
+			'insert or ignore into foods (name, calories, carbs, fats, protein) values ("tatties", 400, 50, 7, 17);'
+		);
+		tx.executeSql('select * from foods', [], (_, { rows }) =>
+			console.log(JSON.stringify(rows)),
+			console.log("foods db")
+        );
+    });
+  }
+  
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
@@ -28,6 +61,8 @@ export default class App extends React.Component {
       );
     }
   }
+  
+  
 
   _loadResourcesAsync = async () => {
     return Promise.all([
