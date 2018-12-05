@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   TextInput,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { WebBrowser, SQLite } from 'expo';
 
@@ -25,10 +26,8 @@ export default class HomeScreen extends React.Component {
   onChangeText = name => this.setState({ name });
   render() {
     return (
-      <View style={styles.container}>
-      <View style={styles.image}>
-	    <Image source={require('../assets/images/plate.png')}/>
-      </View>
+      <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
+	    <Image style={styles.image} source={require('../assets/images/plate.png')}/>
 	    <Text style={styles.title}>Enter a food:</Text> 
         <TextInput
 		  onChangeText={this.onChangeText}
@@ -40,7 +39,7 @@ export default class HomeScreen extends React.Component {
           <Text style={styles.buttonText}>Search</Text>
         </TouchableOpacity>
 		<Text style={styles.checkDB}>{this.state.test}</Text>
-      </View>
+    </KeyboardAvoidingView>
 	  );
   };
   
