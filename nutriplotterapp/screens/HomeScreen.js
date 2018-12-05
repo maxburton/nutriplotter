@@ -70,7 +70,7 @@ export default class HomeScreen extends React.Component {
 			console.log(dbOut.rows.length);
 			if(dbOut.rows.length > 0){
 				this.setState({
-				test: "Food Found",
+				test: JSON.stringify(dbOut.rows._array[0]),
 				})
 			}else{
 				this.setState({
