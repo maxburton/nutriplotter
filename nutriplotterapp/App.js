@@ -1,9 +1,11 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, AsyncStorage} from 'react-native';
 import { AppLoading, Asset, Font, Icon, SQLite } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
+import popDB from './populateDatabase';
 
 const db = SQLite.openDatabase('db.db');
+const isFirstLaunch = SQLite.openDatabase('ifl.db');
 
 export default class App extends React.Component {
   state = {
@@ -11,19 +13,37 @@ export default class App extends React.Component {
   };
   
   componentDidMount() {
+	var isFirstLaunch = '1';
+	_retrieveData = async () => {
+	  try {
+		const value = await AsyncStorage.getItem('isFirstLaunch');
+		if (value !== null) {
+		  isFirstLaunch = value;
+		  console.log(value);
+		  console.log(isFirstLaunch);
+		}
+	   } catch (error) {
+		 console.log("error fetching data");
+	   }
+	}
+	_retrieveData();
+	
+	
+	
     db.transaction(tx => {
-/*
+		//test
 		tx.executeSql(
 			'create table if not exists test(name varchar(255) primary key not null);'
 		);
-		tx.executeSql(
-			'insert or ignore into test (name) values ("apple");'
-		);
+		if(isFirstLaunch == '1'){
+			var p = new popDB();
+			console.log("First LAUNCH");
+		}
 		tx.executeSql('select * from test', [], (_, { rows }) =>
 			console.log(JSON.stringify(rows)),
 			console.log("test")
         );
-*/
+
 		tx.executeSql(
 			'create table if not exists foods (name varchar(255) primary key not null, calories int, carbs int, fats int, protein int);'
 		);
@@ -41,6 +61,27 @@ export default class App extends React.Component {
 			console.log("foods db")
         );
     });
+	
+	_storeData = async () => {
+	  try {
+		await AsyncStorage.setItem('isFirstLaunch', '0');
+	  } catch (error) {
+		console.log("error setting data");
+	  }
+	}
+	
+	_storeData();
+	
+	_removeData = async () => {
+	  try {
+		await AsyncStorage.removeItem('isFirstLaunch');
+	  } catch (error) {
+		console.log("error removing data");
+	  }
+	}
+	
+	//_removeData();12
+	
   }
   
   render() {
