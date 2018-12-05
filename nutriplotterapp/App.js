@@ -31,7 +31,6 @@ export default class App extends React.Component {
 	
 	
     db.transaction(tx => {
-		//test
 		tx.executeSql(
 			'create table if not exists test(name varchar(255) primary key not null);'
 		);
