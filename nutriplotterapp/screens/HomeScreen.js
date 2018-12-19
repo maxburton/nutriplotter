@@ -39,7 +39,7 @@ export default class HomeScreen extends React.Component {
           value={this.state.name}
         />
 		<TouchableOpacity onPress={this.onPress}>
-          <Text style={styles.buttonText}>Search</Text>
+          <Text style={styles.buttonText}>Add Food</Text>
         </TouchableOpacity>
 		<Text style={styles.checkDB}>{this.state.test}</Text>
     </KeyboardAvoidingView>
