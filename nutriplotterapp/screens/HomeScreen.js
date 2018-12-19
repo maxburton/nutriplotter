@@ -120,7 +120,7 @@ export default class HomeScreen extends React.Component {
 				this.setState({
 				test: "No foods found matching that criteria, please try again",
 				})
-			}//new computer, git name changed
+			}
 	  });
   }
 
