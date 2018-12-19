@@ -23,7 +23,10 @@ export default class HomeScreen extends React.Component {
   };
   
   state = { name: '' , test: '', }
-  onChangeText = name => this.setState({ name });
+  onChangeText = name => {
+	  this.setState({ name });
+	  this.search(name);
+  };
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
@@ -78,6 +81,49 @@ export default class HomeScreen extends React.Component {
 			}
 	  });
   }
+  
+    search = searchString => {
+		var dbQuery = 'select name from foods;';
+		var promise = new Promise(function (resolve, reject) {
+			db.transaction(function (transaction) {
+				transaction.executeSql(dbQuery, [], function (transaction, result) {
+					resolve(JSON.stringify(result)); // here the returned Promise is resolved
+				}, nullHandler, errorHandler);
+			});
+		});
+		
+		function nullHandler(result){
+			console.log("Null Log : " + JSON.stringfy(result));
+		}
+
+		function errorHandler(error){
+			console.log("Error Log : " + error);
+		}
+	  
+		promise.then((results) => {
+		    var dbOut = JSON.parse(results);
+			var foods = [];
+			if(dbOut.rows.length > 0){
+				for(let i = 0; i < dbOut.rows._array.length; i++){ 
+					let stringName = JSON.stringify(dbOut.rows._array[i].name);
+					console.log(stringName + "   " + searchString.toLowerCase());
+					if(stringName.includes(searchString.toLowerCase()) && searchString.length > 0){
+						foods.push(stringName);
+					}
+				}
+			}
+			if(foods.length > 0 || searchString.length == 0){
+				this.setState({
+					test: foods.toString(),
+				})
+			}else{
+				this.setState({
+				test: "No foods found matching that criteria, please try again",
+				})
+			}
+	  });
+  }
+
 };
 
 const offset = 24;
