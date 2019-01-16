@@ -3,9 +3,6 @@ import { Platform, StatusBar, StyleSheet, View, AsyncStorage} from 'react-native
 import { AppLoading, Asset, Font, Icon, SQLite } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import popDB from './populateDatabase';
-import { createStackNavigator, createAppContainer } from "react-navigation";
-import HomeScreen from './screens/HomeScreen';
-
 
 const db = SQLite.openDatabase('db.db');
 const isFirstLaunch = SQLite.openDatabase('ifl.db');
@@ -41,27 +38,6 @@ export default class App extends React.Component {
 			var p = new popDB();
 			console.log("First LAUNCH");
 		}
-		tx.executeSql('select * from test', [], (_, { rows }) =>
-			console.log(JSON.stringify(rows)),
-			console.log("test")
-        );
-
-		tx.executeSql(
-			'create table if not exists foods (name varchar(255) primary key not null, calories int, carbs int, fats int, protein int);'
-		);
-		tx.executeSql(
-			'insert or ignore into foods (name, calories, carbs, fats, protein) values ("haggis", 200, 20, 5, 9);'
-		);
-		tx.executeSql(
-			'insert or ignore into foods (name, calories, carbs, fats, protein) values ("neeps", 300, 30, 8, 21);'
-		);
-		tx.executeSql(
-			'insert or ignore into foods (name, calories, carbs, fats, protein) values ("tatties", 400, 50, 7, 17);'
-		);
-		tx.executeSql('select * from foods', [], (_, { rows }) =>
-			console.log(JSON.stringify(rows)),
-			console.log("foods db")
-        );
     });
 	
 	_storeData = async () => {
@@ -81,8 +57,6 @@ export default class App extends React.Component {
 		console.log("error removing data");
 	  }
 	}
-	
-	//_removeData();12
 	
   }
   
@@ -140,12 +114,3 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
-
-/*const AppNavigator = createStackNavigator({
-	Home: {
-		screen: HomeScreen
-	}
-});
-
-export default createAppContainer(AppNavigator);
-*/
