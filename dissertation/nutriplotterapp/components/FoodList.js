@@ -15,7 +15,7 @@ class List extends Component {
    }
    onChangeText = name => {
 	  this.setState({ name });
-	  if(name.length > 3){
+	  if(name.length > 2 || name.length == 0){
 		this.search(name);
 	  }
    };
