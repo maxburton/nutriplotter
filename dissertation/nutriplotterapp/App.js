@@ -3,6 +3,9 @@ import { Platform, StatusBar, StyleSheet, View, AsyncStorage} from 'react-native
 import { AppLoading, Asset, Font, Icon, SQLite } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import popDB from './populateDatabase';
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import HomeScreen from './screens/HomeScreen';
+
 
 const db = SQLite.openDatabase('db.db');
 const isFirstLaunch = SQLite.openDatabase('ifl.db');
@@ -137,3 +140,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+/*const AppNavigator = createStackNavigator({
+	Home: {
+		screen: HomeScreen
+	}
+});
+
+export default createAppContainer(AppNavigator);
+*/
