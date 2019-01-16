@@ -69,6 +69,21 @@ export default class ProfileScreen extends Component {
           <View style={styles.container}>
             <Timeline style={styles.list} data={this.data} />
           </View>
+          <Text style={styles.favouritefoods}>Your Favourite Foods</Text>
+          <View style={styles.grid}>
+            <Image
+              style={styles.icon}
+              source={require("../assets/images/apple.png")}
+            />
+            <Image
+              style={styles.icon}
+              source={require("../assets/images/meat.png")}
+            />
+            <Image
+              style={styles.icon}
+              source={require("../assets/images/banana.png")}
+            />
+          </View>
         </View>
       </ScrollView>
     );
@@ -101,6 +116,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#00BFFF",
     height: 200
   },
+  icon: {
+    flex:1,
+    width: 120,
+    height: 120,
+    alignSelf: "center",
+    borderColor: "black",
+    resizeMode: "contain"
+  },
   avatar: {
     width: 130,
     height: 130,
@@ -119,10 +142,9 @@ const styles = StyleSheet.create({
   //},
   userstats: {
     fontSize: 20,
-    marginTop: 10,
-    padding: 10,
+    marginTop: 20,
     fontWeight: "600",
-    textAlign: "left"
+    textAlign: "center"
   },
   body: {
     marginTop: 40
@@ -176,5 +198,14 @@ const styles = StyleSheet.create({
   list: {
     flex: 1,
     marginTop: 10
+  },
+  favouritefoods: {
+    fontSize: 20,
+    padding: 10,
+    fontWeight: "600",
+    textAlign: "center"
+  },
+  grid: {
+    flexDirection: "row"
   }
 });
