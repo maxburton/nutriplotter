@@ -15,7 +15,9 @@ class List extends Component {
    }
    onChangeText = name => {
 	  this.setState({ name });
-	  this.search(name);
+	  if(name.length > 3){
+		this.search(name);
+	  }
    };
    render() {
       return (
@@ -95,7 +97,7 @@ class List extends Component {
 				})
 			}
 	  });
-  }//
+  }
 
 
 }
