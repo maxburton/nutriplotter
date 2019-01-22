@@ -18,9 +18,11 @@
     "react": "^16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
     "react-native-elements": "^1.0.0-beta7",
+    "react-native-gesture-handler": "^1.0.12",
     "react-native-settings-list": "^1.8.0",
+    "react-native-timeline-listview": "^0.2.3",
     "react-native-vector-icons": "^6.1.0",
-    "react-navigation": "^2.18.2"
+    "react-navigation": "^2.18.3"
   },
   "devDependencies": {
     "@expo/vector-icons": "^8.0.0",

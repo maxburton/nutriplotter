@@ -32,7 +32,7 @@ export default class App extends React.Component {
 	
     db.transaction(tx => {
 		tx.executeSql(
-			'create table if not exists test(name varchar(255) primary key not null);'
+			'create table if not exists plate(name varchar(255) primary key not null, amount int);'
 		);
 		if(isFirstLaunch == '1'){
 			var p = new popDB();

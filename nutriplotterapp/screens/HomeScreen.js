@@ -1,5 +1,6 @@
 import React from 'react';
 import List from '../components/FoodList.js'
+import Plate from '../components/Plate.js'
 import {
   Image,
   Platform,
@@ -25,7 +26,9 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
-	    <Image style={styles.image} source={require('../assets/images/plate.png')}/>
+	    <View style={styles.list}>
+			<Plate style={styles.list}/>
+		</View>
 	    <Text style={styles.title}>Enter a food:</Text> 
 		<View style={styles.list}>
 			<List style={styles.list}/>
@@ -33,6 +36,8 @@ export default class HomeScreen extends React.Component {
       </KeyboardAvoidingView>
 	  );
   };
+  
+  
   
 	/*
 	<TouchableOpacity onPress={this.onPress}>
@@ -59,12 +64,5 @@ const styles = StyleSheet.create({
     marginLeft: offset,
     fontSize: offset,
   },
-  image: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: null,
-    height: null,
-    resizeMode: 'contain'
-  },
+  
 });
