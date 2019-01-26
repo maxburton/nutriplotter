@@ -1,6 +1,6 @@
 import { ExpoConfigView } from "@expo/samples";
 import React, { Component } from "react";
-//import { createStackNavigator, createAppContainer } from "react-navigation";
+import { createStackNavigator, createAppContainer } from "react-navigation";
 
 import Timeline from "react-native-timeline-listview";
 

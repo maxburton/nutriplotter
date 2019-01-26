@@ -5,7 +5,7 @@ import AppNavigator from './navigation/AppNavigator';
 import popDB from './populateDatabase';
 
 const db = SQLite.openDatabase('db.db');
-const isFirstLaunch = SQLite.openDatabase('ifl.db');
+//const isFirstLaunch = SQLite.openDatabase('ifl.db');
 
 export default class App extends React.Component {
   state = {

@@ -11,6 +11,7 @@ import {
   View,
   TextInput,
   KeyboardAvoidingView,
+  Button,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
@@ -28,6 +29,9 @@ export default class HomeScreen extends React.Component {
       <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
 	    <View style={styles.list}>
 			<Plate style={styles.list}/>
+			<Button title="Go to Edit Food screen"
+				onPress={() => this.props.navigation.navigate('EditFoodScreen')}
+			/>
 		</View>
 	    <Text style={styles.title}>Enter a food:</Text> 
 		<View style={styles.list}>
@@ -35,7 +39,7 @@ export default class HomeScreen extends React.Component {
 		</View>
       </KeyboardAvoidingView>
 	  );
-  };
+  };//
   
   
   

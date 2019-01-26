@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Text, ScrollView, TouchableOpacity, StyleSheet, View, TextInput, Image, Alert } from 'react-native'
 import { WebBrowser, SQLite } from 'expo';
+import Pie from 'react-native-pie';
 
 const db = SQLite.openDatabase('db.db');
    
@@ -56,7 +57,13 @@ class Plate extends Component {
       return (
 	  <View style={styles.viewContainer}>
 	    <TouchableOpacity activeOpacity = { .5 } onPress={ this.onPlateClick } style={styles.plate}>
-	      <Image style={styles.image} source={require('../assets/images/plate.png')}/>
+	      <Pie
+          radius={70}
+          //completly filled pie chart with radius 70
+          series={[56, 11, 77]}
+          //values to show and color sequentially
+          colors={['yellow', 'green', 'orange']}
+        />
 	    </TouchableOpacity>
 		<TouchableOpacity activeOpacity = { .5 } onPress={ this.onClearClick } style={styles.viewContainer}>
 	      <Text style={styles.clearButton}>Clear Plate</Text>
@@ -130,7 +137,9 @@ const styles = StyleSheet.create ({
 	flex:1,
    },
    plate: {
-    flex:9
+    flex:9,
+	alignItems: 'center',
+	justifyContent: 'space-around',
    },
    clearButton:{
 	flex:1,
