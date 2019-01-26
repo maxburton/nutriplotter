@@ -47,12 +47,7 @@ class Plate extends Component {
 			}
 		});
    };
-   onChangeText = name => {
-	  this.setState({ name });
-	  if(name.length > 2 || name.length == 0){
-		this.search(name);
-	  }
-   };
+
    render() {
       return (
 	  <View style={styles.viewContainer}>
