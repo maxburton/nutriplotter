@@ -64,7 +64,9 @@ export default class EditFoodScreen extends React.Component {
   render() {
 	  
     this.load();
-	if(!this.state.promiseIsResolved){return null}
+	if(!this.state.promiseIsResolved){
+		return <Text>Loading...</Text>
+		}
   
 	return (
 		  <View style={styles.container}>
