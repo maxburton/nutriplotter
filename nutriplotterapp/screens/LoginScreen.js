@@ -57,7 +57,7 @@ export default class LoginScreen extends Component {
 
     if (type == "success") {
       response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture`
+        `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large)`
       );
 
       //storing respose as json
