@@ -23,20 +23,33 @@ export default class HomeScreen extends React.Component {
 	title: 'Build A Plate',
   };
   
-  state = { }
+  state = {test: switch1State}
   render() {
+    if (switch1State){
+      style={flex:1, backgroundColor: '#191919'}
+      backgroundColor='#4C4C4C'
+      titleStyle={color: '#FFFFFF', marginTop: offset, marginLeft: offset, fontSize: offset}
+      listStyle={color:'#FFFFFF'}
+    } else {
+      style={flex:1, backgroundColor: '#FFFFFF'}
+      backgroundColor='#FFFFFF'
+      titleStyle={color: '#000000', marginTop: offset, marginLeft: offset, fontSize: offset}
+    }
     return (
-      <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
+      <KeyboardAvoidingView switch1State={switch1State} style={style} behavior="position" contentContainerStyle={styles.container}>
 	    <View style={styles.list}>
 			<Plate style={styles.list}/>
 			<Button title="Go to Edit Food screen"
-				onPress={() => this.props.navigation.navigate('EditFoodScreen')}
+        onPress={() => this.props.navigation.navigate('EditFoodScreen')}
 			/>
 		</View>
-	    <Text style={styles.title}>Enter a food:</Text> 
+	    <Text style={titleStyle}>Enter a food:</Text> 
 		<View style={styles.list}>
 			<List style={styles.list}/>
 		</View>
+    <Button title="Temp"
+        onPress={() => this.setState({state: this.state})}//console.log('Switch 1 is: ' + switch1State)}
+    />
       </KeyboardAvoidingView>
 	  );
   };//

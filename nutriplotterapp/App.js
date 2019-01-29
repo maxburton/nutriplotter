@@ -4,6 +4,7 @@ import { AppLoading, Asset, Font, Icon, SQLite } from 'expo';
 import AppNavigator from './navigation/AppNavigator';
 import popDB from './populateDatabase';
 
+
 const db = SQLite.openDatabase('db.db');
 //const isFirstLaunch = SQLite.openDatabase('ifl.db');
 

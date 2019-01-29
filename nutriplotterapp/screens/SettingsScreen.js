@@ -7,73 +7,50 @@ import {
   Text,
 } from 'react-native';
 import SettingsList from 'react-native-settings-list';
+import index from '../themes';
 
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {
     title: 'Settings',
   };
-//  onValueChange = (value) => {
-//    this.setState({switchValue: value})
-//    console.log('Switch 1 is: ' + value)
-//  }
-  toggleSwitch = (switchNumber) => {
-    this.setState({
-      activeSwitch: switchNumber === this.state.activeSwitch ? null : switchNumber
-    })
-  };
-  switchOne = (value) => { this.toggleSwitch(1) };
-  switchTwo = (value) => { this.toggleSwitch(2) };
-  switchThree = (value) => { this.toggleSwitch(3) };
-  switchFour = (value) => { this.toggleSwitch(4) };
+  onValueChange = (value) => {
+    this.setState({switchValue: value})
+    setStateSwitch(value)
+    console.log('Switch 1 is: ' + value)
+  }
   constructor() {
     super();
-//    this.onValueChange = this.onValueChange.bind(this);
-    this.state = {//switchValue: false
-      activeSwitch: null,
-    };
+    this.onValueChange = this.onValueChange.bind(this);
+    this.state = {switch1State};
   }
 
   render() {
-    /* Go ahead and delete ExpoConfigView and replace it with your
-     * content, we just wanted to give you a quick view of your config */
+    const isDarkMode = this.state.switchValue;
+    if (isDarkMode){
+      style={flex:1, backgroundColor: '#191919'}
+      backgroundColor='#4C4C4C'
+      titleStyle={color: '#FFFFFF'}
+    } else {
+      style={flex:1, backgroundColor: '#FFFFFF'}
+      backgroundColor='#FFFFFF'
+      titleStyle={color: '#000000'}
+    }
     return (
-      <View>
+      <View isDarkMode={isDarkMode} style={style}>
         <SettingsList>
           <SettingsList.Item
+            backgroundColor={backgroundColor}
             hasNavArrow={false}
-            switchState={this.state.activeSwitch === 1}
-            switchOnValueChange={this.switchOne}
+            switchState={this.state.switchValue}
+            switchOnValueChange={this.onValueChange}
             hasSwitch={true}
-            title='Setting 1'/>
-
-          <SettingsList.Item
-            hasNavArrow={false}
-            switchState={this.state.activeSwitch === 2}
-            switchOnValueChange={this.switchTwo}
-            hasSwitch={true}
-            title='Setting 2'/>
-
-          <SettingsList.Item
-            hasNavArrow={false}
-            switchState={this.state.activeSwitch === 3}
-            switchOnValueChange={this.switchThree}
-            hasSwitch={true}
-            title='Setting 3'/>
-            
-          <SettingsList.Item
-            hasNavArrow={false}
-            switchState={this.state.activeSwitch === 4}
-            switchOnValueChange={this.switchFour}
-            hasSwitch={true}
-            title='Setting 4'/>
-        </SettingsList>
+            title='Dark Background'
+            titleStyle={titleStyle}
+            />
+          </SettingsList>
       </View>
     );
   }
 }
-const styles = StyleSheet.create ({
-  container: {
-     flex: 1,
-     marginTop: 100
-  }
-})
+
+
