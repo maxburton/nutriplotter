@@ -17,14 +17,18 @@ const plateNav = createStackNavigator({
   EditFoodScreen: {
     screen: EditFoodScreen
   },
+});
+
+const loginNav = createStackNavigator({
   ProfileScreen: {
     screen: ProfileScreen
-  }
+  },
 });
 
 export default createSwitchNavigator({
   // You could add another route here for authentication.
   // Read more at https://reactnavigation.org/docs/en/auth-flow.html
   Main: MainTabNavigator,
-  HomeScreen: plateNav
+  HomeScreen: plateNav,
+  LoginScreen: loginNav,
 });
