@@ -1,7 +1,7 @@
 import { ExpoConfigView } from "@expo/samples";
 import React, { Component } from "react";
 import { createStackNavigator, createAppContainer } from "react-navigation";
-
+import "./LoginScreen.js";
 import Timeline from "react-native-timeline-listview";
 
 import {
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     height: 200
   },
   icon: {
-    flex:1,
+    flex: 1,
     width: 120,
     height: 120,
     alignSelf: "center",
