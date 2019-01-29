@@ -40,6 +40,7 @@ export default class ProfileScreen extends Component {
 
       //storing respose as json
       global.userinfo = await response.json();
+
       console.log("USER_INFO", userinfo);
 
       //redirect to profile screen
