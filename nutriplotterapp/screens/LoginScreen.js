@@ -23,20 +23,24 @@ export default class ProfileScreen extends Component {
   login = async () => {
     const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
       id,
-      { permissions: ["public_profile", "email", "user_friends"] }
+      {
+        permissions: [
+          "public_profile",
+          "email",
+          "user_friends",
+          "user_hometown"
+        ]
+      }
     );
 
     if (type == "success") {
       response = await fetch(
-        `https://graph.facebook.com/me?access_token=${token}&fields=id,name,birthday,picture`
+        `https://graph.facebook.com/me?access_token=${token}&fields=id,name,hometown,picture`
       );
 
       //storing respose as json
-      console.log("response", response);
-      const json = await response.json();
-      console.log("USER_INFO", json);
-
-      global.userinfo = json;
+      global.userinfo = await response.json();
+      console.log("USER_INFO", userinfo);
 
       //redirect to profile screen
       this.props.navigation.navigate("ProfileScreen");

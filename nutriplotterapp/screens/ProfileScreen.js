@@ -22,6 +22,7 @@ import StatsScreen from "../screens/StatsScreen";
   Stats: { screen: StatsScreen }
 }); */
 
+console.log();
 export default class ProfileScreen extends Component {
   static navigationOptions = {
     title: "My Profile"
@@ -49,18 +50,17 @@ export default class ProfileScreen extends Component {
   }
 
   render() {
+    const url = userinfo["picture"]["data"]["url"];
+    console.log(url);
     const { navigate } = this.props.navigation;
     return (
       <ScrollView>
         <View style={styles.header} />
-        <Image
-          style={styles.avatar}
-          source={require("../assets/images/avatar.png")}
-        />
+        <Image style={styles.avatar} source={{ uri: { url } }} />
 
         <View style={styles.body}>
-          <Text style={styles.name}>John James</Text>
-          <Text style={styles.info}>Student / Healthy Eater</Text>
+          <Text style={styles.name}>{userinfo["name"]}</Text>
+          <Text style={styles.info}>{userinfo["hometown"]["name"]}</Text>
           <Text style={styles.description}>
             Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
             electram expetendis, omittam deseruisse consequuntur ius an,
