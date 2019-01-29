@@ -51,10 +51,6 @@ export default class ProfileScreen extends Component {
 
   render() {
     const url = userinfo["picture"]["data"]["url"];
-    var hometown = "";
-    userinfo["hometown"]["name"] != undefined
-      ? (hometown = userinfo["hometown"]["name"])
-      : (hometown = "Scotland");
     const { navigate } = this.props.navigation;
 
     return (
@@ -64,7 +60,7 @@ export default class ProfileScreen extends Component {
         <Image style={styles.avatar} source={{ uri: url }} />
         <View style={styles.body}>
           <Text style={styles.name}>{userinfo["name"]}</Text>
-          <Text style={styles.info}>{hometown}</Text>
+          <Text style={styles.info}>Glasgow, Scotland</Text>
           <Text style={styles.description}>
             Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
             electram expetendis, omittam deseruisse consequuntur ius an,
