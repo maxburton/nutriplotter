@@ -7,7 +7,7 @@ import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
 import LinksScreen from "../screens/LinksScreen";
 import SettingsScreen from "../screens/SettingsScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import LoginScreen from "../screens/LoginScreen";
 import EditFoodScreen from "../screens/EditFoodScreen";
 
 const plateNav = createStackNavigator({
@@ -20,9 +20,9 @@ const plateNav = createStackNavigator({
 });
 
 const loginNav = createStackNavigator({
-  ProfileScreen: {
-    screen: ProfileScreen
-  },
+  LoginScreen: {
+	screen: LoginScreen
+  }
 });
 
 export default createSwitchNavigator({

@@ -19,6 +19,7 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
+	global.isLoggedIn = false;
     var isFirstLaunch = "1";
     _retrieveData = async () => {
       try {
