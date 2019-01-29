@@ -5,6 +5,8 @@ import {
   View,
   Text,
   Button,
+  TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { WebBrowser, SQLite } from 'expo';
 
@@ -61,16 +63,37 @@ export default class EditFoodScreen extends React.Component {
 	promiseIsResolved:false,
   }
   
+  onClearClick = () => {
+	   Alert.alert(
+		  'Clear Plate',
+		  'Are you sure you want to delete all items on your plate?',
+		  [
+			{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+			{text: 'OK', onPress: () => {
+			db.transaction(tx => {
+				tx.executeSql('delete from plate;');
+			});
+			}
+			},
+		  ],
+		  { cancelable: false }
+		)
+		this.forceUpdate()
+   }
+  
   render() {
 	  
     this.load();
 	if(!this.state.promiseIsResolved){
-		return <Text>Loading...</Text>
+		return null
 		}
   
 	return (
 		  <View style={styles.container}>
 			<Text>{this.state.foods}</Text>
+			<TouchableOpacity onPress={ this.onClearClick }>
+				<Text style={styles.clearButton}>Clear Plate</Text>
+			</TouchableOpacity>
 			<Button title="Go to Home screen"
 			onPress={() => this.props.navigation.navigate('Home')}
 		   />
@@ -87,5 +110,11 @@ const styles = StyleSheet.create ({
      marginTop: 100,
 	 alignItems: 'center',
 	 justifyContent: 'space-around',
-  }
+  },
+  clearButton:{
+	textAlign: 'center',
+	fontSize: 18,
+	color: 'red',
+	justifyContent: 'flex-end',
+   },
 })

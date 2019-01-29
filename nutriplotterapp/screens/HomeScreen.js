@@ -28,10 +28,9 @@ export default class HomeScreen extends React.Component {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
 	    <View style={styles.list}>
+		<TouchableOpacity style={styles.list} onPress={() => this.props.navigation.navigate('EditFoodScreen')}>
 			<Plate style={styles.list}/>
-			<Button title="Go to Edit Food screen"
-				onPress={() => this.props.navigation.navigate('EditFoodScreen')}
-			/>
+		</TouchableOpacity>
 		</View>
 	    <Text style={styles.title}>Enter a food:</Text> 
 		<View style={styles.list}>
@@ -40,6 +39,8 @@ export default class HomeScreen extends React.Component {
       </KeyboardAvoidingView>
 	  );
   };//
+  
+
   
   
   

@@ -41,9 +41,9 @@ class Plate extends Component {
 			  allFoods = allFoods + (i+1) + ". " + capitalizeFirstLetter(dbOut.rows._array[i].name) + "\n";
 			} 
 			if(length == 0){
-				alert("Your plate is empty! Add some by searching below.");
+				//alert("Your plate is empty! Add some by searching below.");
 			}else{
-				alert(allFoods);
+				//alert(allFoods);
 			}
 		});
    };
@@ -51,42 +51,20 @@ class Plate extends Component {
    render() {
       return (
 	  <View style={styles.viewContainer}>
-	    <TouchableOpacity activeOpacity = { .5 } onPress={ this.onPlateClick } style={styles.plate}>
+	    <View style={styles.plate}>
 	      <Pie
-          radius={70}
+          radius={100}
           //completly filled pie chart with radius 70
           series={[56, 11, 77]}
           //values to show and color sequentially
           colors={['yellow', 'green', 'orange']}
-        />
-	    </TouchableOpacity>
-		<TouchableOpacity activeOpacity = { .5 } onPress={ this.onClearClick } style={styles.viewContainer}>
-	      <Text style={styles.clearButton}>Clear Plate</Text>
-	    </TouchableOpacity>
+          />
+		</View>
 	  </View>
       )
    }
    
-   onClearClick(){
-	   Alert.alert(
-		  'Clear Plate',
-		  'Are you sure you want to delete all items on your plate?',
-		  [
-			{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-			{text: 'OK', onPress: () => {
-			db.transaction(tx => {
-				tx.executeSql('delete from plate;');
-			});
-			}
-			},
-		  ],
-		  { cancelable: false }
-		)
-   }
    
-   deleteAll(){
-	    
-	}
    
    
    
@@ -135,13 +113,6 @@ const styles = StyleSheet.create ({
     flex:9,
 	alignItems: 'center',
 	justifyContent: 'space-around',
-   },
-   clearButton:{
-	flex:1,
-	textAlign: 'center',
-	fontSize: 18,
-	color: 'red',
-	justifyContent: 'flex-end',
    },
    text: {
       color: '#4f603c'
