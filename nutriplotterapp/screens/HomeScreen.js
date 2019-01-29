@@ -17,14 +17,29 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 
+import getStyleSheet from '../themes/style';
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     //header: null,
 	title: 'Build A Plate',
   };
   
-  state = { }
+  constructor(props) {
+    super(props);
+    this.state = {
+      darkTheme: false
+    };
+    this.toggleTheme = this.toggleTheme.bind(this);
+  }
+  toggleTheme() {
+    this.setState({darkTheme: !this.state.darkTheme})
+  };
+
+  //state = { }
   render() {
+    const styles = getStyleSheet(this.state.darkTheme);
+    //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
     return (
       <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
 	    <View style={styles.list}>
@@ -51,7 +66,7 @@ export default class HomeScreen extends React.Component {
   
 };
 
-const offset = 24;
+/*const offset = 24;
 const styles = StyleSheet.create({
   container: {
     flex:1
@@ -69,4 +84,4 @@ const styles = StyleSheet.create({
     fontSize: offset,
   },
   
-});
+});*/

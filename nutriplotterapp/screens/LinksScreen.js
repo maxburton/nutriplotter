@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Constants, WebBrowser } from 'expo';
 import {Linking, Text, View, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import { MonoText } from '../components/StyledText';
+import getStyleSheet from '../themes/style';
 
 
 export default class HelpScreen extends React.Component {
@@ -9,7 +10,19 @@ export default class HelpScreen extends React.Component {
     title: "How to Play",
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      darkTheme: false
+    };
+    this.toggleTheme = this.toggleTheme.bind(this);
+  }
+  toggleTheme() {
+    this.setState({darkTheme: !this.state.darkTheme})
+  };
+
   render(){
+    const styles = getStyleSheet(this.state.darkTheme);
     return(
       <ScrollView>
         <Text style = {styles.defaultText}>
@@ -39,7 +52,7 @@ export default class HelpScreen extends React.Component {
 
 }
 
-const styles = StyleSheet.create({
+/*const styles = StyleSheet.create({
   defaultText: {
     color: 'black',
     fontSize: 24,
@@ -52,3 +65,4 @@ const styles = StyleSheet.create({
 	textAlign: 'center',
 },
 });
+*/
