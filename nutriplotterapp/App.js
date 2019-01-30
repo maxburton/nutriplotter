@@ -19,6 +19,8 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
+	//Disables warning messages: TRUE FOR DEMOS
+	console.disableYellowBox = true;
 	global.isLoggedIn = false;
     var isFirstLaunch = "1";
     _retrieveData = async () => {

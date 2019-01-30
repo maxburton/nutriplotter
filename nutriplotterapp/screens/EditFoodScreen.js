@@ -7,6 +7,7 @@ import {
   Button,
   TouchableOpacity,
   Alert,
+  ScrollView,
 } from 'react-native';
 import { WebBrowser, SQLite } from 'expo';
 
@@ -90,7 +91,9 @@ export default class EditFoodScreen extends React.Component {
   
 	return (
 		  <View style={styles.container}>
+			<ScrollView style={styles.scrollContainer}>
 			<Text>{this.state.foods}</Text>
+			</ScrollView>
 			<TouchableOpacity onPress={ this.onClearClick }>
 				<Text style={styles.clearButton}>Clear Plate</Text>
 			</TouchableOpacity>
@@ -110,6 +113,10 @@ const styles = StyleSheet.create ({
      marginTop: 100,
 	 alignItems: 'center',
 	 justifyContent: 'space-around',
+  },
+  scrollContainer: {
+     flex: 3,
+     marginTop: 50,
   },
   clearButton:{
 	textAlign: 'center',
