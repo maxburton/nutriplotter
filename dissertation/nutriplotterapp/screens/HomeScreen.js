@@ -25,9 +25,7 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
-	    <TouchableOpacity activeOpacity = { .5 } onPress={ this.plateClicked } style={styles.container}>
-	      <Image style={styles.image} source={require('../assets/images/plate.png')}/>
-	    </TouchableOpacity>
+	    <Image style={styles.image} source={require('../assets/images/plate.png')}/>
 	    <Text style={styles.title}>Enter a food:</Text> 
 		<View style={styles.list}>
 			<List style={styles.list}/>
@@ -35,10 +33,6 @@ export default class HomeScreen extends React.Component {
       </KeyboardAvoidingView>
 	  );
   };
-  
-  plateClicked(){
-	  alert("Plate clicked");
-  }
   
 	/*
 	<TouchableOpacity onPress={this.onPress}>
