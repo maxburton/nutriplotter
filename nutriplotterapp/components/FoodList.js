@@ -88,20 +88,18 @@ class List extends Component {
 			  value={this.state.name}
 		 />
          <View style = {styles.scrollStyle}>
+			<Text style={styles.checkDB}>{this.state.test}</Text>
 			<FlatList
 				data={JSON.parse(this.state.names)}
 				renderItem={({item, index})=>{
 					return(
 						<FlatListItem item={item} index={index}>
-						
 						</FlatListItem>
 					);
 				}}
 			>
-
 			</FlatList>
-         </View>
-		 <Text style={styles.checkDB}>{this.state.test}</Text>
+        </View>
 	    </View>
       )
    }
@@ -171,7 +169,7 @@ const styles = StyleSheet.create ({
       color: '#4f603c'
    },
    scrollStyle: {
-	  height: '65%',  
+	  height: '70%',  
    },
   checkDB: {
 	  textAlign: 'center',
@@ -205,7 +203,6 @@ const styles = StyleSheet.create ({
 	  width: 30,
 	  height: 30,
 	  margin: 2,
-
   },
 
 

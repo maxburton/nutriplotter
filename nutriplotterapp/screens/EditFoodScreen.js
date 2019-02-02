@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react'
 import {
   Switch,
   StyleSheet,
@@ -7,13 +7,39 @@ import {
   Button,
   TouchableOpacity,
   Alert,
-  ScrollView,
+  FlatList,
+  Image,
 } from 'react-native';
 import { WebBrowser, SQLite } from 'expo';
+import IconMI from 'react-native-vector-icons/MaterialIcons'
 
 const db = SQLite.openDatabase('db.db');
 
-export default class EditFoodScreen extends React.Component {
+class FlatListItem extends Component{
+	render(){
+		return(
+			<View style={styles.itemStyle}>
+				<Image
+					source={require('../assets/images/apple.png')}
+					style={styles.image}
+				>
+				</Image>
+
+				<Text style={styles.buttonView}>{this.props.item.name}</Text>
+
+				<TouchableOpacity style={styles.deleteView} onPress = {() => this.deleteItem(this.props.index)}>
+					<Text style={styles.deleteText}><IconMI name="delete-forever" size={28}/></Text>
+				</TouchableOpacity>
+			</View>
+		);
+	}
+	
+	deleteItem(){
+		alert("Deleted");
+	}
+}
+
+export default class EditFoodScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Edit Food',
 	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home')}} />,
@@ -46,11 +72,11 @@ export default class EditFoodScreen extends React.Component {
 		this.setState({promiseIsResolved: true});
 		var dbOut = JSON.parse(results);
 		var length = dbOut.rows.length;
-		var allFoods = "";
+		var allFoods = [];
 		for (i = 0; i < length; i++) { 
-		  allFoods = allFoods + (i+1) + ". " + capitalizeFirstLetter(dbOut.rows._array[i].name) + "\n";
+		  allFoods.push({"name":capitalizeFirstLetter(dbOut.rows._array[i].name)});
 		} 
-		this.setState({foods: allFoods})
+		this.setState({foods: JSON.stringify(allFoods)})
 		if(length == 0){
 			//alert("Your plate is empty! Add some by searching below.");
 		}else{
@@ -62,6 +88,7 @@ export default class EditFoodScreen extends React.Component {
   state = { 
 	empty:'Your plate is empty! Add some by searching on the plate screen.',
 	promiseIsResolved:false,
+	foods:'[]',
   }
   
   onClearClick = () => {
@@ -74,12 +101,14 @@ export default class EditFoodScreen extends React.Component {
 			db.transaction(tx => {
 				tx.executeSql('delete from plate;');
 			});
+			this.setState({foods:'[]'});
+			this.forceUpdate();
 			}
 			},
 		  ],
 		  { cancelable: false }
 		)
-		this.forceUpdate()
+		
    }
   
   render() {
@@ -90,16 +119,22 @@ export default class EditFoodScreen extends React.Component {
 		}
   
 	return (
-		  <View style={styles.container}>
-			<ScrollView style={styles.scrollContainer}>
-			<Text>{this.state.foods}</Text>
-			</ScrollView>
+		  <View style={styles.bigContainer}>
+			<View style = {styles.scrollContainer}>
+			<FlatList
+				data={JSON.parse(this.state.foods)}
+				renderItem={({item, index})=>{
+					return(
+						<FlatListItem item={item} index={index}>
+						</FlatListItem>
+					);
+				}}
+			>
+			</FlatList>
+			</View>
 			<TouchableOpacity onPress={ this.onClearClick }>
 				<Text style={styles.clearButton}>Clear Plate</Text>
 			</TouchableOpacity>
-			<Button title="Go to Home screen"
-			onPress={() => this.props.navigation.navigate('Home')}
-		   />
 		  </View>
 	);
 	
@@ -108,20 +143,57 @@ export default class EditFoodScreen extends React.Component {
 }
 
 const styles = StyleSheet.create ({
-  container: {
+  bigContainer: {
      flex: 1,
-     marginTop: 100,
-	 alignItems: 'center',
-	 justifyContent: 'space-around',
+     marginTop: 35,
   },
   scrollContainer: {
-     flex: 3,
-     marginTop: 50,
+     flex: 1,
+     marginTop: 10,
+	 justifyContent: 'flex-start',
   },
   clearButton:{
 	textAlign: 'center',
 	fontSize: 18,
 	color: 'red',
 	justifyContent: 'flex-end',
+	marginBottom: 30,
+	marginTop: 30,
    },
+   imageView: {
+	  flex: 1,
+  },
+  buttonView: {
+	  width: '100%',
+	  marginLeft: 10,
+	  flexDirection: 'column',
+	  flex: 1,
+  },
+  itemStyle: {
+	flex: 1,  
+	flexDirection: 'row',
+	padding: 8,
+    marginTop: 3,
+    alignItems: 'flex-start',
+	backgroundColor: '#c1c1c1',
+  },
+  image: {
+	  width: 30,
+	  height: 30,
+	  margin: 2,
+  },
+  deleteView: {
+	  width: 45,
+	  height: 35,
+	  margin: 4,
+	  marginLeft: 12,
+	  borderRadius: 15,
+	  backgroundColor: 'red',
+	  justifyContent: 'center',
+	  alignItems: 'center',
+  },
+  deleteText: {
+	  color: 'white',
+	  fontSize: 24,
+  }
 })
