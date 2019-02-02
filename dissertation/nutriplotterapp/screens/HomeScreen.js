@@ -1,5 +1,6 @@
 import React from 'react';
 import List from '../components/FoodList.js'
+import Plate from '../components/Plate.js'
 import {
   Image,
   Platform,
@@ -10,10 +11,13 @@ import {
   View,
   TextInput,
   KeyboardAvoidingView,
+  Button,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
+
+import getStyleSheet from '../themes/style';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -21,18 +25,39 @@ export default class HomeScreen extends React.Component {
 	title: 'Build A Plate',
   };
   
-  state = { }
+  constructor(props) {
+    super(props);
+    this.state = {
+      darkTheme: false
+    };
+    this.toggleTheme = this.toggleTheme.bind(this);
+  }
+  toggleTheme() {
+    this.setState({darkTheme: !this.state.darkTheme})
+  };
+
+  //state = { }
   render() {
+    const styles = getStyleSheet(this.state.darkTheme);
+    //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
     return (
       <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
-	    <Image style={styles.image} source={require('../assets/images/plate.png')}/>
+	    <View style={styles.list}>
+		<TouchableOpacity style={styles.list} onPress={() => this.props.navigation.navigate('EditFoodScreen')}>
+			<Plate style={styles.list}/>
+		</TouchableOpacity>
+		</View>
 	    <Text style={styles.title}>Enter a food:</Text> 
 		<View style={styles.list}>
 			<List style={styles.list}/>
 		</View>
       </KeyboardAvoidingView>
 	  );
-  };
+  };//
+  
+
+  
+  
   
 	/*
 	<TouchableOpacity onPress={this.onPress}>
@@ -42,7 +67,7 @@ export default class HomeScreen extends React.Component {
   
 };
 
-const offset = 24;
+/*const offset = 24;
 const styles = StyleSheet.create({
   container: {
     flex:1
@@ -59,12 +84,5 @@ const styles = StyleSheet.create({
     marginLeft: offset,
     fontSize: offset,
   },
-  image: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: null,
-    height: null,
-    resizeMode: 'contain'
-  },
-});
+  
+});*/

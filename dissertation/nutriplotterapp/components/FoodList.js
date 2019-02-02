@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Text, ScrollView, TouchableOpacity, StyleSheet, View, TextInput } from 'react-native'
 import { WebBrowser, SQLite } from 'expo';
+import { ListItem } from 'react-native-elements';
 
 const db = SQLite.openDatabase('db.db');
    
@@ -11,11 +12,44 @@ class List extends Component {
 	  names: '[]',
    }
    alertItemName = (item) => {
-      alert(item.name)
-   }
+	    var dbQuery = 'select name, calories, carbs, fats, protein from foods where name="' + item.name.toLowerCase() + '";';
+		//alert(item.name);
+		var promise = new Promise(function (resolve, reject) {
+			db.transaction(function (transaction) {
+				transaction.executeSql(dbQuery, [], function (transaction, result) {
+					resolve(JSON.stringify(result)); // here the returned Promise is resolved
+				}, nullHandler, errorHandler);
+			});
+		});
+		
+		function nullHandler(result){
+			console.log("Null Log : " + JSON.stringify(result));
+		}
+
+		function errorHandler(error){
+			console.log("Error Log : " + error);
+		}
+		
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+	  
+		promise.then((results) => {
+			var dbOut = JSON.parse(results);
+			var kcals = JSON.parse(results).rows._array[0].calories;
+			var carbs = JSON.parse(results).rows._array[0].carbs;
+			var fats = JSON.parse(results).rows._array[0].fats;
+			var protein = JSON.parse(results).rows._array[0].protein;
+			var foodName = JSON.parse(results).rows._array[0].name;
+			alert("Calories: " + kcals + " Carbs: " + carbs + " Fats: " + fats + " Protein: " + protein);
+			db.transaction(tx => {
+				tx.executeSql('insert or ignore into plate (name, amount) values ("' + foodName + '", 0);');
+			});
+		});
+   };
    onChangeText = name => {
 	  this.setState({ name });
-	  if(name.length > 3){
+	  if(name.length > 2 || name.length == 0){
 		this.search(name);
 	  }
    };
@@ -28,7 +62,7 @@ class List extends Component {
 			  placeHolder="Enter a food"
 			  value={this.state.name}
 		 />
-         <ScrollView>
+         <ScrollView style = {styles.scrollStyle}>
             {
                JSON.parse(this.state.names).map((item, index) => (
                   <TouchableOpacity
@@ -103,7 +137,6 @@ class List extends Component {
 }
 export default List
 
-const offset = 24;
 const styles = StyleSheet.create ({
    container: {
       padding: 10,
@@ -114,14 +147,17 @@ const styles = StyleSheet.create ({
    text: {
       color: '#4f603c'
    },
+   scrollStyle: {
+	  height: '70%',  
+   },
      checkDB: {
 	  textAlign: 'center',
 	  color: 'red',
    },
      nameInput: {
-     height: offset * 2,
-     margin: offset,
-     paddingHorizontal: offset,
+     height: '15%',
+     margin: '5%',
+     paddingHorizontal: '5%',
      borderColor: '#111111',
      borderWidth: 1,
   },

@@ -1,7 +1,8 @@
-import { ExpoConfigView } from "@expo/samples";
-import React, { Component } from "react";
-//import { createStackNavigator, createAppContainer } from "react-navigation";
+//UNUSED LEGACY
 
+import React, { Component } from "react";
+import { createStackNavigator, createAppContainer } from "react-navigation";
+import "./LoginScreen.js";
 import Timeline from "react-native-timeline-listview";
 
 import {
@@ -22,6 +23,7 @@ import StatsScreen from "../screens/StatsScreen";
   Stats: { screen: StatsScreen }
 }); */
 
+console.log();
 export default class ProfileScreen extends Component {
   static navigationOptions = {
     title: "My Profile"
@@ -49,18 +51,17 @@ export default class ProfileScreen extends Component {
   }
 
   render() {
+    const url = userinfo["picture"]["data"]["url"];
     const { navigate } = this.props.navigation;
+
     return (
       <ScrollView>
         <View style={styles.header} />
-        <Image
-          style={styles.avatar}
-          source={require("../assets/images/avatar.png")}
-        />
 
+        <Image style={styles.avatar} source={{ uri: url }} />
         <View style={styles.body}>
-          <Text style={styles.name}>John James</Text>
-          <Text style={styles.info}>Student / Healthy Eater</Text>
+          <Text style={styles.name}>{userinfo["name"]}</Text>
+          <Text style={styles.info}>Glasgow, Scotland</Text>
           <Text style={styles.description}>
             Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
             electram expetendis, omittam deseruisse consequuntur ius an,
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
     height: 200
   },
   icon: {
-    flex:1,
+    flex: 1,
     width: 120,
     height: 120,
     alignSelf: "center",
