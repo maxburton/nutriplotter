@@ -1,16 +1,33 @@
 import React, { Component } from 'react'
-import { Text, ScrollView, TouchableOpacity, StyleSheet, View, TextInput } from 'react-native'
+import { Text, Image, TouchableOpacity, StyleSheet, View, TextInput, FlatList } from 'react-native'
 import { WebBrowser, SQLite } from 'expo';
+import { ListItem } from 'react-native-elements';
 
 const db = SQLite.openDatabase('db.db');
-   
-class List extends Component {
-   state = {
-	  name: '',
-	  test: '',
-	  names: '[]',
-   }
-   alertItemName = (item) => {
+
+class FlatListItem extends Component{
+	render(){
+		return(
+			<View style={styles.itemStyle}>
+				<Image
+					source={require('../assets/images/apple.png')}
+					style={styles.image}
+				>
+				
+				</Image>
+				<View style={styles.buttonView}>
+					<TouchableOpacity
+						 style = {styles.container}
+						 onPress = {() => this.alertItemName(this.props.item)}
+					>
+						<Text>{this.props.item.name}</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		);
+	}
+	
+	alertItemName = (item) => {
 	    var dbQuery = 'select name, calories, carbs, fats, protein from foods where name="' + item.name.toLowerCase() + '";';
 		//alert(item.name);
 		var promise = new Promise(function (resolve, reject) {
@@ -46,6 +63,15 @@ class List extends Component {
 			});
 		});
    };
+}
+   
+class List extends Component {
+   state = {
+	  name: '',
+	  test: '',
+	  names: '[]',
+   }
+   
    onChangeText = name => {
 	  this.setState({ name });
 	  if(name.length > 2 || name.length == 0){
@@ -61,20 +87,20 @@ class List extends Component {
 			  placeHolder="Enter a food"
 			  value={this.state.name}
 		 />
-         <ScrollView style = {styles.scrollStyle}>
-            {
-               JSON.parse(this.state.names).map((item, index) => (
-                  <TouchableOpacity
-                     key = {item.id}
-                     style = {styles.container}
-                     onPress = {() => this.alertItemName(item)}>
-                     <Text style = {styles.text}>
-                        {item.name}
-                     </Text>
-                  </TouchableOpacity>
-               ))
-            }
-         </ScrollView>
+         <View style = {styles.scrollStyle}>
+			<FlatList
+				data={JSON.parse(this.state.names)}
+				renderItem={({item, index})=>{
+					return(
+						<FlatListItem item={item} index={index}>
+						
+						</FlatListItem>
+					);
+				}}
+			>
+
+			</FlatList>
+         </View>
 		 <Text style={styles.checkDB}>{this.state.test}</Text>
 	    </View>
       )
@@ -138,27 +164,48 @@ export default List
 
 const styles = StyleSheet.create ({
    container: {
-      padding: 10,
-      marginTop: 3,
-      alignItems: 'center',
-	  backgroundColor: '#a1a1a1',
+      marginLeft: 10,
+	  justifyContent: 'center',
    },
    text: {
       color: '#4f603c'
    },
    scrollStyle: {
-	  height: '70%',  
+	  height: '65%',  
    },
-     checkDB: {
+  checkDB: {
 	  textAlign: 'center',
 	  color: 'red',
    },
-     nameInput: {
+  nameInput: {
      height: '15%',
      margin: '5%',
      paddingHorizontal: '5%',
      borderColor: '#111111',
      borderWidth: 1,
+  },
+  imageView: {
+	  flex: 1
+  },
+  buttonView: {
+	  justifyContent: 'center',
+	  flex: 1,
+	  flexDirection: 'column',
+  },
+  itemStyle: {
+	flex: 1,  
+	flexDirection: 'row',
+	padding: 8,
+    marginTop: 3,
+    alignItems: 'flex-start',
+	backgroundColor: '#c1c1c1',
+	justifyContent: 'center',
+  },
+  image: {
+	  width: 30,
+	  height: 30,
+	  margin: 2,
+
   },
 
 
