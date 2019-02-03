@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import { WebBrowser, SQLite } from 'expo';
 
+import styles from '../themes/editFoodScreenStyle';
+
 const db = SQLite.openDatabase('db.db');
 
 export default class EditFoodScreen extends React.Component {
@@ -106,22 +108,3 @@ export default class EditFoodScreen extends React.Component {
 	
   }
 }
-
-const styles = StyleSheet.create ({
-  container: {
-     flex: 1,
-     marginTop: 100,
-	 alignItems: 'center',
-	 justifyContent: 'space-around',
-  },
-  scrollContainer: {
-     flex: 3,
-     marginTop: 50,
-  },
-  clearButton:{
-	textAlign: 'center',
-	fontSize: 18,
-	color: 'red',
-	justifyContent: 'flex-end',
-   },
-})

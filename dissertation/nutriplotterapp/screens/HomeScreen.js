@@ -16,7 +16,6 @@ import {
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
-
 import getStyleSheet from '../themes/style';
 
 export default class HomeScreen extends React.Component {
@@ -39,18 +38,19 @@ export default class HomeScreen extends React.Component {
   //state = { }
   render() {
     const styles = getStyleSheet(this.state.darkTheme);
+    
     //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
     return (
       <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
-	    <View style={styles.list}>
-		<TouchableOpacity style={styles.list} onPress={() => this.props.navigation.navigate('EditFoodScreen')}>
-			<Plate style={styles.list}/>
-		</TouchableOpacity>
-		</View>
-	    <Text style={styles.title}>Enter a food:</Text> 
-		<View style={styles.list}>
-			<List style={styles.list}/>
-		</View>
+	      <View style={styles.list}>
+		      <TouchableOpacity style={styles.list} onPress={() => this.props.navigation.navigate('EditFoodScreen')}>
+			      <Plate style={styles.list}/>
+		      </TouchableOpacity>
+		    </View>
+	      <Text style={styles.title}>Enter a food:</Text> 
+		    <View style={styles.list}>
+			    <List style={styles.list}/>
+		    </View>
       </KeyboardAvoidingView>
 	  );
   };//
