@@ -9,9 +9,10 @@ const styles = StyleSheet.create({
     },
     viewContainer:{
      flex:1,
+     margin: '10%'
     },
     plate: {
-     flex:9,
+     flex:1,
      alignItems: 'center',
      justifyContent: 'space-around',
     },

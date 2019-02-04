@@ -1,19 +1,35 @@
 import React, { Component } from 'react'
-import { Text, ScrollView, TouchableOpacity, StyleSheet, View, TextInput, Image, Alert } from 'react-native'
+import { 
+	Text, 
+	ScrollView, 
+	TouchableOpacity, 
+	StyleSheet, 
+	View, 
+	TextInput, 
+	Image, 
+	Alert
+} from 'react-native'
+
+
 import { WebBrowser, SQLite } from 'expo';
 import Pie from 'react-native-pie';
 
+import Food from './Food';
 import styles from '../themes/plateStyle';
 
 const db = SQLite.openDatabase('db.db');
-   
+var a = new Food('a');
+
 class Plate extends Component {
    state = {
-	  foods: '',
+	  foods: [a], // Of Food Component
+	  pieSeries: [],
+	  pieColours: []
    }
 
 
    onPlateClick = () => {
+	   nutritionScore += 10;
 	   console.log("Plate Clicked");
 	    var dbQuery = 'select name, amount from plate;';
 		//alert(item.name);
@@ -53,23 +69,39 @@ class Plate extends Component {
    };
 
    render() {
+		var foodRender = [];
+
+		for (const food of this.state.foods) {
+			foodRender.push(food.render());
+			console.log(food);
+		}
+
+
       return (
 	  <View style={styles.viewContainer}>
 	    <View style={styles.plate}>
-	      <Pie
-          radius={100}
-          //completly filled pie chart with radius 70
-          series={[56, 11, 77]}
+			
+			<Pie
+		  // Make the pie chart a ring around the plate which fills up based on the foods present
+          	radius={100} innerRadius={95} on
+
+          series={this.state.pieSeries}
           //values to show and color sequentially
-          colors={['yellow', 'green', 'orange']}
-          />
+		  colors={this.state.pieColours}/>
+		  {foodRender}
+		
 		</View>
+		
 	  </View>
       )
    }
    
-   
-   
+
+
+
+   renderPieSeries = function(){
+	   return [this.state.nutritionScore];
+   }
    
    
     deleteItem = searchString => {
