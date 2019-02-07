@@ -8,6 +8,7 @@ export default class PopulateDatabase extends React.Component {
 	constructor(){
 		super();
 		db.transaction(tx => {
+tx.executeSql('create table if not exists foods (name varchar(255) primary key not null, calories real, carbs real, fats real, protein real, sugar real, saturatedfat real, fibre real, omega3 real, group varchar(255), calcium real, vita real, vitb1 real, vitb9 real, vitc real);');
 tx.executeSql('insert or ignore into foods (name, calories, carbs, fats, protein, sugar, saturatedfat, fibre, omega3, group, calcium, vita, vitb1, vitb9, vitc) values ("ackee, canned, drained", 151, 0.8, 15.2, 2.9, 0.8, 0, 0.00, 0, "dg", 0, 0.00, 0.03, 41, 30);');
 tx.executeSql('insert or ignore into foods (name, calories, carbs, fats, protein, sugar, saturatedfat, fibre, omega3, group, calcium, vita, vitb1, vitb9, vitc) values ("agar, dried", 16, 0, 1.2, 1.3, 0, 0.30, 81.10, 0.40, "dg", 0, 0.00, 0.01, 0, 0);');
 tx.executeSql('insert or ignore into foods (name, calories, carbs, fats, protein, sugar, saturatedfat, fibre, omega3, group, calcium, vita, vitb1, vitb9, vitc) values ("agar, dried, soaked and drained", 2, 0, 0.1, 0.2, 0, 0, 15.00, 0, "dg", 0, 0.00, 0.01, 0, 0);');

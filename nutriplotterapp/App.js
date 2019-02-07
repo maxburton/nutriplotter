@@ -41,6 +41,9 @@ export default class App extends React.Component {
       tx.executeSql(
         "create table if not exists plate(name varchar(255) primary key not null, amount int);"
       );
+	  tx.executeSql(
+        "drop table if not exists foods;"
+      );
       if (isFirstLaunch == "1") {
         var p = new popDB();
         console.log("First LAUNCH");
