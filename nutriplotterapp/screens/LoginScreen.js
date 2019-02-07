@@ -1,5 +1,6 @@
 import { ExpoConfigView } from "@expo/samples";
 import React, { Component } from "react";
+import { TouchableOpacity } from "react-native";
 import Timeline from "react-native-timeline-listview";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 
@@ -14,37 +15,35 @@ import {
   KeyboardAvoidingView,
   Button,
   ScrollView,
-  Image,
-
+  Image
 } from "react-native";
 import * as Expo from "expo";
+import * as firebase from "firebase";
+
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyDDEJNntQAHQO4K09I2lBaCTVYlq1i6eDo",
+  authDomain: "nutriplotter.firebaseapp.com",
+  databaseURL: "https://nutriplotter.firebaseio.com",
+  projectId: "nutriplotter",
+  storageBucket: "nutriplotter.appspot.com"
+};
+
+firebase.initializeApp(firebaseConfig);
 
 const id = "2301384936810927";
 
+const FBSDK = require("react-native-fbsdk");
+const { LoginManager, AccessToken } = FBSDK;
+
 export default class LoginScreen extends Component {
-  static navigationOptions = {
-    title: "My Profile"
-  };
-  
+  static navigationOptions = () => ({
+    title: "My Profile",
+    headerRight: <Button title="Logout" onPress={() => this.logout()} />
+  });
+
   constructor() {
     super();
-    this.data = [
-      {
-        time: "🥇",
-        title: "Points",
-        description: "You have earned a total of 890 points"
-      },
-      {
-        time: "🍽️",
-        title: "Plates",
-        description: "You've made a total of 69 plates"
-      },
-      {
-        time: "🏆",
-        title: "Score",
-        description: "Your overrall score is 65"
-      }
-    ];
   }
 
   login = async () => {
@@ -56,101 +55,115 @@ export default class LoginScreen extends Component {
     );
 
     if (type == "success") {
+      //const response = firebase.auth.FacebookAuthProvider.credential(token);
+
       response = await fetch(
         `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large)`
       );
 
       //storing respose as json
+
+      /*firebase
+        .auth()
+        .signInAndRetrieveDataWithCredential(response)
+        .catch(error => {
+          alert("error");
+        });*/
+
       global.userinfo = await response.json();
 
       console.log("USER_INFO", userinfo);
+      //get userinfo
+      const id = userinfo["id"];
+      const name = userinfo["name"];
+      const userpic = userinfo["picture"]["data"]["url"];
+
+      //write user data to firebase
+      firebase
+        .database()
+        .ref("users/" + id)
+        .set({
+          username: name,
+          profile_picture: userpic
+        });
 
       //redirect to profile screen
-      this.props.navigation.navigate("ProfileScreen");//
-	  console.log(global.isLoggedIn);
-	  global.isLoggedIn = true;
-	  this.forceUpdate()
-	  console.log(global.isLoggedIn);
+      this.props.navigation.navigate("ProfileScreen"); //
+      console.log(global.isLoggedIn);
+      global.isLoggedIn = true;
+      this.forceUpdate();
+      console.log(global.isLoggedIn);
     } else {
       alert(type);
     }
   };
 
+  logout = () => {
+    global.isLoggedIn = false;
+    console.log("NEW CALL", global.isLoggedIn);
+    this.forceUpdate();
+  };
+
   render() {
-	if(global.isLoggedIn){
-		const url = userinfo["picture"]["data"]["url"];
-		const { navigate } = this.props.navigation;
+    if (global.isLoggedIn) {
+      const url = userinfo["picture"]["data"]["url"];
+      const { navigate } = this.props.navigation;
 
-		return (
-		  <ScrollView>
-			<View style={styles.header} />
+      return (
+        <View style={styles.container}>
+          <View style={styles.header} />
+          <Image style={styles.avatar} source={{ uri: url }} />
+          <View style={styles.body}>
+            <Text style={styles.name}>{userinfo["name"]}</Text>
+            <Text style={styles.info}>Glasgow, Scotland</Text>
 
-			<Image style={styles.avatar} source={{ uri: url }} />
-			<View style={styles.body}>
-			  <Text style={styles.name}>{userinfo["name"]}</Text>
-			  <Text style={styles.info}>Glasgow, Scotland</Text>
-			  <Text style={styles.description}>
-				Lorem ipsum dolor sit amet, saepe sapientem eu nam. Qui ne assum
-				electram expetendis, omittam deseruisse consequuntur ius an,
-			  </Text>
-			  <Text style={styles.userstats}>User Stats</Text>
-			  <View style={styles.container}>
-				<Timeline style={styles.list} data={this.data} />
-			  </View>
-			  <Text style={styles.favouritefoods}>Your Favourite Foods</Text>
-			  <View style={styles.grid}>
-				<Image
-				  style={styles.icon}
-				  source={require("../assets/images/apple.png")}
-				/>
-				<Image
-				  style={styles.icon}
-				  source={require("../assets/images/meat.png")}
-				/>
-				<Image
-				  style={styles.icon}
-				  source={require("../assets/images/banana.png")}
-				/>
-			  </View>
-			</View>
-		  </ScrollView>
-		);
-	}else{
-    const { navigate } = this.props.navigation;
-    return (
-      <KeyboardAvoidingView style={styles.containerView} behavior="padding">
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.loginScreenContainer}>
-            <View style={styles.loginFormView}>
-              <Text style={styles.logoText}>NutriPlotter</Text>
-              <TextInput
-                placeholder="Username"
-                placeholderColor="#c4c3cb"
-                style={styles.loginFormTextInput}
-              />
-              <TextInput
-                placeholder="Password"
-                placeholderColor="#c4c3cb"
-                style={styles.loginFormTextInput}
-                secureTextEntry={true}
-              />
-              <Button
-                style={styles.loginButton}
-                onPress={() => this.props.navigation.navigate("ProfileScreen")}
-                title="Login"
-              />
-              <Button
-                style={styles.fbLoginButton}
-                onPress={() => this.login()}
-                title="Login with Facebook"
-                color="#3897f1"
-              />
-            </View>
+            <TouchableOpacity style={styles.buttonContainer}>
+              <Text>My Stats</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.buttonContainer}>
+              <Text>Leaderboards</Text>
+            </TouchableOpacity>
           </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    );
-	}
+        </View>
+      );
+    } else {
+      const { navigate } = this.props.navigation;
+      return (
+        <KeyboardAvoidingView style={styles.containerView} behavior="padding">
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.loginScreenContainer}>
+              <View style={styles.loginFormView}>
+                <Text style={styles.logoText}>NutriPlotter</Text>
+                <TextInput
+                  placeholder="Username"
+                  placeholderColor="#c4c3cb"
+                  style={styles.loginFormTextInput}
+                />
+                <TextInput
+                  placeholder="Password"
+                  placeholderColor="#c4c3cb"
+                  style={styles.loginFormTextInput}
+                  secureTextEntry={true}
+                />
+                <Button
+                  style={styles.loginButton}
+                  onPress={() =>
+                    this.props.navigation.navigate("ProfileScreen")
+                  }
+                  title="Login"
+                />
+                <Button
+                  style={styles.fbLoginButton}
+                  onPress={() => this.login()}
+                  title="Login with Facebook"
+                  color="#3897f1"
+                />
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+      );
+    }
   }
 }
 
@@ -244,6 +257,7 @@ const styles = StyleSheet.create({
     marginTop: 40,
     flex: 1,
     textAlign: "center",
+    alignItems: "center",
     padding: 30
   },
   name: {
@@ -270,6 +284,7 @@ const styles = StyleSheet.create({
     height: 45,
     flexDirection: "row",
     justifyContent: "center",
+    textAlign: "center",
     alignItems: "center",
     marginBottom: 20,
     width: 250,
