@@ -12,6 +12,8 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Button,
+  Dimensions,
+  measure
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
@@ -22,11 +24,16 @@ import Food from '../components/Food';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    //header: null,
     title: 'Play with Your Food',
   };
   
   constructor(props) {
+    // Window is the draw space available for the app (does not include Android notification bar)
+    //this.state.window = {
+    //  height: Dimensions.get('window').height,
+    //  width: Dimensions.get('window').width
+    //};
+
     super(props);
     this.state = {
       darkTheme: false,
@@ -47,13 +54,14 @@ export default class HomeScreen extends React.Component {
   //state = { }
   render() {
     const styles = getStyleSheet(this.state.darkTheme);
-  
 
-    //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
+    var food = new Food({name: "Foo", plate: this.plate});
+
     return (
+      
       <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
 	      
-        
+        {food.render()}
         <View style={styles.list}>
           <TouchableOpacity style={styles.list} 
             onPress={
@@ -70,36 +78,5 @@ export default class HomeScreen extends React.Component {
         
       </KeyboardAvoidingView>
 	  );
-  };//
-  
-
-  
-  
-  
-	/*
-	<TouchableOpacity onPress={this.onPress}>
-	  <Text style={styles.buttonText}>Add Food</Text>
-	</TouchableOpacity>
-	*/
-  
+  };
 };
-
-/*const offset = 24;
-const styles = StyleSheet.create({
-  container: {
-    flex:1
-  },
-  list: {
-	flex:1
-  },
-  title: {
-    marginTop: offset,
-    marginLeft: offset,
-    fontSize: offset,
-  },
-  buttonText: {
-    marginLeft: offset,
-    fontSize: offset,
-  },
-  
-});*/

@@ -6,8 +6,10 @@ import {
 	StyleSheet, 
 	View, 
 	TextInput, 
-	Image, 
-	Alert
+	ImageBackground, 
+	Alert,
+	UIManager,
+	findNodeHandle
 } from 'react-native'
 
 
@@ -18,15 +20,17 @@ import Food from './Food';
 import styles from '../themes/plateStyle';
 
 const db = SQLite.openDatabase('db.db');
-var a = new Food({name: 'a'});
+
 
 export default class Plate extends Component {
    state = {
-	  foods: [a], // Of Food Component
+	  foods: [], // Of Food Component
 	  pieSeries: [],
 	  pieColours: [],
-	  empty: false
+	  empty: true,
    }
+
+
 
    onPlateClick = () => {
 	   console.log("Plate Clicked");
@@ -72,20 +76,41 @@ export default class Plate extends Component {
 		});
    };
 
+
+
+
    render() {
-		
+
       return (
 	  <View style={styles.viewContainer}>
-	    <View style={styles.plate}>
-			
+	    <View style={styles.plate} onLayout={(event) => {
+			var dimension = event.nativeEvent.layout;  
+			this.state.dimensions = {
+			  x: dimension.x,
+			  y: dimension.y,
+			  width: dimension.width,
+			  height: dimension.height,
+			  center: {
+				  x: dimension.x + Math.floor(dimension.width / 2), 
+				  y: dimension.y + Math.floor(dimension.height / 2)
+			  },
+			  radius: Math.floor(dimension.width / 2)
+			}
+		}}>
+		<ImageBackground 
+			alignContent={'center'}
+			style={StyleSheet.create({zIndex: 0})} 
+			source={require('../assets/images/plate.png')}>
 			<Pie
-		  // Make the pie chart a ring around the plate which fills up based on the foods present
-          	radius={100} innerRadius={95} on
-
-          series={this.state.pieSeries}
-          //values to show and color sequentially
-		  colors={this.state.pieColours}/>
-		  
+		 	 // Make the pie chart a ring around the plate which fills up based on the foods present
+			  radius={105} innerRadius={81} on
+			  left={25}
+          	series={this.state.pieSeries}
+         	 //values to show and color sequentially
+		  	colors={this.state.pieColours}
+			
+			style={StyleSheet.create({zIndex: 1})}/>
+		</ImageBackground>
 		
 		</View>
 		
@@ -93,6 +118,7 @@ export default class Plate extends Component {
 	  </View>
       )
    }
+
    
    // For each food in the plate's state, add its component render JSX to
    // an array, return the array for rendering by the plate.
@@ -106,6 +132,9 @@ export default class Plate extends Component {
 	return foodRender;
    }
 
+
+
+   	
 
    // Give the % of the pie chart as a given nutrition score, which dynamically updates to reflect
    // what's on the plate.
@@ -126,9 +155,9 @@ export default class Plate extends Component {
 	   } else {
 		   //console.log(this.state.foods);
 		   var s = "[";
-		   //for (i = 0; i < this.state.foods.length; i++) {
-		   //   s += this.state.foods[i].state.name + ",";
-		   //}
+		   for (i = 0; i < this.state.foods.length; i++) {
+		      s += this.state.foods[i].state.name + ",";
+		   }
 		   s += "]";
 		   return s;
 	   }
@@ -159,5 +188,5 @@ export default class Plate extends Component {
 		promise.then((results) => {
 		    //code runs after field deleted
 	  });
-  }
+	}
 }

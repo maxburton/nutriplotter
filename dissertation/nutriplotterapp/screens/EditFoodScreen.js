@@ -18,8 +18,7 @@ const db = SQLite.openDatabase('db.db');
 export default class EditFoodScreen extends React.Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Edit Food',
-	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home')}} />,
-
+		headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
   });
 	
 
@@ -67,7 +66,11 @@ export default class EditFoodScreen extends React.Component {
   state = { 
 		empty:'Your plate is empty! Add some by searching on the plate screen.',
 		promiseIsResolved:false,
-  }
+	}
+	
+
+
+
   
   onClearClick = () => {
 	   Alert.alert(
@@ -107,14 +110,12 @@ export default class EditFoodScreen extends React.Component {
 	return (
 		  <View style={styles.container}>
 			<ScrollView style={styles.scrollContainer}>
-			<Text text="hello"></Text>
-			<Text>{this.state.plate.getFoodNames()}</Text>
 			</ScrollView>
 			<TouchableOpacity onPress={ this.onClearClick }>
 				<Text style={styles.clearButton}>Clear Plate</Text>
 			</TouchableOpacity>
 			<Button title="Go to Home screen"
-			onPress={() => this.props.navigation.navigate('Home')}
+			onPress={() => this.props.navigation.navigate('Home', {plate: this.plate})}
 		   />
 		  </View>
 	);
