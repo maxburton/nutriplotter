@@ -1,7 +1,19 @@
-image: blang/latex
-build:
+stages:
+    - build
+    - tests
+    
+
+build_dissertation:
+  image: blang/latex
+  stage: build
   script:
     - latexmk -pdf -cd docs/dissertation/dissertation.tex
   artifacts:
     paths:
       - "*.pdf"
+
+build_builder:
+  image: docker
+  stage: build
+  script:
+    - docker build -t nutriplatter/builder:latest ./nutriplatterapp

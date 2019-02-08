@@ -21,7 +21,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+	  "bundleIdentifier": "com.nutriplotter",
+    },
+	"android": {
+		"package": "com.nutriplotter",
+	}
   }
 }
