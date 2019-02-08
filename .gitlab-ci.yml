@@ -16,4 +16,4 @@ build_builder:
   image: docker
   stage: build
   script:
-    - docker build -t nutriplatter/builder:latest ./nutriplatterapp
+    - docker build -t nutriplatter/builder:latest ./nutriplotterapp
