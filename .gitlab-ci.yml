@@ -20,6 +20,7 @@ build_android:
   stage: build
   script:
     - apk add git --no-cache
+    - cd ./nutriplotterapp
     - npm install
     - npm install -g expo-cli
     - expo build:android
