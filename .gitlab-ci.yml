@@ -20,10 +20,10 @@ build_builder:
   script:
     - docker build -t nutriplotterapp/builder:latest ./nutriplotterapp
     - docker login -u ${dockerLogin} -p ${dockerPassword}
-    - docker push nutriplotterapp/builder:latest
+    - docker push ${dockerLogin}/builder:latest
 
 build_android:
-  image: nutriplotterapp/builder:latest
+  image: ${dockerLogin}/builder:latest
   stage: build
   before_script:
     - docker login -u ${dockerLogin} -p ${dockerPassword}
