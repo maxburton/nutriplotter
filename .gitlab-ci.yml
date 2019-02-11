@@ -27,6 +27,7 @@ build_android:
   
   script:
     - cd ./nutriplotterapp
+    - apk add bash
     - npm install
     - npm install -g expo-cli
     - npm install turtle-cli gulp-cli
