@@ -28,6 +28,7 @@ build_android:
   script:
     - cd ./nutriplotterapp
     - npm install
+    - npm install expo-cli turtle-cli gulp-cli
     - EXPO_USERNAME=${CIuser}
     - EXPO_PASSWORD=${CIpass}
     - expo login -u "${CIuser}" -p "${CIpass}"
