@@ -14,15 +14,26 @@ build_dissertation:
     paths:
       - "*.pdf"
 
-
-build_android:
-  image: node:8.15.0-alpine
+build_builder:
+  image: docker
   stage: build
   script:
-    - apk add git --no-cache
+    - docker build -t nutriplotterapp/builder:latest ./nutriplotterapp
+    - docker login -u ${dockerLogin} -p ${dockerPassword}
+    - docker push nutriplotterapp/builder:latest
+
+build_android:
+  image: nutriplotterapp/builder:latest
+  stage: build
+  before_script:
+    - docker login -u ${dockerLogin} -p ${dockerPassword}
+  script:
     - cd ./nutriplotterapp
     - npm install
-    - npm install -g expo-cli
+    - EXPO_USERNAME = ${CIuser}
+    - EXPO_PASSWORD = ${CIpass}
     - expo login -u "${CIuser}" -p "${CIpass}"
     - expo fetch:android:keystore
     - expo build:android
+    - npm expo build:android
+
