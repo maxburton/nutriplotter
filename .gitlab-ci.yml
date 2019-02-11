@@ -21,4 +21,5 @@ build_android:
   script:
     - apk add git --no-cache
     - npm install
+    - npm install -g expo-cli
     - expo build:android
