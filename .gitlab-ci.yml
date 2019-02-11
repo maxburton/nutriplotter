@@ -23,4 +23,5 @@ build_android:
     - cd ./nutriplotterapp
     - npm install
     - npm install -g expo-cli
+    - expo login -u ${CIuser} -p ${CIpass}
     - expo build:android
