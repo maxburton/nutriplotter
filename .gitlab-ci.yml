@@ -28,8 +28,8 @@ build_android:
   script:
     - cd ./nutriplotterapp
     - npm install
-    - EXPO_USERNAME = ${CIuser}
-    - EXPO_PASSWORD = ${CIpass}
+    - EXPO_USERNAME=${CIuser}
+    - EXPO_PASSWORD=${CIpass}
     - expo login -u "${CIuser}" -p "${CIpass}"
     - expo fetch:android:keystore
     - expo build:android
