@@ -16,7 +16,7 @@ build_builder:
   image: docker
   stage: build
   script:
-    - docker build -t nutriplatter/builder:latest ./nutriplotterapp
+    - docker build -t builder:latest ./nutriplotterapp
     
 build_other:
   image: docker
@@ -25,7 +25,7 @@ build_other:
     - docker image ls
 
 build_android:
-  image: nutriplatter/builder:latest
+  image: builder:latest
   stage: build
   script:
     - npm expo build:android
