@@ -20,5 +20,5 @@ build_android:
   stage: build
   script:
     - apk add git --no-cache
-	- npm install
+    - npm install
     - npm expo build:android
