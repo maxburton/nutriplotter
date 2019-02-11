@@ -14,23 +14,11 @@ build_dissertation:
     paths:
       - "*.pdf"
 
-build_builder:
-  image: docker
-  stage: build
-  script:
-    - docker build -t builder:latest ./nutriplotterapp
-    
-build_other:
-  image: docker
-  stage: build
-  script:
-    - docker image ls
-
 
 build_android:
-  before_script:
-    - docker build -t builder:latest ./nutriplotterapp
-  image: builder:latest
+  image: node:8.15.0-alpine
   stage: build
   script:
+    - apk add git --no-cache
+	- npm install
     - npm expo build:android
