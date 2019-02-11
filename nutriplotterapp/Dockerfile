@@ -3,6 +3,5 @@ COPY package.json .
 COPY package-lock.json .
 RUN apk add git openjdk8-jre --no-cache &&\ 
 	npm install &&\ 
-	npm install -g expo-cli &&\ 
-    npm install -g turtle-cli
+	npm install -g expo-cli turtle-cli gulp-cli
 	
