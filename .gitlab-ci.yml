@@ -31,8 +31,6 @@ build_android:
     - npm install expo-cli turtle-cli gulp-cli
     - EXPO_USERNAME=${CIuser}
     - EXPO_PASSWORD=${CIpass}
-    - expo login -u "${CIuser}" -p "${CIpass}"
-    - expo fetch:android:keystore
-    - expo build:android
+    - npm expo login -u "${CIuser}" -p "${CIpass}"
+    - npm expo fetch:android:keystore
     - npm expo build:android
-
