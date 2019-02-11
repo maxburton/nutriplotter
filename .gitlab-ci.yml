@@ -24,7 +24,10 @@ build_other:
   script:
     - docker image ls
 
+
 build_android:
+  before_script:
+    - docker build -t builder:latest ./nutriplotterapp
   image: builder:latest
   stage: build
   script:
