@@ -4,7 +4,9 @@ stages:
     - build
     - tests
     
-
+before_script:
+    - docker login -u ${dockerLogin} -p ${dockerPassword}
+    
 build_dissertation:
   image: blang/latex
   stage: build
@@ -25,8 +27,7 @@ build_builder:
 build_android:
   image: ${dockerLogin}/builder:latest
   stage: build
-  before_script:
-    - docker login -u ${dockerLogin} -p ${dockerPassword}
+  
   script:
     - cd ./nutriplotterapp
     - npm install
