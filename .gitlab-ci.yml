@@ -4,9 +4,6 @@ stages:
     - build
     - tests
     
-before_script:
-    - docker login -u ${dockerLogin} -p ${dockerPassword}
-    
 build_dissertation:
   image: blang/latex
   stage: build
