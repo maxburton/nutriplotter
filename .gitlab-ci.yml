@@ -24,4 +24,5 @@ build_android:
     - npm install
     - npm install -g expo-cli
     - expo login -u "${CIuser}" -p "${CIpass}"
+    - expo fetch:android:keystore
     - expo build:android
