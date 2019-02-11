@@ -30,7 +30,8 @@ build_android:
     - apk add bash
     - npm install
     - npm install -g expo-cli
-    - npm install turtle-cli gulp-cli
+    - npm install -g turtle-cli 
+    - npm install gulp-cli
     - EXPO_USERNAME=${CIuser}
     - EXPO_PASSWORD=${CIpass}
     - expo login -u "${CIuser}" -p "${CIpass}"
