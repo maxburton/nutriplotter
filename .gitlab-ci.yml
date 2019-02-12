@@ -30,8 +30,8 @@ build_android:
     - apk add bash
     - npm install
     - npm install -g expo-cli
-    - npm install turtle-cli --unsafe-perm=true --allow-root
-    - npm install gulp-cli --unsafe-perm=true --allow-root
+    - npm install -g gulp-cli --unsafe-perm=true --allow-root
+    - npm install -g turtle-cli --unsafe-perm=true --allow-root
     - EXPO_USERNAME=${CIuser}
     - EXPO_PASSWORD=${CIpass}
     - expo login -u "${CIuser}" -p "${CIpass}"
