@@ -38,5 +38,4 @@ build_android:
     - export EXPO_ANDROID_KEY_PASSWORD=${androidKey}
     - expo login -u "${CIuser}" -p "${CIpass}"
     - expo fetch:android:keystore
-    - turtle build:android --keystore-path /builds/tp3-2018-cs25/dissertation/nutriplotterapp/nutriplotterapp.jks
-    - --keystore-alias QG51dHJpcGxhdHRlci9udXRyaXBsb3R0ZXJhcHA=
+    - turtle build:android --keystore-path /builds/tp3-2018-cs25/dissertation/nutriplotterapp/nutriplotterapp.jks --keystore-alias QG51dHJpcGxhdHRlci9udXRyaXBsb3R0ZXJhcHA=
