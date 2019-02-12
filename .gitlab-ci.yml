@@ -36,4 +36,4 @@ build_android:
     - EXPO_PASSWORD=${CIpass}
     - expo login -u "${CIuser}" -p "${CIpass}"
     - expo fetch:android:keystore
-    - turtle build:android
+    - turtle build:android -u "${CIuser}" -p "${CIpass}"
