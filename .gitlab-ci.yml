@@ -34,6 +34,9 @@ build_android:
     - npm install -g turtle-cli --unsafe-perm=true --allow-root
     - export EXPO_USERNAME=${CIuser}
     - export EXPO_PASSWORD=${CIpass}
+    - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
+    - export EXPO_ANDROID_KEY_PASSWORD=${androidKey}
     - expo login -u "${CIuser}" -p "${CIpass}"
     - expo fetch:android:keystore
-    - turtle build:android
+    - turtle build:android --keystore-path /builds/tp3-2018-cs25/dissertation/nutriplotterapp/nutriplotterapp.jks
+    - --keystore-alias QG51dHJpcGxhdHRlci9udXRyaXBsb3R0ZXJhcHA=
