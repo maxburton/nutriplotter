@@ -29,9 +29,10 @@ build_android:
     - cd ./nutriplotterapp
     - apk add bash
     - npm install
+    - sudo su
     - npm install -g expo-cli
-    - sudo npm install -g turtle-cli 
-    - sudo npm install -g gulp-cli
+    - npm install turtle-cli --unsafe-perm=true --allow-root
+    - npm install gulp-cli --unsafe-perm=true --allow-root
     - EXPO_USERNAME=${CIuser}
     - EXPO_PASSWORD=${CIpass}
     - expo login -u "${CIuser}" -p "${CIpass}"
