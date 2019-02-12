@@ -1,0 +1,248 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`plate renders 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "flex": 9,
+        "justifyContent": "space-around",
+      }
+    }
+  >
+    <ARTSurfaceView
+      style={
+        Array [
+          undefined,
+          Object {
+            "height": 200,
+            "width": 200,
+          },
+        ]
+      }
+    >
+      <ARTGroup
+        opacity={1}
+        transform={
+          Array [
+            6.123233995736766e-17,
+            -1,
+            1,
+            6.123233995736766e-17,
+            0,
+            200,
+          ]
+        }
+      >
+        <ARTShape
+          d={
+            Array [
+              0,
+              150,
+              100,
+              4,
+              100,
+              100,
+              50,
+              0,
+              360,
+              1,
+            ]
+          }
+          fill={null}
+          opacity={1}
+          stroke={
+            Array [
+              1,
+              1,
+              1,
+              1,
+            ]
+          }
+          strokeCap={1}
+          strokeDash={null}
+          strokeJoin={1}
+          strokeWidth={100}
+          transform={
+            Array [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+            ]
+          }
+        />
+        <ARTShape
+          d={
+            Array [
+              0,
+              150,
+              100,
+              4,
+              100,
+              100,
+              50,
+              0,
+              6.283185307179586,
+              1,
+            ]
+          }
+          fill={null}
+          opacity={1}
+          stroke={
+            Array [
+              1,
+              1,
+              1,
+              1,
+            ]
+          }
+          strokeCap={1}
+          strokeDash={null}
+          strokeJoin={1}
+          strokeWidth={100}
+          transform={
+            Array [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+            ]
+          }
+        />
+        <ARTShape
+          d={
+            Array [
+              0,
+              150,
+              100,
+              4,
+              100,
+              100,
+              50,
+              0,
+              3.518583772020569,
+              1,
+            ]
+          }
+          fill={null}
+          opacity={1}
+          stroke={
+            Array [
+              1,
+              1,
+              0,
+              1,
+            ]
+          }
+          strokeCap={0}
+          strokeDash={null}
+          strokeJoin={1}
+          strokeWidth={100}
+          transform={
+            Array [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+            ]
+          }
+        />
+        <ARTShape
+          d={
+            Array [
+              0,
+              53.51117570558744,
+              81.59377236576609,
+              4,
+              100,
+              100,
+              50,
+              3.518583772020569,
+              4.209734155810323,
+              1,
+            ]
+          }
+          fill={null}
+          opacity={1}
+          stroke={
+            Array [
+              0,
+              0.5019607843137255,
+              0,
+              1,
+            ]
+          }
+          strokeCap={0}
+          strokeDash={null}
+          strokeJoin={1}
+          strokeWidth={100}
+          transform={
+            Array [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+            ]
+          }
+        />
+        <ARTShape
+          d={
+            Array [
+              0,
+              75.91231629491423,
+              56.18466599780682,
+              4,
+              100,
+              100,
+              50,
+              4.209734155810323,
+              9.047786842338605,
+              1,
+            ]
+          }
+          fill={null}
+          opacity={1}
+          stroke={
+            Array [
+              1,
+              0.6470588235294118,
+              0,
+              1,
+            ]
+          }
+          strokeCap={0}
+          strokeDash={null}
+          strokeJoin={1}
+          strokeWidth={100}
+          transform={
+            Array [
+              1,
+              0,
+              0,
+              1,
+              0,
+              0,
+            ]
+          }
+        />
+      </ARTGroup>
+    </ARTSurfaceView>
+  </View>
+</View>
+`;
