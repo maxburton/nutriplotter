@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import { TouchableOpacity } from "react-native";
 import Timeline from "react-native-timeline-listview";
 import { createStackNavigator, createAppContainer } from "react-navigation";
+import firebase from "../components/Firebase.js";
 
 import {
   Keyboard,
@@ -18,10 +19,9 @@ import {
   Image
 } from "react-native";
 import * as Expo from "expo";
-import * as firebase from "firebase";
 
 // Initialize Firebase
-const firebaseConfig = {
+/*const firebaseConfig = {
   apiKey: "AIzaSyDDEJNntQAHQO4K09I2lBaCTVYlq1i6eDo",
   authDomain: "nutriplotter.firebaseapp.com",
   databaseURL: "https://nutriplotter.firebaseio.com",
@@ -30,6 +30,7 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
+*/
 
 const id = "2301384936810927";
 

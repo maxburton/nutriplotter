@@ -9,6 +9,7 @@ import {
 import { AppLoading, Asset, Font, Icon, SQLite } from "expo";
 import AppNavigator from "./navigation/AppNavigator";
 import popDB from "./populateDatabase";
+import firebase from "./components/Firebase.js";
 
 const db = SQLite.openDatabase("db.db");
 //const isFirstLaunch = SQLite.openDatabase('ifl.db');
@@ -18,15 +19,53 @@ export default class App extends React.Component {
     isLoadingComplete: false
   };
 
+  submitToDB = async (
+    name,
+    calories,
+    carbs,
+    fats,
+    protein,
+    sugar,
+    satfat,
+    fibre,
+    omega3,
+    group,
+    calcium,
+    vitA,
+    vitB1,
+    vitB9,
+    vitC
+  ) => {
+    firebase
+      .database()
+      .ref("foods/" + name)
+      .set({
+        calories: calories,
+        carbs: carbs,
+        fats: fats,
+        protein: protein,
+        sugar: sugar,
+        satfat: satfat,
+        fibre: fibre,
+        omega3: omega3,
+        group: group,
+        calcium: calcium,
+        vitA: vitA,
+        vitB1: vitB1,
+        vitB9: vitB9,
+        vitC: vitC
+      });
+  };
   componentDidMount() {
-	//Disables warning messages: TRUE FOR DEMOS
-	console.disableYellowBox = true;
-	global.isLoggedIn = false;
+    //Disables warning messages: TRUE FOR DEMOS
+    console.disableYellowBox = true;
+    global.isLoggedIn = false;
     var isFirstLaunch = "1";
     _retrieveData = async () => {
       try {
         const value = await AsyncStorage.getItem("isFirstLaunch");
         if (value !== null) {
+          console.log("gggggggggggg");
           isFirstLaunch = value;
           console.log(value);
           console.log(isFirstLaunch);
