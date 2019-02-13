@@ -30,14 +30,15 @@ export default class FoodStatsScreen extends Component{
   };
 
 
-  var dbQuery = "select name, amount from plate";;
-  var promise = new Promise(function (resolve, reject) {
-    db.transaction(function (transaction) {
-      transaction.executeSql(dbQuery, [], function (transaction, result) {
-        resolve(JSON.stringify(result)); // here the returned Promise is resolved
-      }, nullHandler, errorHandler);
+  calcResults = () => {
+    var dbQuery = "select name, amount from plate;";
+    var promise = new Promise(function (resolve, reject) {
+      db.transaction(function (transaction) {
+        transaction.executeSql(dbQuery, [], function (transaction, result) {
+          resolve(JSON.stringify(result)); // here the returned Promise is resolved
+        }, nullHandler, errorHandler);
+      });
     });
-  });
 
   function nullHandler(result){
     console.log("Null Log : " + JSON.stringify(result));
@@ -59,22 +60,18 @@ export default class FoodStatsScreen extends Component{
       if(temp > 880 || temp < 720) {
         points = points - (800 - temp)**2;
       }
-
-
-
-
-
-
     }
+
   });
+}
 
   render(
     return (
       <View>
         <Text> points </Text>
       </View>
-    )
-  )
+    );
+  );
 
 
 }

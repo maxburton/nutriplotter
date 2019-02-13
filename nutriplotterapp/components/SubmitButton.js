@@ -19,6 +19,15 @@ class SubmitButton extends Component {
       });
     });
 
+
+    function nullHandler(result){
+      console.log("Null Log : " + JSON.stringify(result));
+    }
+
+    function errorHandler(error){
+      console.log("Error Log : " + error);
+    }
+
     promise.then((results) => {
       var dbOut = JSON.parse(results);
       var length = dbOut.rows.length;
@@ -32,13 +41,6 @@ class SubmitButton extends Component {
   };
 
 
-  function nullHandler(result){
-    console.log("Null Log : " + JSON.stringify(result));
-  }
-
-  function errorHandler(error){
-    console.log("Error Log : " + error);
-  }
 
   render() {
     return (
