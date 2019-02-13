@@ -1,6 +1,7 @@
 import React from 'react';
 import List from '../components/FoodList.js'
 import Plate from '../components/Plate.js'
+import SubmitButton from '../components/SubmitButton.js'
 import {
   Image,
   Platform,
@@ -24,7 +25,7 @@ export default class HomeScreen extends React.Component {
     //header: null,
 	title: 'Build A Plate',
   };
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -42,29 +43,31 @@ export default class HomeScreen extends React.Component {
     //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
     return (
       <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
-	    <View style={styles.list}>
-		<TouchableOpacity style={styles.list} onPress={() => this.props.navigation.navigate('EditFoodScreen')}>
-			<Plate style={styles.list}/>
-		</TouchableOpacity>
-		</View>
-	    <Text style={styles.title}>Enter a food:</Text> 
-		<View style={styles.list}>
-			<List style={styles.list}/>
-		</View>
+	     <View style={styles.list}>
+		     <TouchableOpacity style={styles.list} onPress={() => this.props.navigation.navigate('EditFoodScreen')}>
+			     <Plate style={styles.list}/>
+		     </TouchableOpacity>
+            //object for submitting
+            <SubmitButton style={styles.list}/>
+        </View>
+	      <Text style={styles.title}>Enter a food:</Text>
+		    <View style={styles.list}>
+			     <List style={styles.list}/>
+		    </View>
       </KeyboardAvoidingView>
 	  );
   };//
-  
 
-  
-  
-  
+
+
+
+
 	/*
 	<TouchableOpacity onPress={this.onPress}>
 	  <Text style={styles.buttonText}>Add Food</Text>
 	</TouchableOpacity>
 	*/
-  
+
 };
 
 /*const offset = 24;
@@ -84,5 +87,5 @@ const styles = StyleSheet.create({
     marginLeft: offset,
     fontSize: offset,
   },
-  
+
 });*/
