@@ -52,6 +52,7 @@ export default class HomeScreen extends React.Component {
   //state = { }
   render() {
     const styles = getStyleSheet(this.state.darkTheme);
+    const { navigate } = this.props.navigation;
     //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
     return (
       <KeyboardAvoidingView
@@ -62,7 +63,7 @@ export default class HomeScreen extends React.Component {
         <View style={styles.list}>
           <TouchableOpacity
             style={styles.list}
-            onPress={() => this.props.navigate("EditFoodScreen")}
+            onPress={() => navigate("EditFoodScreen")}
           >
             <Plate style={styles.list} />
           </TouchableOpacity>

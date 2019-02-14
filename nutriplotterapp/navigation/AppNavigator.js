@@ -9,6 +9,7 @@ import LinksScreen from "../screens/LinksScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import LoginScreen from "../screens/LoginScreen";
 import EditFoodScreen from "../screens/EditFoodScreen";
+import LeaderboardScreen from "../screens/LeaderboardScreen";
 
 const plateNav = createStackNavigator({
   HomeScreen: {
@@ -16,12 +17,15 @@ const plateNav = createStackNavigator({
   },
   EditFoodScreen: {
     screen: EditFoodScreen
-  },
+  }
 });
 
 const loginNav = createStackNavigator({
   LoginScreen: {
-	screen: LoginScreen
+    screen: LoginScreen
+  },
+  LeaderboardScreen: {
+    screen: LeaderboardScreen
   }
 });
 
@@ -30,5 +34,5 @@ export default createSwitchNavigator({
   // Read more at https://reactnavigation.org/docs/en/auth-flow.html
   Main: MainTabNavigator,
   HomeScreen: plateNav,
-  LoginScreen: loginNav,
+  LoginScreen: loginNav
 });

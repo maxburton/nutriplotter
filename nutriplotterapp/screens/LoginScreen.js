@@ -1,6 +1,7 @@
 import { ExpoConfigView } from "@expo/samples";
 import React, { Component } from "react";
 import { TouchableOpacity } from "react-native";
+import { SocialIcon } from "react-native-elements";
 import Timeline from "react-native-timeline-listview";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from "../components/Firebase.js";
@@ -117,13 +118,17 @@ export default class LoginScreen extends Component {
           <View style={styles.body}>
             <Text style={styles.name}>{userinfo["name"]}</Text>
             <Text style={styles.info}>Glasgow, Scotland</Text>
-
-            <TouchableOpacity style={styles.buttonContainer}>
-              <Text>My Stats</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.buttonContainer}>
-              <Text>Leaderboards</Text>
-            </TouchableOpacity>
+            <View style={styles.bodyContent}>
+              <TouchableOpacity style={styles.buttonContainer}>
+                <Text>My Stats</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.buttonContainer}
+                onPress={() => navigate("LeaderboardScreen")}
+              >
+                <Text>Leaderboards</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       );
@@ -135,29 +140,12 @@ export default class LoginScreen extends Component {
             <View style={styles.loginScreenContainer}>
               <View style={styles.loginFormView}>
                 <Text style={styles.logoText}>NutriPlotter</Text>
-                <TextInput
-                  placeholder="Username"
-                  placeholderColor="#c4c3cb"
-                  style={styles.loginFormTextInput}
-                />
-                <TextInput
-                  placeholder="Password"
-                  placeholderColor="#c4c3cb"
-                  style={styles.loginFormTextInput}
-                  secureTextEntry={true}
-                />
-                <Button
-                  style={styles.loginButton}
-                  onPress={() =>
-                    this.props.navigation.navigate("ProfileScreen")
-                  }
-                  title="Login"
-                />
-                <Button
-                  style={styles.fbLoginButton}
-                  onPress={() => this.login()}
+
+                <SocialIcon
                   title="Login with Facebook"
-                  color="#3897f1"
+                  button
+                  type="facebook"
+                  onPress={() => this.login()}
                 />
               </View>
             </View>
@@ -212,11 +200,7 @@ const styles = StyleSheet.create({
     height: 45,
     marginTop: 10
   },
-  fbLoginButton: {
-    height: 45,
-    marginTop: 10,
-    backgroundColor: "transparent"
-  },
+  fbLoginButton: {},
   header: {
     backgroundColor: "#00BFFF",
     height: 200
@@ -252,10 +236,10 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   body: {
-    marginTop: 40
+    marginTop: 40,
+    justifyContent: "center"
   },
   bodyContent: {
-    marginTop: 40,
     flex: 1,
     textAlign: "center",
     alignItems: "center",
@@ -285,8 +269,8 @@ const styles = StyleSheet.create({
     height: 45,
     flexDirection: "row",
     justifyContent: "center",
-    textAlign: "center",
     alignItems: "center",
+    textAlign: "center",
     marginBottom: 20,
     width: 250,
     borderRadius: 30,

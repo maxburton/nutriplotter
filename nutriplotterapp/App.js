@@ -56,6 +56,7 @@ export default class App extends React.Component {
         vitC: vitC
       });
   };
+
   componentDidMount() {
     //Disables warning messages: TRUE FOR DEMOS
     console.disableYellowBox = true;
@@ -65,7 +66,7 @@ export default class App extends React.Component {
       try {
         const value = await AsyncStorage.getItem("isFirstLaunch");
         if (value !== null) {
-          console.log("gggggggggggg");
+          
           isFirstLaunch = value;
           console.log(value);
           console.log(isFirstLaunch);
