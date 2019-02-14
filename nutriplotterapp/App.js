@@ -66,7 +66,6 @@ export default class App extends React.Component {
       try {
         const value = await AsyncStorage.getItem("isFirstLaunch");
         if (value !== null) {
-          
           isFirstLaunch = value;
           console.log(value);
           console.log(isFirstLaunch);
