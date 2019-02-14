@@ -1,5 +1,8 @@
 import * as React from "react";
 import { Constants, WebBrowser } from "expo";
+import firebase from "../components/Firebase.js";
+import Leaderboard from "react-native-leaderboard";
+
 import {
   Linking,
   Text,
@@ -14,10 +17,10 @@ import getStyleSheet from "../themes/style";
 
 export default class LeaderboardScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "How to Play",
+    title: "Leaderboards",
     headerLeft: (
       <Button
-        title="My Profile"
+        title="Back"
         onPress={() => {
           navigation.navigate("Login");
         }}
@@ -30,41 +33,46 @@ export default class LeaderboardScreen extends React.Component {
     this.state = {
       darkTheme: false
     };
+
     this.toggleTheme = this.toggleTheme.bind(this);
   }
-  toggleTheme() {
-    this.setState({ darkTheme: !this.state.darkTheme });
+
+  componentDidMount() {
+    this.readUserData();
   }
+
+  readUserData = async () => {
+    firebase
+      .database()
+      .ref("scores/")
+      .on("value", function(snapshot) {
+        var returnArr = [];
+        global.data = [];
+        global.orgDict = {};
+
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+          item.key = childSnapshot.key;
+
+          returnArr.push(item);
+        });
+
+        console.log(returnArr);
+        for (var i = 0; i < returnArr.length; i++) {
+          data.push({
+            userName: returnArr[i]["key"],
+            highScore: returnArr[i]["userscore"]
+          });
+          orgDict[returnArr[i]["key"]] = returnArr[i]["userscore"];
+        }
+        //organised
+        console.log(data);
+        //this.setState({ data: data });
+      });
+  };
 
   render() {
     const styles = getStyleSheet(this.state.darkTheme);
-    return (
-      <ScrollView>
-        <Text style={styles.defaultText}>
-          The aim of the game is to build a balanced meal. The plus button
-          allows you to look for foods to add and touching the plate allows you
-          to edit amounts or remove foods from the plate.
-        </Text>
-
-        <Text style={styles.defaultText}>
-          When you have finished your meal press the tick button to submit and
-          see how you have done.
-        </Text>
-
-        <Text style={styles.defaultText}>
-          If you are struggling read up on balanced diets here:
-        </Text>
-
-        <TouchableOpacity onPress={this._handleOpenWithWebBrowser}>
-          <Text style={styles.buttonText}>Balanced Meal Reading</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    );
+    return <View />;
   }
-
-  _handleOpenWithWebBrowser = () => {
-    WebBrowser.openBrowserAsync(
-      "https://www.choosemyplate.gov/ten-tips-build-healthy-meal"
-    );
-  };
 }
