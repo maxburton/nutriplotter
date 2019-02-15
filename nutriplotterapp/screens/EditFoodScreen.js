@@ -42,7 +42,7 @@ class FlatListItem extends Component{
 export default class EditFoodScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Edit Food',
-	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home')}} />,
+	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
 
   });
   
@@ -112,13 +112,15 @@ export default class EditFoodScreen extends Component {
    }
   
   render() {
-	  
+	  const {navigation}  = this.props;
+		this.plate = navigation.getParam('plate', null);
+
     this.load();
-	if(!this.state.promiseIsResolved){
-		return null
+		if(!this.state.promiseIsResolved){
+			return null
 		}
   
-	return (
+		return (
 		  <View style={styles.bigContainer}>
 			<View style = {styles.scrollContainer}>
 			<FlatList
@@ -136,7 +138,7 @@ export default class EditFoodScreen extends Component {
 				<Text style={styles.clearButton}>Clear Plate</Text>
 			</TouchableOpacity>
 		  </View>
-	);
+		);
 	
 	
   }
@@ -153,14 +155,14 @@ const styles = StyleSheet.create ({
 	 justifyContent: 'flex-start',
   },
   clearButton:{
-	textAlign: 'center',
-	fontSize: 18,
-	color: 'red',
-	justifyContent: 'flex-end',
-	marginBottom: 30,
-	marginTop: 30,
-   },
-   imageView: {
+		textAlign: 'center',
+		fontSize: 18,
+		color: 'red',
+		justifyContent: 'flex-end',
+		marginBottom: 30,
+		marginTop: 30,
+  },
+  imageView: {
 	  flex: 1,
   },
   buttonView: {
@@ -170,12 +172,12 @@ const styles = StyleSheet.create ({
 	  flex: 1,
   },
   itemStyle: {
-	flex: 1,  
-	flexDirection: 'row',
-	padding: 8,
+		flex: 1,  
+		flexDirection: 'row',
+		padding: 8,
     marginTop: 3,
     alignItems: 'flex-start',
-	backgroundColor: '#c1c1c1',
+		backgroundColor: '#c1c1c1',
   },
   image: {
 	  width: 30,
@@ -196,4 +198,4 @@ const styles = StyleSheet.create ({
 	  color: 'white',
 	  fontSize: 24,
   }
-})
+});

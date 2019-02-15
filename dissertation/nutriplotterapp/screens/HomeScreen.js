@@ -1,9 +1,6 @@
-import React from "react";
-import List from "../components/FoodList.js";
-import Plate from "../components/Plate.js";
-import firebase from "../components/Firebase.js";
-
-//Initliase firebase database
+import React from 'react';
+import List from '../components/FoodList.js'
+import Plate from '../components/Plate.js'
 import {
   Image,
   Platform,
@@ -29,7 +26,7 @@ export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'Play with Your Food',
   };
-
+  
   constructor(props) {
     // Window is the draw space available for the app (does not include Android notification bar)
     //this.state.window = {
@@ -49,18 +46,10 @@ export default class HomeScreen extends React.Component {
     this.plate = new Plate({styles: getStyleSheet(this.state.darkTheme)});
   }
 
-  submitToDB = async (name, score) => {
-    firebase
-      .database()
-      .ref("scores/" + name)
-      .set({
-        userscore: score
-      });
-  };
 
   toggleTheme() {
-    this.setState({ darkTheme: !this.state.darkTheme });
-  }
+    this.setState({darkTheme: !this.state.darkTheme})
+  };
 
   //state = { }
   render() {
