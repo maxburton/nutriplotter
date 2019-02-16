@@ -30,11 +30,7 @@ export default class LeaderboardScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      darkTheme: false
-    };
-
-    this.toggleTheme = this.toggleTheme.bind(this);
+    this.state = { promiseIsResolved: false };
   }
 
   componentDidMount() {
@@ -42,6 +38,7 @@ export default class LeaderboardScreen extends React.Component {
   }
 
   readUserData = async () => {
+    self = this;
     firebase
       .database()
       .ref("scores/")
@@ -65,14 +62,26 @@ export default class LeaderboardScreen extends React.Component {
           });
           orgDict[returnArr[i]["key"]] = returnArr[i]["userscore"];
         }
+
+        self.setState({ promiseIsResolved: true });
+
         //organised
-        console.log(data);
+        //console.log(data);
         //this.setState({ data: data });
       });
   };
 
   render() {
-    const styles = getStyleSheet(this.state.darkTheme);
-    return <View />;
+    if (!this.state.promiseIsResolved) {
+      return (
+        <View>
+          <Text>waiting on leaderboards..</Text>
+        </View>
+      );
+    } else {
+      return (
+        <Leaderboard data={global.data} sortBy="highScore" labelBy="userName" />
+      );
+    }
   }
 }
