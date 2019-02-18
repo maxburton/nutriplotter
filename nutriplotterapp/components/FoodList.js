@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { Text, Image, TouchableOpacity, StyleSheet, View, TextInput, FlatList } from 'react-native'
-import { WebBrowser, SQLite } from 'expo';
+import { WebBrowser } from 'expo';
 import { ListItem } from 'react-native-elements';
 
-const db = SQLite.openDatabase('db.db');
+var Datastore = require('react-native-local-mongodb'), 
+db = new Datastore({ filename: 'asyncStorageKey', autoload: true });
 
 class FlatListItem extends Component{
 	render(){
@@ -28,23 +29,18 @@ class FlatListItem extends Component{
 	}
 	
 	alertItemName = (item) => {
-	    var dbQuery = 'select name, calories, carbs, fats, protein from foods where name="' + item.name.toLowerCase() + '";';
 		//alert(item.name);
-		var promise = new Promise(function (resolve, reject) {
-			db.transaction(function (transaction) {
-				transaction.executeSql(dbQuery, [], function (transaction, result) {
-					resolve(JSON.stringify(result)); // here the returned Promise is resolved
-				}, nullHandler, errorHandler);
-			});
-		});
-		
-		function nullHandler(result){
-			console.log("Null Log : " + JSON.stringify(result));
-		}
-
-		function errorHandler(error){
-			console.log("Error Log : " + error);
-		}
+		var myPromise = () => {
+			return new Promise((resolve, reject) => {
+            db
+             .find({})
+             .toArray(function(err, data) {
+                 err 
+                    ? reject(err) 
+                    : resolve(data);
+               });
+         });
+       };
 		
 		function capitalizeFirstLetter(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
@@ -104,28 +100,36 @@ class List extends Component {
       )
    }
    
-       search = searchString => {
-		var dbQuery = 'select name from foods;';
-		var promise = new Promise(function (resolve, reject) {
-			db.transaction(function (transaction) {
-				transaction.executeSql(dbQuery, [], function (transaction, result) {
-					resolve(JSON.stringify(result)); // here the returned Promise is resolved
-				}, nullHandler, errorHandler);
-			});
+     search = searchString => {
+		 var stringToGoIntoTheRegex = searchString;
+		 var regex = new RegExp(stringToGoIntoTheRegex, "g");
+		 db.insert({ name: "haggis", calories: 100, carbs: 200, fats: 300 }, function (err, newDocs) {
+        // Two documents were inserted in the database
+    }); 
+	   
+	   	var promise = new Promise(function (resolve, reject) {
+		db.find({ name: "haggis" }, function (err, docs) {
+				resolve(docs); // here the returned Promise is resolved
+			}, nullHandler, errorHandler);
 		});
-		
-		function nullHandler(result){
-			console.log("Null Log : " + JSON.stringify(result));
-		}
+	
+	function nullHandler(result){
+		console.log("Null Log : " + result);
+	}
 
-		function errorHandler(error){
-			console.log("Error Log : " + error);
-		}
-		
-		function capitalizeFirstLetter(string) {
-			return string.charAt(0).toUpperCase() + string.slice(1);
-		}
-	  
+	function errorHandler(error){
+		console.log("Error Log : " + error);
+	}
+	
+	function capitalizeFirstLetter(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+  
+	promise.then((results) => {
+		console.log(results);		
+	})
+	
+	  /*
 		promise.then((results) => {
 		    var dbOut = JSON.parse(results);
 			var foods = [];
@@ -154,6 +158,7 @@ class List extends Component {
 				})
 			}
 	  });
+	  */
   }
 
 
