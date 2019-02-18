@@ -9,7 +9,6 @@ import LinksScreen from "../screens/LinksScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import LoginScreen from "../screens/LoginScreen";
 import EditFoodScreen from "../screens/EditFoodScreen";
-import FoodStatsScreen from "../screens/FoodStatsScreen";
 
 const plateNav = createStackNavigator({
   HomeScreen: {
