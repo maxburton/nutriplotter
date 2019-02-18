@@ -88,7 +88,6 @@ export default class HomeScreen extends React.Component {
   render() {
     //const styles = getStyleSheet(this.state.darkTheme);
     //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
-    const {width, height} = require('Dimensions').get('window');
     return (
 
         <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
@@ -97,6 +96,7 @@ export default class HomeScreen extends React.Component {
               <Plate style={styles.list}/>
             </TouchableOpacity>
           </View>
+
           <Text style={styles.title}>Enter a food:</Text>
           <View style={styles.list}>
             <List style={styles.list}/>
@@ -109,16 +109,18 @@ export default class HomeScreen extends React.Component {
           </View>
 
 
-
+            {/**view start**/}
             <Modal
               isVisible={this.state.isModalVisible}
               onBackdropPress={() => this.setState({ isModalVisible: false })}
               stlye = {styles.model}
               >
+              {/**Model Block**/}
               <View style ={styles.modelContainer}>
 
-                <View style={{flex: 2, flexDirection: 'row', width: width, justifyContent:'space-between'}}>
 
+                <View style={{flex: 2, flexDirection: 'row', width: width, justifyContent:'space-between'}}>
+                  {/**Nutrition names Column**/}
                   <View style={ styles.modelColumn }>
                     <View style={styles.childStyle}>
                       <Text> Calories </Text>
@@ -128,9 +130,10 @@ export default class HomeScreen extends React.Component {
                     </View>
                   </View>
 
-                  <View style={{flex: 1, width: 1, height: 550, backgroundColor: 'black'}}>
-                  </View>
+                  {/**middle Line**/}
+                  <View style={{ width: 1, height: 350, backgroundColor: 'black' }}/>
 
+                  {/**Nutritional values column**/}
                   <View style={ styles.modelColumn }>
                     <View style={styles.childStyle}>
                       <Text> 2000 </Text>
@@ -153,9 +156,8 @@ export default class HomeScreen extends React.Component {
 
 
 
-
-
 const offset = 24;
+const {width, height} = require('Dimensions').get('window');
 const styles = StyleSheet.create({
   container: {
     flex:1,
@@ -173,19 +175,17 @@ const styles = StyleSheet.create({
     fontSize: offset,
   },
   model: {
-    backgroundColor: "orange",
-    margin: 0,
+
   },
   childStyle: {
       fontSize: 72,
       color: 'red',
   },
   modelContainer: {
-    borderColor: "orange",
     justifyContent: 'center',
     alignItems: 'center',
-    height: 550,
-    backgroundColor: 'powderblue',
+    height: height-(offset*3),
+    backgroundColor: 'white',
   },
   modelColumn: {
     flex: 5,
