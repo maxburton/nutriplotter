@@ -36,12 +36,39 @@ export default class HomeScreen extends React.Component {
     this.toggleTheme = this.toggleTheme.bind(this);
   }
 
-  submitToDB = async (name, score) => {
+  // ************* NEEDS A 'SUBMIT' BUTTON TO WORK, CURRENTLY NOT ONE *************
+  updateScore = async (name, score) => {
+    //get scores as dict
+    firebase
+      .database()
+      .ref("scores/")
+      .on("value", function(snapshot) {
+        var returnArr = [];
+        global.orgDict = {};
+        currentscore = 0;
+
+        snapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+          item.key = childSnapshot.key;
+
+          returnArr.push(item);
+        });
+
+        for (var i = 0; i < returnArr.length; i++) {
+          orgDict[returnArr[i]["key"]] = returnArr[i]["userscore"];
+        }
+      });
+
+    //get currentscore and add this score
+    currentscore = orgDict[name];
+    newscore = currentscore + score;
+
+    //update userscore in db
     firebase
       .database()
       .ref("scores/" + name)
-      .set({
-        userscore: score
+      .update({
+        userscore: newscore
       });
   };
 

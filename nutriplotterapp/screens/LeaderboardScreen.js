@@ -1,23 +1,12 @@
 import * as React from "react";
-import { Constants, WebBrowser } from "expo";
 import firebase from "../components/Firebase.js";
 import Leaderboard from "react-native-leaderboard";
 
-import {
-  Linking,
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  Button
-} from "react-native";
-import { MonoText } from "../components/StyledText";
-import getStyleSheet from "../themes/style";
+import { Linking, Text, View, Button, StyleSheet } from "react-native";
 
 export default class LeaderboardScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
-    title: "Leaderboards",
+    title: "Global Leaderboard",
     headerLeft: (
       <Button
         title="Back"
@@ -64,10 +53,6 @@ export default class LeaderboardScreen extends React.Component {
         }
 
         self.setState({ promiseIsResolved: true });
-
-        //organised
-        //console.log(data);
-        //this.setState({ data: data });
       });
   };
 

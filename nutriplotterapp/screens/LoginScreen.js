@@ -40,8 +40,7 @@ const { LoginManager, AccessToken } = FBSDK;
 
 export default class LoginScreen extends Component {
   static navigationOptions = () => ({
-    title: "My Profile",
-    headerRight: <Button title="Logout" onPress={() => this.logout()} />
+    title: "My Profile"
   });
 
   constructor() {
@@ -80,13 +79,21 @@ export default class LoginScreen extends Component {
       const name = userinfo["name"];
       const userpic = userinfo["picture"]["data"]["url"];
 
-      //write user data to firebase
+      //write user data to firebase users
       firebase
         .database()
         .ref("users/" + id)
         .set({
           username: name,
           profile_picture: userpic
+        });
+
+      //write user name and initial score of 0 to firebase score
+      firebase
+        .database()
+        .ref("scores/" + name)
+        .set({
+          userscore: 0
         });
 
       //redirect to profile screen
@@ -100,19 +107,20 @@ export default class LoginScreen extends Component {
     }
   };
 
-  logout = () => {
+  //function to logout
+  logout = (async = () => {
     global.isLoggedIn = false;
-    console.log("NEW CALL", global.isLoggedIn);
     this.forceUpdate();
-  };
+  });
 
   render() {
     if (global.isLoggedIn) {
       const url = userinfo["picture"]["data"]["url"];
       const { navigate } = this.props.navigation;
 
+      //profile screen
       return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <View style={styles.header} />
           <Image style={styles.avatar} source={{ uri: url }} />
           <View style={styles.body}>
@@ -128,12 +136,20 @@ export default class LoginScreen extends Component {
               >
                 <Text>Leaderboards</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.logout}
+                onPress={() => this.logout()}
+              >
+                <Text>Logout</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </ScrollView>
       );
     } else {
       const { navigate } = this.props.navigation;
+
+      //login screen
       return (
         <KeyboardAvoidingView style={styles.containerView} behavior="padding">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -164,6 +180,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignSelf: "center",
     backgroundColor: "#00d0ff"
+  },
+  logout: {
+    marginTop: 30
   },
   containerView: {
     flex: 1
