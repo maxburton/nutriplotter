@@ -12,7 +12,7 @@ import popDB from "./populateDatabase";
 import firebase from "./components/Firebase.js";
 
 var Datastore = require('react-native-local-mongodb'), 
-db = new Datastore({ filename: 'asyncStorageKey', autoload: true });
+db = new Datastore({ filename: 'foods', autoload: true });
 
 export default class App extends React.Component {
   state = {
@@ -88,10 +88,10 @@ export default class App extends React.Component {
     });
 	*/
 	
-	db.insert([{ name: "haggis", calories: 100, carbs: 200, fats: 300 }, { name: "Neeps", calories: 111, carbs: 222, fats: 333 }, { name: "Tatties", calories: 101, carbs: 202, fats: 303 }], function (err, newDocs) {
+	db.insert([{ _id: "haggis", calories: 100, carbs: 200, fats: 300 }, { _id: "neeps", calories: 111, carbs: 222, fats: 333 }, { _id: "tatties", calories: 101, carbs: 202, fats: 303 }], function (err, newDocs) {
         // Two documents were inserted in the database
     }); 
-
+	
     _storeData = async () => {
       try {
         await AsyncStorage.setItem("isFirstLaunch", "0");

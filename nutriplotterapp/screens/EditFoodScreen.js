@@ -10,10 +10,11 @@ import {
   FlatList,
   Image,
 } from 'react-native';
-import { WebBrowser, SQLite } from 'expo';
+import { WebBrowser } from 'expo';
 import IconMI from 'react-native-vector-icons/MaterialIcons'
 
-const db = SQLite.openDatabase('db.db');
+var Datastore = require('react-native-local-mongodb'), 
+platedb = new Datastore({ filename: 'plate', autoload: true });
 
 class FlatListItem extends Component{
 	render(){
@@ -27,15 +28,16 @@ class FlatListItem extends Component{
 
 				<Text style={styles.buttonView}>{this.props.item.name}</Text>
 
-				<TouchableOpacity style={styles.deleteView} onPress = {() => this.deleteItem(this.props.index)}>
+				<TouchableOpacity style={styles.deleteView} onPress = {() => this.deleteItem(this.props.item.name)}>
 					<Text style={styles.deleteText}><IconMI name="delete-forever" size={28}/></Text>
 				</TouchableOpacity>
 			</View>
 		);
 	}
 	
-	deleteItem(){
-		alert("Deleted");
+	deleteItem(foodName){
+		EditFoodScreen.deleteItem(foodName);
+		EditFoodScreen.setState({promiseIsResolved: true});
 	}
 }
 
@@ -43,53 +45,50 @@ export default class EditFoodScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Edit Food',
 	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
-
   });
   
-  load(){
-	var dbQuery = 'select name, amount from plate;';
-	var promise = new Promise(function (resolve, reject) {
-		db.transaction(function (transaction) {
-			transaction.executeSql(dbQuery, [], function (transaction, result) {
-				resolve(JSON.stringify(result)); // here the returned Promise is resolved
-			}, nullHandler, errorHandler);
+    state = { 
+		empty:'Your plate is empty! Add some by searching on the plate screen.',
+		promiseIsResolved:false,
+		foods:[],
+	}
+	
+	static deleteItem = (foodName) => {
+		platedb.remove({_id: foodName.toLowerCase()}, function (err, numRemoved) {
+			updateFoodsState();
 		});
-	});
-	
-	function nullHandler(result){
-		console.log("Null Log : " + JSON.stringify(result));
-	}
-
-	function errorHandler(error){
-		console.log("Error Log : " + error);
 	}
 	
-	function capitalizeFirstLetter(string) {
-		return string.charAt(0).toUpperCase() + string.slice(1);
-	}
   
-	promise.then((results) => {
-		this.setState({promiseIsResolved: true});
-		var dbOut = JSON.parse(results);
-		var length = dbOut.rows.length;
-		var allFoods = [];
-		for (i = 0; i < length; i++) { 
-		  allFoods.push({"name":capitalizeFirstLetter(dbOut.rows._array[i].name)});
-		} 
-		this.setState({foods: JSON.stringify(allFoods)})
-		if(length == 0){
-			//alert("Your plate is empty! Add some by searching below.");
-		}else{
-			//alert(allFoods);
-		}			
-	})
-  }
+	componentDidMount() {
+		setPromiseToResolved = () => {
+			this.setState({promiseIsResolved: true})
+		}
+
+		setFoodsState = (allFoods) => {
+			this.setState({foods: allFoods})
+		}
+		
+		platedb.find({}, function (err, docs) {
+			console.log("Current items on Plate: ");
+			console.log(docs);
+			setPromiseToResolved();
+			var length = docs.length;
+			console.log(length);
+			var allFoods = [];
+			for (i = 0; i < length; i++) {
+				allFoods.push({"name":capitalizeFirstLetter(docs[i]._id)});
+			}
+			setFoodsState(allFoods);
+		});
+		
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+		
+	}
 	
-  state = { 
-	empty:'Your plate is empty! Add some by searching on the plate screen.',
-	promiseIsResolved:false,
-	foods:'[]',
-  }
+
   
   onClearClick = () => {
 	   Alert.alert(
@@ -98,24 +97,23 @@ export default class EditFoodScreen extends Component {
 		  [
 			{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
 			{text: 'OK', onPress: () => {
-			db.transaction(tx => {
-				tx.executeSql('delete from plate;');
+			platedb.remove({}, { multi: true }, function (err, numRemoved) {
+				deletePlate();
 			});
-			this.setState({foods:'[]'});
-			this.forceUpdate();
 			}
 			},
 		  ],
 		  { cancelable: false }
 		)
-		
+		deletePlate = () => {
+			this.setState({foods:[]});
+		}
    }
   
   render() {
-	  const {navigation}  = this.props;
-		this.plate = navigation.getParam('plate', null);
-
-    this.load();
+	const {navigation}  = this.props;
+	this.plate = navigation.getParam('plate', null);
+	
 		if(!this.state.promiseIsResolved){
 			return null
 		}
@@ -124,7 +122,7 @@ export default class EditFoodScreen extends Component {
 		  <View style={styles.bigContainer}>
 			<View style = {styles.scrollContainer}>
 			<FlatList
-				data={JSON.parse(this.state.foods)}
+				data={this.state.foods}
 				renderItem={({item, index})=>{
 					return(
 						<FlatListItem item={item} index={index}>
