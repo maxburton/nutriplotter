@@ -9,33 +9,90 @@ import {
   Alert,
   FlatList,
   Image,
+  Slider,
 } from 'react-native';
-import { WebBrowser, SQLite } from 'expo';
+import { WebBrowser } from 'expo';
 import IconMI from 'react-native-vector-icons/MaterialIcons'
+import IconFA from 'react-native-vector-icons/FontAwesome'
 
-const db = SQLite.openDatabase('db.db');
+var Datastore = require('react-native-local-mongodb'), 
+platedb = new Datastore({ filename: 'plate', autoload: true });
 
 class FlatListItem extends Component{
+	
+	state = {
+		grams: this.props.item.name[1],
+		maximum: 500,
+	}
+	
+	updatePlate = (val) =>{
+		platedb.update({ _id: this.props.item.name[0].toLowerCase() }, { $set: { amount: val }}, {}, function (err, numReplaced) {
+			console.log(numReplaced);
+			platedb.find({}, function (err, docs) {
+				console.log(docs);
+			});
+		});
+	}
+	plusButtonPressed = () => {
+		var oldWeight = this.state.grams;
+		var newWeight = oldWeight + 1;
+		if(!(newWeight > 500)){
+			this.setState({grams: newWeight});
+			this.updatePlate(newWeight);
+		}
+		
+	}
+	
+	minusButtonPressed = () => {
+		var oldWeight = this.state.grams;
+		var newWeight = oldWeight - 1;
+		if(!(newWeight < 0)){
+			this.setState({grams: newWeight});
+			this.updatePlate(newWeight);
+		}
+	}
+	
 	render(){
 		return(
-			<View style={styles.itemStyle}>
-				<Image
-					source={require('../assets/images/apple.png')}
-					style={styles.image}
-				>
-				</Image>
+			<View style={styles.itemBackground}>
+				<View style={styles.itemStyle}>
+					<Image
+						source={require('../assets/images/apple.png')}
+						style={styles.image}
+					>
+					</Image>
 
-				<Text style={styles.buttonView}>{this.props.item.name}</Text>
+					<Text style={styles.buttonView}>{this.props.item.name[0]}</Text>
 
-				<TouchableOpacity style={styles.deleteView} onPress = {() => this.deleteItem(this.props.index)}>
-					<Text style={styles.deleteText}><IconMI name="delete-forever" size={28}/></Text>
+					<TouchableOpacity style={styles.deleteView} onPress = {() => this.deleteItem(this.props.item.name[0])}>
+						<Text style={styles.deleteText}><IconMI name="delete-forever" size={28}/></Text>
+					</TouchableOpacity>
+				</View>
+				<View style={styles.sliderView}>
+				<TouchableOpacity onPress = {() => this.minusButtonPressed()}>
+					<Text style={styles.minusText}><IconFA name="minus-circle" size={22}/></Text>
 				</TouchableOpacity>
+				<Slider
+					style={styles.slider}
+					step={1}
+					minimumValue={0}
+					maximumValue={this.state.maximum}
+					value={this.state.grams}
+					onValueChange={val => this.setState({ grams: val })}
+					onSlidingComplete={val => this.updatePlate(val)}
+				/>
+				<TouchableOpacity onPress = {() => this.plusButtonPressed()}>
+					<Text style={styles.plusText}><IconFA name="plus-circle" size={22}/></Text>
+				</TouchableOpacity>
+				<Text style={styles.sliderText}>{this.state.grams}g</Text>
+				</View>
 			</View>
 		);
 	}
 	
-	deleteItem(){
-		alert("Deleted");
+	deleteItem(foodName){
+		EditFoodScreen.deleteItem(foodName);
+		EditFoodScreen.setState({promiseIsResolved: true});
 	}
 }
 
@@ -43,53 +100,53 @@ export default class EditFoodScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Edit Food',
 	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
-
   });
+    
   
-  load(){
-	var dbQuery = 'select name, amount from plate;';
-	var promise = new Promise(function (resolve, reject) {
-		db.transaction(function (transaction) {
-			transaction.executeSql(dbQuery, [], function (transaction, result) {
-				resolve(JSON.stringify(result)); // here the returned Promise is resolved
-			}, nullHandler, errorHandler);
+    state = { 
+		empty:'Your plate is empty! Add some by searching on the plate screen.',
+		promiseIsResolved:false,
+		foods:[],
+	}
+	
+	static deleteItem = (foodName) => {
+		platedb.remove({_id: foodName.toLowerCase()}, function (err, numRemoved) {
+			updateFoodsState();
 		});
-	});
-	
-	function nullHandler(result){
-		console.log("Null Log : " + JSON.stringify(result));
-	}
-
-	function errorHandler(error){
-		console.log("Error Log : " + error);
 	}
 	
-	function capitalizeFirstLetter(string) {
-		return string.charAt(0).toUpperCase() + string.slice(1);
-	}
   
-	promise.then((results) => {
-		this.setState({promiseIsResolved: true});
-		var dbOut = JSON.parse(results);
-		var length = dbOut.rows.length;
-		var allFoods = [];
-		for (i = 0; i < length; i++) { 
-		  allFoods.push({"name":capitalizeFirstLetter(dbOut.rows._array[i].name)});
-		} 
-		this.setState({foods: JSON.stringify(allFoods)})
-		if(length == 0){
-			//alert("Your plate is empty! Add some by searching below.");
-		}else{
-			//alert(allFoods);
-		}			
-	})
-  }
+	componentDidMount() {
+		setPromiseToResolved = () => {
+			this.setState({promiseIsResolved: true})
+		}
+
+		setFoodsState = (allFoods) => {
+			this.setState({foods: allFoods})
+		}
+		
+		platedb.find({}, function (err, docs) {
+			console.log("Current items on Plate: ");
+			console.log(docs);
+			setPromiseToResolved();
+			var length = docs.length;
+			console.log(length);
+			var allFoods = [];
+			var maximumGrams = 500;
+			for (i = 0; i < length; i++) {
+				allFoods.push({"name": [capitalizeFirstLetter(docs[i]._id), docs[i].amount]});
+				maximumGrams -= docs[i].amount;
+			}
+			setFoodsState(allFoods);
+		});
+		
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+		
+	}
 	
-  state = { 
-	empty:'Your plate is empty! Add some by searching on the plate screen.',
-	promiseIsResolved:false,
-	foods:'[]',
-  }
+
   
   onClearClick = () => {
 	   Alert.alert(
@@ -98,24 +155,23 @@ export default class EditFoodScreen extends Component {
 		  [
 			{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
 			{text: 'OK', onPress: () => {
-			db.transaction(tx => {
-				tx.executeSql('delete from plate;');
+			platedb.remove({}, { multi: true }, function (err, numRemoved) {
+				deletePlate();
 			});
-			this.setState({foods:'[]'});
-			this.forceUpdate();
 			}
 			},
 		  ],
 		  { cancelable: false }
 		)
-		
+		deletePlate = () => {
+			this.setState({foods:[]});
+		}
    }
   
   render() {
-	  const {navigation}  = this.props;
-		this.plate = navigation.getParam('plate', null);
-
-    this.load();
+	const {navigation}  = this.props;
+	this.plate = navigation.getParam('plate', null);
+	
 		if(!this.state.promiseIsResolved){
 			return null
 		}
@@ -124,7 +180,7 @@ export default class EditFoodScreen extends Component {
 		  <View style={styles.bigContainer}>
 			<View style = {styles.scrollContainer}>
 			<FlatList
-				data={JSON.parse(this.state.foods)}
+				data={this.state.foods}
 				renderItem={({item, index})=>{
 					return(
 						<FlatListItem item={item} index={index}>
@@ -147,11 +203,9 @@ export default class EditFoodScreen extends Component {
 const styles = StyleSheet.create ({
   bigContainer: {
      flex: 1,
-     marginTop: 35,
   },
   scrollContainer: {
      flex: 1,
-     marginTop: 10,
 	 justifyContent: 'flex-start',
   },
   clearButton:{
@@ -175,9 +229,9 @@ const styles = StyleSheet.create ({
 		flex: 1,  
 		flexDirection: 'row',
 		padding: 8,
-    marginTop: 3,
-    alignItems: 'flex-start',
 		backgroundColor: '#c1c1c1',
+		alignItems: 'center',
+		
   },
   image: {
 	  width: 30,
@@ -197,5 +251,33 @@ const styles = StyleSheet.create ({
   deleteText: {
 	  color: 'white',
 	  fontSize: 24,
-  }
+  },
+  sliderView: {
+	  flex: 1,
+	  flexDirection: 'row',
+	  alignItems: 'center',
+	  backgroundColor: '#a1a1a1',
+  },
+  slider:{
+	  flex: 7,
+	  marginLeft: 15,
+  },
+  sliderText: {
+	   flex: 2,
+	   marginRight: 15,
+	   fontSize: 16,
+	   textAlign: 'right',
+  },
+  itemBackground:{
+	  
+	  marginTop: 5,
+  },
+  plusText: {
+	   marginLeft: 15,
+	   fontSize: 24,
+  },
+    minusText: {
+	   marginLeft: 15,
+	   fontSize: 24,
+  },
 });

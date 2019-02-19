@@ -1,75 +1,52 @@
 import React, { Component } from 'react'
 import { Text, Image, TouchableOpacity, StyleSheet, View, TextInput, FlatList } from 'react-native'
-import { WebBrowser, SQLite } from 'expo';
+import { WebBrowser } from 'expo';
 import { ListItem } from 'react-native-elements';
 
-const db = SQLite.openDatabase('db.db');
+var Datastore = require('react-native-local-mongodb'), 
+db = new Datastore({ filename: 'foods', autoload: true });
+platedb = new Datastore({ filename: 'plate', autoload: true });
 
 class FlatListItem extends Component{
 	render(){
 		return(
+		<TouchableOpacity onPress = {() => this.alertItemName(this.props.item)}>
 			<View style={styles.itemStyle}>
 				<Image
 					source={require('../assets/images/apple.png')}
 					style={styles.image}
 				>
-				
 				</Image>
 				<View style={styles.buttonView}>
-					<TouchableOpacity
-						 style = {styles.container}
-						 onPress = {() => this.alertItemName(this.props.item)}
-					>
+					<View style = {styles.container}>
 						<Text>{this.props.item.name}</Text>
-					</TouchableOpacity>
+					</View>
 				</View>
 			</View>
+		</TouchableOpacity>
 		);
 	}
 	
 	alertItemName = (item) => {
-	    var dbQuery = 'select name, calories, carbs, fats, protein from foods where name="' + item.name.toLowerCase() + '";';
-		//alert(item.name);
-		var promise = new Promise(function (resolve, reject) {
-			db.transaction(function (transaction) {
-				transaction.executeSql(dbQuery, [], function (transaction, result) {
-					resolve(JSON.stringify(result)); // here the returned Promise is resolved
-				}, nullHandler, errorHandler);
-			});
-		});
+		var newFoodId = item.name.toLowerCase()
+		platedb.find({_id: newFoodId}, function (err, newDocs) {
+			if(newDocs.length == []){
+				platedb.insert({_id: newFoodId, amount: 0}, function (err, newDocs) {
+					console.log(newFoodId + " Inserted");
+				}); 
+			}else{
+				console.log(newFoodId + " already in database!");
+			}
+		}); 
 		
-		function nullHandler(result){
-			console.log("Null Log : " + JSON.stringify(result));
-		}
-
-		function errorHandler(error){
-			console.log("Error Log : " + error);
-		}
-		
-		function capitalizeFirstLetter(string) {
-			return string.charAt(0).toUpperCase() + string.slice(1);
-		}
-	  
-		promise.then((results) => {
-			var dbOut = JSON.parse(results);
-			var kcals = JSON.parse(results).rows._array[0].calories;
-			var carbs = JSON.parse(results).rows._array[0].carbs;
-			var fats = JSON.parse(results).rows._array[0].fats;
-			var protein = JSON.parse(results).rows._array[0].protein;
-			var foodName = JSON.parse(results).rows._array[0].name;
-			alert("Calories: " + kcals + " Carbs: " + carbs + " Fats: " + fats + " Protein: " + protein);
-			db.transaction(tx => {
-				tx.executeSql('insert or ignore into plate (name, amount) values ("' + foodName + '", 0);');
-			});
-		});
-   };
+	};
 }
    
 class List extends Component {
-   state = {
-	  name: '',
-	  test: '',
-	  names: '[]',
+    state = {
+	    name: '',
+	    test: '',
+	    names: [],
    }
    
    onChangeText = name => {
@@ -90,7 +67,7 @@ class List extends Component {
          <View style = {styles.scrollStyle}>
 			<Text style={styles.checkDB}>{this.state.test}</Text>
 			<FlatList
-				data={JSON.parse(this.state.names)}
+				data={this.state.names}
 				renderItem={({item, index})=>{
 					return(
 						<FlatListItem item={item} index={index}>
@@ -104,28 +81,51 @@ class List extends Component {
       )
    }
    
-       search = searchString => {
-		var dbQuery = 'select name from foods;';
-		var promise = new Promise(function (resolve, reject) {
-			db.transaction(function (transaction) {
-				transaction.executeSql(dbQuery, [], function (transaction, result) {
-					resolve(JSON.stringify(result)); // here the returned Promise is resolved
-				}, nullHandler, errorHandler);
-			});
-		});
-		
-		function nullHandler(result){
-			console.log("Null Log : " + JSON.stringify(result));
-		}
-
-		function errorHandler(error){
-			console.log("Error Log : " + error);
-		}
-		
+    search = searchString => {
 		function capitalizeFirstLetter(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		}
+		
+		handleStateChange = (foodlen, searchlen, foods) => {
+			if(foodlen > 0 || searchlen == 0){
+				this.setState({
+					test: '',
+					names: foods,
+				})
+			}else{
+				this.setState({
+					test: "No foods found matching that criteria, please try again",
+					names: foods,
+				})
+			}
+		}
+		
+		var stringToGoIntoTheRegex = searchString.toLowerCase();
+		var regex = new RegExp(stringToGoIntoTheRegex, "g");
+		if(searchString.length > 0){
+			db.find({_id: regex}, function (err, docs) {
+				console.log(docs); // here the returned Promise is resolved
+				var foods = [];
+				var count = 0;
+				if(docs.length > 0){
+					for(let i = 0; i < docs.length; i++){ 
+						var formattedString = docs[i]._id.replace(/['"]+/g, '');
+						formattedString = capitalizeFirstLetter(formattedString);
+						foods.push({"id":count,"name":formattedString});
+						count++;
+					}
+				}
+				handleStateChange(foods.length, searchString.length, foods);
+			});
+		}else{
+			this.setState({
+				test: '',
+				names: [],
+			})
+		}
 	  
+	
+	  /*
 		promise.then((results) => {
 		    var dbOut = JSON.parse(results);
 			var foods = [];
@@ -154,6 +154,7 @@ class List extends Component {
 				})
 			}
 	  });
+	  */
   }
 
 

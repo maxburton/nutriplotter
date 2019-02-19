@@ -6,13 +6,13 @@ import {
   View,
   AsyncStorage
 } from "react-native";
-import { AppLoading, Asset, Font, Icon, SQLite } from "expo";
+import { AppLoading, Asset, Font, Icon } from "expo";
 import AppNavigator from "./navigation/AppNavigator";
 import popDB from "./populateDatabase";
 import firebase from "./components/Firebase.js";
 
-const db = SQLite.openDatabase("db.db");
-//const isFirstLaunch = SQLite.openDatabase('ifl.db');
+var Datastore = require('react-native-local-mongodb'), 
+db = new Datastore({ filename: 'foods', autoload: true });
 
 export default class App extends React.Component {
   state = {
@@ -76,6 +76,7 @@ export default class App extends React.Component {
     };
     _retrieveData();
 
+	/*
     db.transaction(tx => {
       tx.executeSql(
         "create table if not exists plate(name varchar(255) primary key not null, amount int);"
@@ -85,7 +86,12 @@ export default class App extends React.Component {
         console.log("First LAUNCH");
       }
     });
-
+	*/
+	
+	db.insert([{ _id: "haggis", calories: 100, carbs: 200, fats: 300 }, { _id: "neeps", calories: 111, carbs: 222, fats: 333 }, { _id: "tatties", calories: 101, carbs: 202, fats: 303 }], function (err, newDocs) {
+        // Two documents were inserted in the database
+    }); 
+	
     _storeData = async () => {
       try {
         await AsyncStorage.setItem("isFirstLaunch", "0");
