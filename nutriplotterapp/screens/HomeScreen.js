@@ -90,6 +90,7 @@ export default class HomeScreen extends React.Component {
 
   toggleTheme() {
     this.setState({ darkTheme: !this.state.darkTheme });
+  };
 
   _toggleModal(){
     this.setState({ isModalVisible: !this.state.isModalVisible });
@@ -147,37 +148,17 @@ export default class HomeScreen extends React.Component {
 	var food2 = new Food({name: "Foo2", plate: this.plate});
 	var food3 = new Food({name: "Foo3", plate: this.plate});
 
-    return (
-      
-      <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
-	      
-        {food.render()}
-        <View style={styles.list}>
-          <TouchableOpacity style={styles.list} 
-            onPress={
-              // Pass a reference to the plate so we can edit its state in the EditFoodScreen
-              () => this.props.navigation.navigate('EditFoodScreen', {plate: this.plate})
-            }>
-			      {this.plate.render()}
-		      </TouchableOpacity>
-		    </View>
-	      <Text style={styles.title}>Enter a food:</Text> 
-		    <View style={styles.list}>
-			    <List style={styles.list}/>
-		    </View>
-        
-      </KeyboardAvoidingView>
-	  );
-  };
-};
     //const styles = getStyleSheet(this.state.darkTheme);
     //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
     return (
 
         <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
+			{food.render()}
           <View style={styles.list}>
-            <TouchableOpacity style={styles.list} onPress={() => this.props.navigation.navigate('EditFoodScreen')}>
-              <Plate style={styles.list}/>
+            <TouchableOpacity style={styles.list} onPress={// Pass a reference to the plate so we can edit its state in the EditFoodScreen
+              () => this.props.navigation.navigate('EditFoodScreen', {plate: this.plate})
+            }>
+			      {this.plate.render()}
             </TouchableOpacity>
           </View>
 
@@ -276,5 +257,5 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginLeft: offset*3
 
-  }
+  },
 });

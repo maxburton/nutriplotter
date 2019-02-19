@@ -103,8 +103,8 @@ export default class Food extends Component {
         return (
             <Animated.View style={[animatedStyle, styles]} {...this.panResponder.panHandlers}>
                 <Image 
-                    style={{width: 50, height: 50, padding: 10}}
-                    source={require('../assets/images/meat.png')}/>
+                    
+                    source={require('../assets/images/fruit.png')}/>
             </Animated.View>
         )
     }
