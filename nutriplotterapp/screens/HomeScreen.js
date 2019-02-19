@@ -2,6 +2,7 @@ import React from "react";
 import List from "../components/FoodList.js";
 import Plate from "../components/Plate.js";
 import firebase from "../components/Firebase.js";
+import "./LoginScreen";
 
 //Initliase firebase database
 import {
@@ -17,17 +18,17 @@ import {
   Button,
   Dimensions,
   measure
-} from 'react-native';
-import { WebBrowser } from 'expo';
+} from "react-native";
+import { WebBrowser } from "expo";
 
-import { MonoText } from '../components/StyledText';
-import getStyleSheet from '../themes/style';
+import { MonoText } from "../components/StyledText";
+import getStyleSheet from "../themes/style";
 
-import Food from '../components/Food';
+import Food from "../components/Food";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'Play with Your Food',
+    title: "Play with Your Food"
   };
 
   constructor(props) {
@@ -39,18 +40,19 @@ export default class HomeScreen extends React.Component {
 
     super(props);
     this.state = {
-      darkTheme: false,
+      darkTheme: false
     };
     this.toggleTheme = this.toggleTheme.bind(this);
-    
+
     // When creating the homescreen, create a reference to the plate to be rendered
     // so that we may be able to call methods on the plate and manipulate its state from other components
-    // on the screen. 
-    this.plate = new Plate({styles: getStyleSheet(this.state.darkTheme)});
+    // on the screen.
+    this.plate = new Plate({ styles: getStyleSheet(this.state.darkTheme) });
   }
 
   // ************* NEEDS A 'SUBMIT' BUTTON TO WORK, CURRENTLY NOT ONE *************
   updateScore = async (name, score) => {
+    console.log(global.isLoggedIn);
     //get scores as dict
     firebase
       .database()
@@ -73,8 +75,12 @@ export default class HomeScreen extends React.Component {
       });
 
     //get currentscore and add this score
-    currentscore = orgDict[name];
-    newscore = currentscore + score;
+    if (orgDict[name]) {
+      currentscore = orgDict[name];
+      newscore = currentscore + score;
+    } else {
+      newscore = score;
+    }
 
     //update userscore in db
     firebase
@@ -93,28 +99,41 @@ export default class HomeScreen extends React.Component {
   render() {
     const styles = getStyleSheet(this.state.darkTheme);
 
-    var food = new Food({name: "Foo", plate: this.plate});
+    var food = new Food({ name: "Foo", plate: this.plate });
 
     return (
-      
-      <KeyboardAvoidingView style={styles.container} behavior="position" contentContainerStyle={styles.container}>
-	      
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="position"
+        contentContainerStyle={styles.container}
+      >
         {food.render()}
         <View style={styles.list}>
-          <TouchableOpacity style={styles.list} 
+          <TouchableOpacity
+            style={styles.list}
             onPress={
               // Pass a reference to the plate so we can edit its state in the EditFoodScreen
-              () => this.props.navigation.navigate('EditFoodScreen', {plate: this.plate})
-            }>
-			      {this.plate.render()}
-		      </TouchableOpacity>
-		    </View>
-	      <Text style={styles.title}>Enter a food:</Text> 
-		    <View style={styles.list}>
-			    <List style={styles.list}/>
-		    </View>
-        
+              () =>
+                this.props.navigation.navigate("EditFoodScreen", {
+                  plate: this.plate
+                })
+            }
+          >
+            {this.plate.render()}
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.title}>Enter a food:</Text>
+        <View style={styles.list}>
+          <List style={styles.list} />
+        </View>
+
+        <Button
+          title="Increment Score By 200"
+          onPress={() => this.updateScore(global.isLoggedIn, 200)}
+        >
+          <Text>Increment Score By 200</Text>
+        </Button>
       </KeyboardAvoidingView>
-	  );
-  };
-};
+    );
+  }
+}
