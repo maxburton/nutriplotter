@@ -54,11 +54,53 @@ class FlatListItem extends Component{
 	}
 	
 	render(){
+		var randomImages = {
+			savouries:require('../assets/images/savouries.png'),
+			misc:require('../assets/images/misc.png'),
+			sauce:require('../assets/images/sauce.png'),
+			soup:require('../assets/images/soup.png'),
+			chocolate:require('../assets/images/chocolate.png'),
+			snacks:require('../assets/images/snacks.png'),
+			sweets:require('../assets/images/sweets.png'),
+			drinks:require('../assets/images/drinks.png'),
+			booze:require('../assets/images/booze.png'),
+			oil:require('../assets/images/oil.png'),
+			burger:require('../assets/images/burger.png'),
+			game:require('../assets/images/game.png'),
+			chicken:require('../assets/images/chicken.png'),
+			beef:require('../assets/images/beef.png'),
+			bacon:require('../assets/images/bacon.png'),
+			fish:require('../assets/images/fish.png'),
+			herbs:require('../assets/images/herbs.png'),
+			nuts:require('../assets/images/nuts.png'),
+			juice:require('../assets/images/juice.png'),
+			fruit:require('../assets/images/fruit.png'),
+			vegdish:require('../assets/images/vegdish.png'),
+			veg:require('../assets/images/veg.png'),
+			beans:require('../assets/images/beans.png'),
+			potato:require('../assets/images/potato.png'),
+			egg:require('../assets/images/egg.png'),
+			cream:require('../assets/images/cream.png'),
+			icecream:require('../assets/images/icecream.png'),
+			milk:require('../assets/images/milk.png'),
+			pudding:require('../assets/images/pudding.png'),
+			cakes:require('../assets/images/cakes.png'),
+			biscuits:require('../assets/images/biscuits.png'),
+			cereals:require('../assets/images/cereals.png'),
+			pastries:require('../assets/images/pastries.png'),
+			bread:require('../assets/images/bread.png'),
+			pizza:require('../assets/images/pizza.png'),
+			pasta:require('../assets/images/pasta.png'),
+			rice:require('../assets/images/rice.png'),
+			sandwich:require('../assets/images/sandwich.png'),
+			grains:require('../assets/images/grains.png'),
+		};
+		var group = this.props.item.name[2];
 		return(
 			<View style={styles.itemBackground}>
 				<View style={styles.itemStyle}>
 					<Image
-						source={require('../assets/images/apple.png')}
+						source={randomImages[group]}
 						style={styles.image}
 					>
 					</Image>
@@ -135,7 +177,7 @@ export default class EditFoodScreen extends Component {
 			var allFoods = [];
 			var maximumGrams = 500;
 			for (i = 0; i < length; i++) {
-				allFoods.push({"name": [capitalizeFirstLetter(docs[i]._id), docs[i].amount]});
+				allFoods.push({"name": [capitalizeFirstLetter(docs[i]._id), docs[i].amount, docs[i].group]});
 				maximumGrams -= docs[i].amount;
 			}
 			setFoodsState(allFoods);

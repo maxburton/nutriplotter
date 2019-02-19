@@ -94,6 +94,8 @@ export default class HomeScreen extends React.Component {
     const styles = getStyleSheet(this.state.darkTheme);
 
     var food = new Food({name: "Foo", plate: this.plate});
+	var food2 = new Food({name: "Foo2", plate: this.plate});
+	var food3 = new Food({name: "Foo3", plate: this.plate});
 
     return (
       

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Image, TouchableOpacity, StyleSheet, View, TextInput, FlatList } from 'react-native'
+import { Text, Image, TouchableOpacity, StyleSheet, View, TextInput, FlatList, Alert } from 'react-native'
 import { WebBrowser } from 'expo';
 import { ListItem } from 'react-native-elements';
 import firebase from "./Firebase.js";
@@ -73,10 +73,12 @@ class FlatListItem extends Component{
 		var newFoodId = item.name.toLowerCase()
 		platedb.find({_id: newFoodId}, function (err, newDocs) {
 			if(newDocs.length == []){
-				platedb.update({ _id: newFoodId}, { $set: { amount: 0 } }, { upsert: true }, function (err, numReplaced, upsert) {
+				platedb.update({ _id: newFoodId}, { $set: { amount: 0, group: item.group } }, { upsert: true }, function (err, numReplaced, upsert) {
+					Alert.alert("\"" + newFoodId + "\" has been added to your plate")
 					console.log(newFoodId + " Inserted");
 				});
 			}else{
+				Alert.alert("\"" + newFoodId + "\" is already on your plate!")
 				console.log(newFoodId + " already in database!");
 			}
 		}); 
@@ -398,7 +400,6 @@ class List extends Component {
 					group = "misc";
 					break;
 			}
-			console.log(group);
 			return group;
 		}
   }
