@@ -9,28 +9,83 @@ import {
   Alert,
   FlatList,
   Image,
+  Slider,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import IconMI from 'react-native-vector-icons/MaterialIcons'
+import IconFA from 'react-native-vector-icons/FontAwesome'
 
 var Datastore = require('react-native-local-mongodb'), 
 platedb = new Datastore({ filename: 'plate', autoload: true });
 
 class FlatListItem extends Component{
+	
+	state = {
+		grams: this.props.item.name[1],
+		maximum: 500,
+	}
+	
+	updatePlate = (val) =>{
+		platedb.update({ _id: this.props.item.name[0].toLowerCase() }, { $set: { amount: val }}, {}, function (err, numReplaced) {
+			console.log(numReplaced);
+			platedb.find({}, function (err, docs) {
+				console.log(docs);
+			});
+		});
+	}
+	plusButtonPressed = () => {
+		var oldWeight = this.state.grams;
+		var newWeight = oldWeight + 1;
+		if(!(newWeight > 500)){
+			this.setState({grams: newWeight});
+			this.updatePlate(newWeight);
+		}
+		
+	}
+	
+	minusButtonPressed = () => {
+		var oldWeight = this.state.grams;
+		var newWeight = oldWeight - 1;
+		if(!(newWeight < 0)){
+			this.setState({grams: newWeight});
+			this.updatePlate(newWeight);
+		}
+	}
+	
 	render(){
 		return(
-			<View style={styles.itemStyle}>
-				<Image
-					source={require('../assets/images/apple.png')}
-					style={styles.image}
-				>
-				</Image>
+			<View style={styles.itemBackground}>
+				<View style={styles.itemStyle}>
+					<Image
+						source={require('../assets/images/apple.png')}
+						style={styles.image}
+					>
+					</Image>
 
-				<Text style={styles.buttonView}>{this.props.item.name}</Text>
+					<Text style={styles.buttonView}>{this.props.item.name[0]}</Text>
 
-				<TouchableOpacity style={styles.deleteView} onPress = {() => this.deleteItem(this.props.item.name)}>
-					<Text style={styles.deleteText}><IconMI name="delete-forever" size={28}/></Text>
+					<TouchableOpacity style={styles.deleteView} onPress = {() => this.deleteItem(this.props.item.name[0])}>
+						<Text style={styles.deleteText}><IconMI name="delete-forever" size={28}/></Text>
+					</TouchableOpacity>
+				</View>
+				<View style={styles.sliderView}>
+				<TouchableOpacity onPress = {() => this.minusButtonPressed()}>
+					<Text style={styles.minusText}><IconFA name="minus-circle" size={22}/></Text>
 				</TouchableOpacity>
+				<Slider
+					style={styles.slider}
+					step={1}
+					minimumValue={0}
+					maximumValue={this.state.maximum}
+					value={this.state.grams}
+					onValueChange={val => this.setState({ grams: val })}
+					onSlidingComplete={val => this.updatePlate(val)}
+				/>
+				<TouchableOpacity onPress = {() => this.plusButtonPressed()}>
+					<Text style={styles.plusText}><IconFA name="plus-circle" size={22}/></Text>
+				</TouchableOpacity>
+				<Text style={styles.sliderText}>{this.state.grams}g</Text>
+				</View>
 			</View>
 		);
 	}
@@ -46,6 +101,7 @@ export default class EditFoodScreen extends Component {
     title: 'Edit Food',
 	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
   });
+    
   
     state = { 
 		empty:'Your plate is empty! Add some by searching on the plate screen.',
@@ -76,8 +132,10 @@ export default class EditFoodScreen extends Component {
 			var length = docs.length;
 			console.log(length);
 			var allFoods = [];
+			var maximumGrams = 500;
 			for (i = 0; i < length; i++) {
-				allFoods.push({"name":capitalizeFirstLetter(docs[i]._id)});
+				allFoods.push({"name": [capitalizeFirstLetter(docs[i]._id), docs[i].amount]});
+				maximumGrams -= docs[i].amount;
 			}
 			setFoodsState(allFoods);
 		});
@@ -145,11 +203,9 @@ export default class EditFoodScreen extends Component {
 const styles = StyleSheet.create ({
   bigContainer: {
      flex: 1,
-     marginTop: 35,
   },
   scrollContainer: {
      flex: 1,
-     marginTop: 10,
 	 justifyContent: 'flex-start',
   },
   clearButton:{
@@ -173,9 +229,9 @@ const styles = StyleSheet.create ({
 		flex: 1,  
 		flexDirection: 'row',
 		padding: 8,
-    marginTop: 3,
-    alignItems: 'flex-start',
 		backgroundColor: '#c1c1c1',
+		alignItems: 'center',
+		
   },
   image: {
 	  width: 30,
@@ -195,5 +251,33 @@ const styles = StyleSheet.create ({
   deleteText: {
 	  color: 'white',
 	  fontSize: 24,
-  }
+  },
+  sliderView: {
+	  flex: 1,
+	  flexDirection: 'row',
+	  alignItems: 'center',
+	  backgroundColor: '#a1a1a1',
+  },
+  slider:{
+	  flex: 7,
+	  marginLeft: 15,
+  },
+  sliderText: {
+	   flex: 2,
+	   marginRight: 15,
+	   fontSize: 16,
+	   textAlign: 'right',
+  },
+  itemBackground:{
+	  
+	  marginTop: 5,
+  },
+  plusText: {
+	   marginLeft: 15,
+	   fontSize: 24,
+  },
+    minusText: {
+	   marginLeft: 15,
+	   fontSize: 24,
+  },
 });

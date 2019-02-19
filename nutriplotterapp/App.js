@@ -58,6 +58,7 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
+	global.maximumGrams = 500;
     //Disables warning messages: TRUE FOR DEMOS
     console.disableYellowBox = true;
     global.isLoggedIn = false;
