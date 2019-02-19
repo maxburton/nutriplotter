@@ -87,10 +87,7 @@ export default class App extends React.Component {
       }
     });
 	*/
-	
-	db.insert([{ _id: "haggis", calories: 100, carbs: 200, fats: 300 }, { _id: "neeps", calories: 111, carbs: 222, fats: 333 }, { _id: "tatties", calories: 101, carbs: 202, fats: 303 }], function (err, newDocs) {
-        // Two documents were inserted in the database
-    }); 
+	var p = new popDB();
 	
     _storeData = async () => {
       try {

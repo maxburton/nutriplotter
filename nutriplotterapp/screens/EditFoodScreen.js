@@ -23,6 +23,7 @@ class FlatListItem extends Component{
 	state = {
 		grams: this.props.item.name[1],
 		maximum: 500,
+		refresh: 0,
 	}
 	
 	updatePlate = (val) =>{
@@ -90,10 +91,17 @@ class FlatListItem extends Component{
 		);
 	}
 	
-	deleteItem(foodName){
-		EditFoodScreen.deleteItem(foodName);
-		EditFoodScreen.setState({promiseIsResolved: true});
+	deleteItem = (foodName) =>{
+		platedb.remove({_id: foodName.toLowerCase()}, function (err, numRemoved) {
+			refresh();
+		});
+		refresh = () =>{
+			var newVal = this.state.refresh + 1
+			this.setState({refresh: newVal});
+		}
 	}
+	
+	
 }
 
 export default class EditFoodScreen extends Component {
@@ -107,14 +115,7 @@ export default class EditFoodScreen extends Component {
 		empty:'Your plate is empty! Add some by searching on the plate screen.',
 		promiseIsResolved:false,
 		foods:[],
-	}
-	
-	static deleteItem = (foodName) => {
-		platedb.remove({_id: foodName.toLowerCase()}, function (err, numRemoved) {
-			updateFoodsState();
-		});
-	}
-	
+	}	
   
 	componentDidMount() {
 		setPromiseToResolved = () => {
