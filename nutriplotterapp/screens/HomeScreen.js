@@ -20,10 +20,12 @@ import {
 } from 'react-native';
 import Modal from "react-native-modal";
 import { WebBrowser, SQLite } from 'expo';
-const db = SQLite.openDatabase('db.db');
 
 import { MonoText } from '../components/StyledText';
 import getStyleSheet from '../themes/style';
+
+var Datastore = require('react-native-local-mongodb'), 
+platedb = new Datastore({ filename: 'plate', autoload: true });
 
 import Food from '../components/Food';
 
@@ -40,9 +42,24 @@ export default class HomeScreen extends React.Component {
     //};
 
     super(props);
+	
     this.state = {
       isModalVisible: false,
       darkTheme: false,
+	  totals: 
+			{calories: 0,
+			carbs: 0,
+			fats: 0,
+			protein: 0,
+			sugar: 0,
+			satfat: 0,
+			fibre: 0,
+			omega3: 0,
+			calcium: 0,
+			vitA: 0,
+			vitB1: 0,
+			vitB9: 0,
+			vitC: 0},
     };
     this.toggleTheme = this.toggleTheme.bind(this);
     
@@ -99,32 +116,7 @@ export default class HomeScreen extends React.Component {
   toggleTheme() {
     this.setState({darkTheme: !this.state.darkTheme})
   };
-
-  _getPlateContents(){
-    var dbQuery = 'select name, amount from plate;';
-    var promise = new Promise(function (resolve, reject) {
-      db.transaction(function (transaction) {
-        transaction.executeSql(dbQuery, [], function (transaction, result) {
-          resolve(JSON.stringify(result));
-        }, nullHandler, errorHandler);
-      });
-    });
-
-    function nullHandler(result){
-      console.log("Null Log : " + JSON.stringify(result));
-    }
-
-    function errorHandler(error){
-      console.log("Error Log : " + error);
-    }
-
-    promise.then((results) => {
-      var dbOut = JSON.parse(results);
-		  return 0;
-    })
-  }
-
-
+  
   _resultsClick(){
     /**check plate size**/
     /**var contents = this._getPlateContents();**/
@@ -139,11 +131,51 @@ export default class HomeScreen extends React.Component {
 
 
   }
+  
+  componentDidMount(){
+		var totals = {
+			calories: 0,
+			carbs: 0,
+			fats: 0,
+			protein: 0,
+			sugar: 0,
+			satfat: 0,
+			fibre: 0,
+			omega3: 0,
+			calcium: 0,
+			vitA: 0,
+			vitB1: 0,
+			vitB9: 0,
+			vitC: 0,
+		};
+	  	platedb.find({}, function (err, foodDocs) {
+		if(foodDocs.length > 0){
+			for(let i = 0; i < foodDocs.length; i++){
+				totals["calories"] += Math.round((foodDocs[i].data.calories * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["carbs"] += Math.round((foodDocs[i].data.carbs * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["fats"] += Math.round((foodDocs[i].data.fats * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["protein"] += Math.round((foodDocs[i].data.protein * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["sugar"] += Math.round((foodDocs[i].data.sugar * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["satfat"] += Math.round((foodDocs[i].data.satfat * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["fibre"] += Math.round((foodDocs[i].data.fibre * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["omega3"] += Math.round((foodDocs[i].data.omega3 * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["calcium"] += Math.round((foodDocs[i].data.calcium * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["vitA"] += Math.round((foodDocs[i].data.vitA * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["vitB1"] += Math.round((foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["vitB9"] += Math.round((foodDocs[i].data.vitB9 * (foodDocs[i].amount * 0.01) * 100) / 100);
+				totals["vitC"] += Math.round((foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01) * 100) / 100);
+			}
+			updateState();
+		}
+	});
 
-  //state = { }
+	updateState = () =>{
+		this.setState({totals: totals});
+	}
+  }
+
   render() {
     const styles = getStyleSheet(this.state.darkTheme);
-
     var food = new Food({name: "Foo", plate: this.plate});
 	var food2 = new Food({name: "Foo2", plate: this.plate});
 	var food3 = new Food({name: "Foo3", plate: this.plate});
@@ -176,41 +208,91 @@ export default class HomeScreen extends React.Component {
 
             {/**view start**/}
             <Modal
-              isVisible={this.state.isModalVisible}
-              onBackdropPress={() => this.setState({ isModalVisible: false })}
-              stlye = {styles.model}
-              >
-              {/**Model Block**/}
-              <View style ={styles.modelContainer}>
-
-
-                <View style={{flex: 2, flexDirection: 'row', width: width, justifyContent:'space-between'}}>
-                  {/**Nutrition names Column**/}
-                  <View style={ styles.modelColumn }>
-                    <View style={styles.childStyle}>
-                      <Text> Calories </Text>
-                    </View>
-                    <View style={styles.childStyle}>
-                      <Text> Protein </Text>
-                    </View>
-                  </View>
-
-                  {/**middle Line**/}
-                  <View style={{ width: 1, height: 350, backgroundColor: 'black' }}/>
-
-                  {/**Nutritional values column**/}
-                  <View style={ styles.modelColumn }>
-                    <View style={styles.childStyle}>
-                      <Text> 2000 </Text>
-                    </View>
-                    <View style={styles.childStyle}>
-                      <Text> 82 </Text>
-                    </View>
-                  </View>
-
-                </View>
-
-              </View>
+				backdropOpacity={0.5}
+				swipeDirection="up"
+				onSwipe={this.closeModal}
+				isVisible={this.state.isModalVisible}
+				
+            >
+			<View style={{flex: 1,
+				backgroundColor: "#fff",
+				borderRadius: 8,
+				borderColor: "#000",
+				borderWidth: 2,
+				marginHorizontal: 30,
+				marginVertical: 60,
+				padding: 8,
+				}}>
+					<Text style={{
+						flex: 1,
+						fontSize: 24,
+						textAlign: "center",
+					}}>Your Plate</Text>
+					<View style={{
+						flex: 3,
+						flexDirection: 'row',
+						justifyContent: "center",
+					}}>
+						<Text style={{
+							flex: 1,
+							textAlign: "right",
+							paddingRight: 10,
+						}}>
+						  {[
+							"\n\nCalories: \n",
+							"Carbohydrates: \n",
+							"Fats: \n",
+							"Protein: \n",
+							"Sugar: \n",
+							"Saturated Fats: \n",
+							"Fibre: \n",
+							"Omega3: \n",
+							"Calcium: \n",
+							"Vitamin A: \n",
+							"Vitamin B1: \n",
+							"Vitamin B9: \n",
+							"Vitamin C: \n",
+						  ]}
+						</Text>
+						<Text style={{
+							flex: 1,
+							textAlign: "left",
+							paddingLeft: 10,
+						}}>
+						  {[
+							"\n\n" + this.state.totals["calories"] + "\n",
+							this.state.totals["carbs"] + "\n",
+							this.state.totals["fats"] + "\n",
+							this.state.totals["protein"] + "\n",
+							this.state.totals["sugar"] + "\n",
+							this.state.totals["satfat"] + "\n",
+							this.state.totals["fibre"] + "\n",
+							this.state.totals["omega3"] + "\n",
+							this.state.totals["calcium"] + "\n",
+							this.state.totals["vitA"] + "\n",
+							this.state.totals["vitB1"] + "\n",
+							this.state.totals["vitB9"] + "\n",
+							this.state.totals["vitC"] + "\n",
+						  ]}
+						</Text>
+					</View>
+					<View style={{flex:1, alignItems: "center"}}>
+					<TouchableOpacity style={{flex: 1}} onPress={() => this.setState({ isModalVisible: false })}>
+						<Text style={{
+							fontSize: 18,
+							textAlign: "center",
+							color: "blue",
+						}}>Tweak Your Plate</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={{flex: 1}} onPress={() => this.setState({ isModalVisible: false })}>
+						<Text style={{
+							fontSize: 18,
+							textAlign: "center",
+							color: "blue",
+						}}>Submit Your Plate</Text>
+					</TouchableOpacity>
+					</View>
+				</View>
             </Modal>
 
         </KeyboardAvoidingView>
@@ -240,7 +322,7 @@ const styles = StyleSheet.create({
     fontSize: offset,
   },
   model: {
-
+		backgroundColor:'white',
   },
   childStyle: {
       fontSize: 72,
@@ -257,5 +339,16 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     marginLeft: offset*3
 
+  },
+  innerView: {
+    
+  },
+  description: {
+    padding: 20,
+    fontSize: 18,
+  },
+  outerView: {
+	flex: 1,
+	backgroundColor: "#00000080",
   },
 });

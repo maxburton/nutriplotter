@@ -73,9 +73,10 @@ class FlatListItem extends Component{
 		var newFoodId = item.name.toLowerCase()
 		platedb.find({_id: newFoodId}, function (err, newDocs) {
 			if(newDocs.length == []){
-				platedb.update({ _id: newFoodId}, { $set: { amount: 0, group: item.group } }, { upsert: true }, function (err, numReplaced, upsert) {
+				platedb.update({ _id: newFoodId}, { $set: { amount: 0, group: item.group, data: item.data } }, { upsert: true }, function (err, numReplaced, upsert) {
 					Alert.alert("\"" + newFoodId + "\" has been added to your plate")
 					console.log(newFoodId + " Inserted");
+					remount();
 				});
 			}else{
 				Alert.alert("\"" + newFoodId + "\" is already on your plate!")
@@ -83,7 +84,13 @@ class FlatListItem extends Component{
 			}
 		}); 
 		
+		remount = () => {
+			this.forceRemount;
+		}
+		
 	};
+	
+	
 }
    
 class List extends Component {
@@ -144,7 +151,7 @@ class List extends Component {
 			}
 		}
 		
-		var stringToGoIntoTheRegex = searchString.toLowerCase();
+		var stringToGoIntoTheRegex = searchString.toLowerCase();//
 		var regex = new RegExp(stringToGoIntoTheRegex, "g");
 		if(searchString.length > 0){
 			db.find({_id: regex}, function (err, docs) {
@@ -156,7 +163,7 @@ class List extends Component {
 						var formattedString = docs[i]._id.replace(/['"]+/g, '');
 						formattedString = capitalizeFirstLetter(formattedString);
 						var group = determineGroup(docs[i].group.toLowerCase());
-						foods.push({"id":count,"name":formattedString,"group":group});
+						foods.push({"id":count,"name":formattedString,"group":group,"data":docs[i]});
 						count++;
 					}
 				}
