@@ -37,6 +37,7 @@ const id = "2301384936810927";
 
 const FBSDK = require("react-native-fbsdk");
 const { LoginManager, AccessToken } = FBSDK;
+global.isLoggedIn = null;
 
 export default class LoginScreen extends Component {
   static navigationOptions = () => ({
@@ -88,18 +89,10 @@ export default class LoginScreen extends Component {
           profile_picture: userpic
         });
 
-      //write user name and initial score of 0 to firebase score
-      firebase
-        .database()
-        .ref("scores/" + name)
-        .set({
-          userscore: 0
-        });
-
       //redirect to profile screen
       this.props.navigation.navigate("ProfileScreen"); //
       console.log(global.isLoggedIn);
-      global.isLoggedIn = true;
+      global.isLoggedIn = name;
       this.forceUpdate();
       console.log(global.isLoggedIn);
     } else {
@@ -109,7 +102,7 @@ export default class LoginScreen extends Component {
 
   //function to logout
   logout = (async = () => {
-    global.isLoggedIn = false;
+    global.isLoggedIn = null;
     this.forceUpdate();
   });
 
