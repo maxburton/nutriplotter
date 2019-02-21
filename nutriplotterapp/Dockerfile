@@ -3,7 +3,7 @@ RUN mkdir -p /app &&\
 	chown node:node /app
 WORKDIR /app
 RUN apk add git openjdk8-jre bash --no-cache &&\
-	apk add bash &&\
+	apk add bash
 USER node
 COPY package.json .
 COPY package-lock.json .
