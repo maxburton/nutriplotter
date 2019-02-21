@@ -8,6 +8,4 @@ USER node
 COPY package.json .
 COPY package-lock.json .
 RUN npm install &&\
-	npm install -g expo-cli &&\
-	npm install -g gulp-cli &&\
-	npm install -g turtle-cli
+	npm install expo-cli gulp-cli turtle-cli
