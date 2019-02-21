@@ -22,10 +22,10 @@
     ],
     "ios": {
       "supportsTablet": true,
-	  "bundleIdentifier": "com.nutriplotter",
+	  "bundleIdentifier": "com.nutriplotter"
     },
 	"android": {
-		"package": "com.nutriplotter",
+		"package": "com.nutriplotter"
 	}
   }
 }
