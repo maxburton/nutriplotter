@@ -10,5 +10,6 @@ RUN mkdir .node &&\
 	echo "prefix = .node" > .npmrc &&\
 	PATH="/app/.node/bin:$PATH" &&\
 	NODE_PATH="/app/.node/lib/node_modules:$NODE_PATH" &&\
+	source ~/.profile &&\
 	npm install &&\
 	npm install expo-cli gulp-cli turtle-cli
