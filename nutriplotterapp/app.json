@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "nutriplotterapp",
-    "description": "A very interesting project.",
+    "description": "Create healthy, balanced plates of food. Try to get the best score!",
     "slug": "nutriplotterapp",
     "privacy": "public",
     "sdkVersion": "31.0.0",
