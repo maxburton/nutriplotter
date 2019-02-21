@@ -27,11 +27,6 @@ build_android:
   
   script:
     - cd ./nutriplotterapp
-    - apk add bash
-    - npm install
-    - npm install -g expo-cli
-    - npm install -g gulp-cli --unsafe-perm=true --allow-root
-    - npm install -g turtle-cli --unsafe-perm=true --allow-root
     - export EXPO_USERNAME=${CIuser}
     - export EXPO_PASSWORD=${CIpass}
     - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
