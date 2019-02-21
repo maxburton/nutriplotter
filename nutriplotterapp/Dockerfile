@@ -8,6 +8,7 @@ RUN cd ~ &&\
 	echo "prefix = .node" > .npmrc &&\
 	PATH="~/.node/bin:$PATH" &&\
 	NODE_PATH="~/.node/lib/node_modules:$NODE_PATH" &&\
+	touch ~/.profile &&\
 	source ~/.profile &&\
 	npm install &&\
 	npm install expo-cli gulp-cli turtle-cli
