@@ -134,13 +134,18 @@ class FlatListItem extends Component{
 	}
 	
 	deleteItem = (foodName) =>{
-		platedb.remove({_id: foodName.toLowerCase()}, function (err, numRemoved) {
-			refresh();
-		});
-		refresh = () =>{
-			var newVal = this.state.refresh + 1
-			this.setState({refresh: newVal});
+		console.log("DELETE PRESSED");
+		for(let i = 0; i < global.plate.length; i++){
+			console.log(global.plate[i]._id + "  --  " + foodName);
+			if(global.plate[i]._id.toLowerCase() == foodName.toLowerCase()){
+				global.plate.splice(i, 1);
+				var newVal = this.state.refresh + 1
+				this.setState({refresh: newVal});
+			}
 		}
+		platedb.remove({_id: foodName.toLowerCase()}, function (err, numRemoved) {
+		});
+		this.props.flatListParent.refreshFlatList();
 	}
 	
 	
@@ -162,26 +167,18 @@ export default class EditFoodScreen extends Component {
 	componentDidMount() {
 		setPromiseToResolved = () => {
 			this.setState({promiseIsResolved: true})
+		}		
+		console.log("Current items on Plate: ");
+		console.log(global.plate);
+		setPromiseToResolved();
+		var length = global.plate.length;
+		var allFoods = [];
+		var maximumGrams = 500;
+		for (i = 0; i < length; i++) {
+			allFoods.push({"name": [capitalizeFirstLetter(global.plate[i]._id), global.plate[i].amount, global.plate[i].group]});
+			maximumGrams -= global.plate[i].amount;
 		}
-
-		setFoodsState = (allFoods) => {
-			this.setState({foods: allFoods})
-		}
-		
-		platedb.find({}, function (err, docs) {
-			console.log("Current items on Plate: ");
-			console.log(docs);
-			setPromiseToResolved();
-			var length = docs.length;
-			console.log(length);
-			var allFoods = [];
-			var maximumGrams = 500;
-			for (i = 0; i < length; i++) {
-				allFoods.push({"name": [capitalizeFirstLetter(docs[i]._id), docs[i].amount, docs[i].group]});
-				maximumGrams -= docs[i].amount;
-			}
-			setFoodsState(allFoods);
-		});
+		this.setState({foods: allFoods})
 		
 		function capitalizeFirstLetter(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
@@ -207,9 +204,25 @@ export default class EditFoodScreen extends Component {
 		  { cancelable: false }
 		)
 		deletePlate = () => {
+			global.plate = [];
 			this.setState({foods:[]});
 		}
    }
+   
+   refreshFlatList = () =>{
+		var length = global.plate.length;
+		var allFoods = [];
+		var maximumGrams = 500;
+		for (i = 0; i < length; i++) {
+			allFoods.push({"name": [capitalizeFirstLetter(global.plate[i]._id), global.plate[i].amount, global.plate[i].group]});
+			maximumGrams -= global.plate[i].amount;
+		}
+		this.setState({foods: allFoods})
+		
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+	}	
   
   render() {
 	const {navigation}  = this.props;
@@ -224,9 +237,10 @@ export default class EditFoodScreen extends Component {
 			<View style = {styles.scrollContainer}>
 			<FlatList
 				data={this.state.foods}
+				extraData={this.state.refresh}
 				renderItem={({item, index})=>{
 					return(
-						<FlatListItem item={item} index={index}>
+						<FlatListItem item={item} index={index} flatListParent={this}>
 						</FlatListItem>
 					);
 				}}
