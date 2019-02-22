@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { AppLoading, Asset, Font, Icon } from "expo";
 import AppNavigator from "./navigation/AppNavigator";
-import popDB from "./populateDatabase";
+import popArray from "./populateArray";
 import firebase from "./components/Firebase.js";
 
 var Datastore = require('react-native-local-mongodb'), 
@@ -87,7 +87,8 @@ export default class App extends React.Component {
       }
     });
 	*/
-	var p = new popDB();
+	var p = new popArray();
+	console.log(global.foods["ackee, canned, drained"]);
 	
     _storeData = async () => {
       try {
