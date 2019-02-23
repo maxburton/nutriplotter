@@ -21,21 +21,42 @@ import {
 
 export default class Food extends Component {
     
-    
+    // We store the nutrition scores for the food for adding to the plate. 
+    // In the constructor, we pass a score object as a prop wherefrom we update the food's
+    // scores. (As this doesn't change over time, it is not stored in the state of the component.)
+    score = {
+        calcium: 0,
+        calories: 0,
+        carbs: 0,
+        fats: 0,
+        fibre: 0,
+        group: 0,
+        omega3: 0,
+        protein: 0,
+        satfat: 0,
+        sugar: 0,
+        vitA: 0,
+        vitB1: 0,
+        vitB9: 0,
+        vitC: 0
+      }
+
     constructor(props) {
         super(props);
         this.state = {
             name: props.name,
             plate: props.plate,
-            onPlate: false
+            foodCategory: props.foodCategory,
+            onPlate: false,
         };  // Set the name of the food from the name prop if given, otherwise default is ''
 
         // Record the x,y position of the component: this can be used to check if we've added it
         // to the plate or not.
         this.animatedValue = new Animated.ValueXY();
         this.animatedValue.addListener((value) => this._value=value);
-        this._value = {x: 0, y: 0};
+        this._value = {x: 200, y: 200};
 
+        
 
         this.panResponder = PanResponder.create({
             onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -51,10 +72,11 @@ export default class Food extends Component {
                 this.animatedValue.setOffset({
                     x: this._value.x,
                     y: this._value.y
-                })
+                });
                 this.animatedValue.setValue({
                     x: 0, y: 0
-                })
+                });
+
             },
     
             // Animate a short but gradual deceleration when you let go.
@@ -64,31 +86,17 @@ export default class Food extends Component {
                     deceleration: 0.998,
                     velocity: {x: gestureState.vx, y: gestureState.vy}
                 }).start();
-                console.log("Food now at:");
-                console.log(this._value);
-                var plateState = this.state.plate.state;
-                var foods = this.state.plate.state.foods;
 
-                if (!this.state.onPlate && this.withinPlateDisk() ){
-                    alert("Food on plate!");
-                    plateState.empty = false;
-                    
-                    foods.push(this);
-                    this.state.onPlate = true;
-                // If we were on the plate but aren't any longer
-                } else if (this.state.onPlate && !this.withinPlateDisk()) {
-                    // Only iterate through foods if we know this food is on the plate (to be removed)
-                    for (i = 0; i < foods.length; i++) {
-                        if (foods[i].name === this.state.name) {
-                            delete foods[i];
-                        }
-                    }
-                    if (foods.length < 1){
-                        plateState.empty = true;
-                    }
-
-                    this.state.onPlate = false;
+                if (this.withinPlateDisk() && !this.addedToPlate()){
+                        // Placed within plate but was not previously added to it 
+                        this.state.plate.addFood(this);
+                        this.state.onPlate = true;
+                } else if (!this.withinPlateDisk() && this.addedToPlate()){
+                        // Placed outwith the plate (!withinPlateDisk) but was previously  added.
+                        this.state.plate.removeFood(this);
+                        this.state.onPlate = false;
                 }
+                
             },
         })
     }
@@ -102,37 +110,37 @@ export default class Food extends Component {
 
         return (
             <Animated.View style={[animatedStyle, styles]} {...this.panResponder.panHandlers}>
-                <Image 
-                    
-                    source={require('../assets/images/fruit.png')}/>
+                <Image source={require('../assets/images/fruit.png')}/>
             </Animated.View>
         )
     }
 
-    // Check if the coords of this food fall within the plate's region
+    // Check if the coords of this food fall within the plate's region (determined using pythagoras to find food displacement
+    // from plate centre.)
     withinPlateDisk() {    
         var plateDim = this.state.plate.state.dimensions;
         var foodRadius = Math.sqrt(Math.pow( plateDim.center.x - this._value.x, 2) 
                             + Math.pow(plateDim.center.y - this._value.y, 2)
                         );
         var plateRadius = Math.floor(plateDim.radius / 2);
-        console.log("::: "+foodRadius <= plateRadius);
-        console.log(foodRadius);
-        console.log(plateRadius);
 		return foodRadius <= plateRadius;
     }
     
-    // Update the pie chart %
-    updatePieProgress(amount) {
 
+    // True if this food is on the plate (stored in the Plate's food array) otherwise false
+    addedToPlate(){
+        return this.state.plate.food.includes(this);
     }
+
 
 }
 
 
+
+
 // Make sure that the default name is just an empty string
 Food.defaultProps = {
-    name: '', plate: null
+    name: '', plate: null, foodCategory: null
 }
 
 const styles = StyleSheet.create({
