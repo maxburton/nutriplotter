@@ -80,6 +80,7 @@ export default class App extends React.Component {
 
 	var p = new popArray();
 	var q = new popList();
+	global.plate = [];
 	platedb.find({}, function (err, newDocs) {
 		global.plate = newDocs;
 	});

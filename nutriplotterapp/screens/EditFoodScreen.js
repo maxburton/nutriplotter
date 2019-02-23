@@ -27,6 +27,11 @@ class FlatListItem extends Component{
 	}
 	
 	updatePlate = (val) =>{
+		for(let i = 0; i < global.plate.length; i++){
+			if(global.plate[i]._id.toLowerCase() == this.props.item.name[0].toLowerCase()){
+				global.plate[i].amount = val;
+			}
+		}
 		platedb.update({ _id: this.props.item.name[0].toLowerCase() }, { $set: { amount: val }}, {}, function (err, numReplaced) {
 			console.log(numReplaced);
 			platedb.find({}, function (err, docs) {

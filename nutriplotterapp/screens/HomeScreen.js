@@ -152,8 +152,9 @@ export default class HomeScreen extends React.Component {
       vitB9: 0,
       vitC: 0
     };
-    platedb.find({}, function(err, foodDocs) {
-      if (foodDocs.length > 0) {
+	
+	var foodDocs = global.plate;
+    if (foodDocs.length > 0) {
         for (let i = 0; i < foodDocs.length; i++) {
           totals["calories"] += Math.round(
             (foodDocs[i].data.calories * (foodDocs[i].amount * 0.01) * 100) /
@@ -197,8 +198,7 @@ export default class HomeScreen extends React.Component {
           );
         }
         updateState();
-      }
-    });
+    }
 
     updateState = () => {
       this.setState({ totals: totals });
