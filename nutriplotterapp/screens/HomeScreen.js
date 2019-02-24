@@ -207,6 +207,25 @@ export default class HomeScreen extends React.Component {
 
   render() {
     const styles = getStyleSheet(this.state.darkTheme);
+    var apple = new Food({
+      name: "apples",
+      score: {
+        calories: 51,
+        carbs: 11.6,
+        fats: 0.5,
+        protein: 0.6,
+        sugar: 11.6,
+        satfat: 0.12,
+        fibre: 2.5,
+        omega3: 0.2,
+        calcium: 0,
+        vitA: 14.0,
+        vitB1: 0.04,
+        vitB9: 0,
+        vitC: 6
+      },
+      plate: this.plate
+    });
     var food = new Food({ name: "Foo", plate: this.plate });
     var food2 = new Food({ name: "Foo2", plate: this.plate });
     var food3 = new Food({ name: "Foo3", plate: this.plate });
@@ -219,14 +238,14 @@ export default class HomeScreen extends React.Component {
         behavior="position"
         contentContainerStyle={styles.container}
       >
-        {food.render()}
+        {apple.render()}
         <View style={styles.list}>
           <TouchableOpacity
             style={styles.list}
             onPress={
               // Pass a reference to the plate so we can edit its state in the EditFoodScreen
-              () =>this.props.navigation.navigate(
-                "EditFoodScreen", {
+              () =>
+                this.props.navigation.navigate("EditFoodScreen", {
                   plate: this.plate
                 })
             }

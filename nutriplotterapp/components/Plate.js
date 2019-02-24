@@ -178,6 +178,7 @@ export default class Plate extends Component {
       this.state.score[scoreKey] += food.score[scoreKey];
     }
     console.log("Added " + food.state.name + " to plate.");
+    console.log(this.getNutritionScores());
   }
 
   // Remove a food object from this plate.
@@ -196,16 +197,17 @@ export default class Plate extends Component {
     
     this.state.foods = [...newFoods];
 
-    var newScores = this.state.score;
+    var newScores = JSON.parse(JSON.stringify(this.state.score));
 
-    for (var scoreKey in this.state.foods) {
+    for (var scoreKey in this.state.score) {
       // Take the score of the removed food from the plate's total score.
-      newScores[scoreKey] -= this.state.foods[scoreKey];
+      newScores[scoreKey] = this.state.score[scoreKey] - food.score[scoreKey];
     }
     
-    this.state.scoe = newScores;
+    this.state.score = newScores;
     
     console.log("Removed " + food.state.name + " from plate.");
+    console.log(this.getNutritionScores());
   }
 
   // Get the names of all food items on the plate
@@ -224,6 +226,11 @@ export default class Plate extends Component {
     }
   }
 
+  getNutritionScores(){
+    for (var scoreKey in this.state.score){
+      console.log(scoreKey + ": " + this.state.score[scoreKey]);
+    }
+  }
 
   deleteItem = searchString => {
     var dbQuery = "select name from foods;";
