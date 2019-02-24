@@ -15,3 +15,5 @@ COPY package.json .
 
 RUN npm install &&\
 		npm install --only=dev
+
+SHELL ["/bin/sh"]
