@@ -1,15 +1,17 @@
-FROM node:11.9-alpine
+FROM node:alpine
 
-# install Alpine dependencies
-RUN apk add git openjdk8-jre bash python make g++ --no-cache &&\
- 		npm install expo-cli gulp-cli turtle-cli --global --unsafe-perm
+ARG APP_DIR=/home/node/app
+ENV APP_DIR=${APP_DIR}
+
+RUN apk add git openjdk8 bash python make g++ --no-cache && \
+		npm install -g --unsafe-perm expo-cli gulp-cli turtle-cli
+
+RUN mkdir -p ${APP_DIR}/node_modules && chown -R node:node ${APP_DIR}
 
 USER node
 
-WORKDIR /home/node/
-
+WORKDIR ${APP_DIR}
 COPY package.json .
 
-# install NPM dependencies
 RUN npm install &&\
 		npm install --only=dev
