@@ -45,8 +45,6 @@ export default class Plate extends Component {
     }
   };
 
-  
-
   onPlateClick = () => {
     console.log("Plate Clicked");
     var dbQuery = "select name, amount from plate;";
@@ -179,32 +177,41 @@ export default class Plate extends Component {
     for (var scoreKey in this.state.score) {
       this.state.score[scoreKey] += food.score[scoreKey];
     }
-    console.log("Added "+food.name +" to plate.");
+    console.log("Added " + food.state.name + " to plate.");
   }
 
   // Remove a food object from this plate.
   removeFood(food) {
     if (this.state.foods.length < 1) {
-      console.log("Failed to remove "+ food.name + " from plate: there are no foods stored within this plate's state.");
+      console.log(
+        "Failed to remove " +
+          food.state.name +
+          " from plate: there are no foods stored within this plate's state."
+      );
       return;
     }
+    
+    let newFoods = this.state.foods.slice()
+                                    .filter(item => item.state.name !== food.state.name);
+    
+    this.state.foods = [...newFoods];
 
-    for (var i = 0; i < this.state.foods.length; i++) {
-      if (this.state.foods[i] == food) {
-        this.state.foods = this.state.foods.splice(i, 1); // Remove the element at i in-place
-        for (var scoreKey in this.state.foods) {
-          // Take the score of the removed food from the plate's total score.
-          this.state.score[scoreKey] -= food.state.score[scoreKey]; 
-        }
-        console.log("Removed "+food.name+ " from plate.");
-      }
+    var newScores = this.state.score;
+
+    for (var scoreKey in this.state.foods) {
+      // Take the score of the removed food from the plate's total score.
+      newScores[scoreKey] -= this.state.foods[scoreKey];
     }
+    
+    this.state.scoe = newScores;
+    
+    console.log("Removed " + food.state.name + " from plate.");
   }
 
   // Get the names of all food items on the plate
   getFoodNames() {
     console.log("Getting food names");
-    if (this.state.empty) {
+    if (this.state.foods.length < 1) {
       return "The plate is empty.";
     } else {
       //console.log(this.state.foods);
@@ -216,6 +223,7 @@ export default class Plate extends Component {
       return s;
     }
   }
+
 
   deleteItem = searchString => {
     var dbQuery = "select name from foods;";

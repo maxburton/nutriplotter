@@ -225,8 +225,8 @@ export default class HomeScreen extends React.Component {
             style={styles.list}
             onPress={
               // Pass a reference to the plate so we can edit its state in the EditFoodScreen
-              () =>
-                this.props.navigation.navigate("EditFoodScreen", {
+              () =>this.props.navigation.navigate(
+                "EditFoodScreen", {
                   plate: this.plate
                 })
             }
