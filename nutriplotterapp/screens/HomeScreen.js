@@ -30,6 +30,22 @@ var Datastore = require("react-native-local-mongodb"),
 
 import Food from "../components/Food";
 
+let defaultScore = {
+  calories: 0,
+  carbs: 0,
+  fats: 0,
+  protein: 0,
+  sugar: 0,
+  satfat: 0,
+  fibre: 0,
+  omega3: 0,
+  calcium: 0,
+  vitA: 0,
+  vitB1: 0,
+  vitB9: 0,
+  vitC: 0
+};
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: "Play with Your Food"
@@ -65,10 +81,14 @@ export default class HomeScreen extends React.Component {
     };
     this.toggleTheme = this.toggleTheme.bind(this);
 
-    // When creating the homescreen, create a reference to the plate to be rendered
-    // so that we may be able to call methods on the plate and manipulate its state from other components
-    // on the screen.
-    this.plate = new Plate({ styles: getStyleSheet(this.state.darkTheme) });
+    // When creating the homescreen, create a plate with the given score and foods props:
+    // on app start up, the empty default props are used, otherwise, the values sent via the
+    // navigate props are used to instantiate the plate
+    this.plate = new Plate({
+      styles: getStyleSheet(this.state.darkTheme),
+      foods: props.foods,
+      score: props.score
+    });
   }
 
   // ************* NEEDS A 'SUBMIT' BUTTON TO WORK, CURRENTLY NOT ONE *************
@@ -127,8 +147,8 @@ export default class HomeScreen extends React.Component {
   _resultsClick() {
     /**check plate size**/
     /**var contents = this._getPlateContents();**/
-    var contents = 1;
-    if (contents == 0) {
+
+    if (this.plate.state.foods.length < 1) {
       alert("Try adding some food first!");
     } else {
       /**display results**/
@@ -137,21 +157,7 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    var totals = {
-      calories: 0,
-      carbs: 0,
-      fats: 0,
-      protein: 0,
-      sugar: 0,
-      satfat: 0,
-      fibre: 0,
-      omega3: 0,
-      calcium: 0,
-      vitA: 0,
-      vitB1: 0,
-      vitB9: 0,
-      vitC: 0
-    };
+    var totals = defaultScore;
     platedb.find({}, function(err, foodDocs) {
       if (foodDocs.length > 0) {
         for (let i = 0; i < foodDocs.length; i++) {
@@ -207,19 +213,51 @@ export default class HomeScreen extends React.Component {
 
   render() {
     const styles = getStyleSheet(this.state.darkTheme);
+    // Use previous plate data if coming from another screen, otherwise create a new plate component with the
+    // current theme.
+    this.plate = this.props.navigation.getParam(
+      "plate",
+      new Plate({
+        style: this.styles,
+        foods: this.props.navigation.getParam("foods", []),
+        score: this.props.navigation.getParam("score", defaultScore)
+      })
+    );
+
+    var apple = new Food({
+      name: "apples",
+      score: {
+        calories: 51,
+        carbs: 11.6,
+        fats: 0.5,
+        protein: 0.6,
+        sugar: 11.6,
+        satfat: 0.12,
+        fibre: 2.5,
+        omega3: 0.2,
+        calcium: 0,
+        vitA: 14.0,
+        vitB1: 0.04,
+        vitB9: 0,
+        vitC: 6
+      },
+      plate: this.plate
+    });
     var food = new Food({ name: "Foo", plate: this.plate });
     var food2 = new Food({ name: "Foo2", plate: this.plate });
     var food3 = new Food({ name: "Foo3", plate: this.plate });
 
     //const styles = getStyleSheet(this.state.darkTheme);
     //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
+
+    console.log(this.plate);
     return (
       <KeyboardAvoidingView
         style={styles.container}
         behavior="position"
         contentContainerStyle={styles.container}
       >
-        {food.render()}
+        {apple.render()}
         <View style={styles.list}>
           <TouchableOpacity
             style={styles.list}
@@ -227,7 +265,9 @@ export default class HomeScreen extends React.Component {
               // Pass a reference to the plate so we can edit its state in the EditFoodScreen
               () =>
                 this.props.navigation.navigate("EditFoodScreen", {
-                  plate: this.plate
+                  plate: this.plate,
+                  foods: this.plate.state.foods,
+                  score: this.plate.state.score
                 })
             }
           >
@@ -312,19 +352,19 @@ export default class HomeScreen extends React.Component {
                 }}
               >
                 {[
-                  "\n\n" + this.state.totals["calories"] + "\n",
-                  this.state.totals["carbs"] + "\n",
-                  this.state.totals["fats"] + "\n",
-                  this.state.totals["protein"] + "\n",
-                  this.state.totals["sugar"] + "\n",
-                  this.state.totals["satfat"] + "\n",
-                  this.state.totals["fibre"] + "\n",
-                  this.state.totals["omega3"] + "\n",
-                  this.state.totals["calcium"] + "\n",
-                  this.state.totals["vitA"] + "\n",
-                  this.state.totals["vitB1"] + "\n",
-                  this.state.totals["vitB9"] + "\n",
-                  this.state.totals["vitC"] + "\n"
+                  "\n\n" + this.plate.state.score["calories"] + "\n",
+                  this.plate.state.score["carbs"] + "\n",
+                  this.plate.state.score["fats"] + "\n",
+                  this.plate.state.score["protein"] + "\n",
+                  this.plate.state.score["sugar"] + "\n",
+                  this.plate.state.score["satfat"] + "\n",
+                  this.plate.state.score["fibre"] + "\n",
+                  this.plate.state.score["omega3"] + "\n",
+                  this.plate.state.score["calcium"] + "\n",
+                  this.plate.state.score["vitA"] + "\n",
+                  this.plate.state.score["vitB1"] + "\n",
+                  this.plate.state.score["vitB9"] + "\n",
+                  this.plate.state.score["vitC"] + "\n"
                 ]}
               </Text>
             </View>
@@ -371,6 +411,11 @@ export default class HomeScreen extends React.Component {
     );
   }
 }
+
+HomeScreen.defaultProps = {
+  foods: [],
+  score: {}
+};
 
 const offset = 24;
 const { width, height } = require("Dimensions").get("window");
