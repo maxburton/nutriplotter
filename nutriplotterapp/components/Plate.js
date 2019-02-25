@@ -45,6 +45,13 @@ export default class Plate extends Component {
     }
   };
 
+  // Set up the plate to be constructed with score and foods, which are 0s and empty (resp.) by default
+  constructor(props){
+    super(props);
+    this.state.score = props.score;
+    this.state.foods = props.foods;
+  }
+
   onPlateClick = () => {
     console.log("Plate Clicked");
     var dbQuery = "select name, amount from plate;";
@@ -264,4 +271,24 @@ export default class Plate extends Component {
       //code runs after field deleted
     });
   };
+}
+
+Plate.defaultProps = {
+  foods: [],
+  score: {
+    calories: 0,
+    carbs: 0,
+    fats: 0,
+    protein: 0,
+    sugar: 0,
+    satfat: 0,
+    fibre: 0,
+    omega3: 0,
+    calcium: 0,
+    vitA: 0,
+    vitB1: 0,
+    vitB9: 0,
+    vitC: 0
+  },
+  empty: true
 }

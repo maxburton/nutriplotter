@@ -118,7 +118,7 @@ export default class Food extends Component {
         style={[animatedStyle, styles]}
         {...this.panResponder.panHandlers}
       >
-        <Image source={require("../assets/images/fruit.png")} />
+        <Image style={styles.image} source={require("../assets/images/fruit.png")} />
       </Animated.View>
     );
   }
@@ -131,8 +131,7 @@ export default class Food extends Component {
       Math.pow(plateDim.center.x - this._value.x, 2) +
         Math.pow(plateDim.center.y - this._value.y, 2)
     );
-    var plateRadius = Math.floor(plateDim.radius / 2);
-    return foodRadius <= plateRadius;
+    return foodRadius <= plateDim.radius*0.9;
   }
 
   // True if this food is on the plate (stored in the Plate's food array) otherwise false
@@ -155,5 +154,8 @@ Food.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-  zIndex: 10
+  zIndex: 10,
+  image: {
+    width: 40, height: 40
+  }
 });
