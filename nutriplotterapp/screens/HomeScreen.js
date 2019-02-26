@@ -252,14 +252,49 @@ export default class HomeScreen extends React.Component {
     console.log(this.plate);
     return (
       <KeyboardAvoidingView
-        style={styles.container}
+        style={[
+          styles.container,
+          {
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "stretch"
+          }
+        ]}
         behavior="position"
         contentContainerStyle={styles.container}
       >
+        <TouchableOpacity
+          onPress={() =>
+            this.props.navigation.navigate("EditFoodScreen", {
+              plate: this.plate,
+              foods: this.plate.state.foods,
+              score: this.plate.state.score
+            })
+          }
+          style={{
+            backgroundColor: "skyblue",
+            zIndex: 10
+          }}
+        >
+          <Text style={{fontSize: 24}}>Edit</Text>
+        </TouchableOpacity>
+
         {apple.render()}
-        <View style={styles.list}>
+        {/* Central block */}
+        <View
+          style={[
+            styles.list,
+            {
+              height: 200,
+              backgroundColor: "red",
+              marginHorizontal: "10%", //20,
+              zIndex: -1
+            }
+          ]}
+        >
           <TouchableOpacity
-            style={styles.list}
+            style={[styles.list]}
             onPress={
               // Pass a reference to the plate so we can edit its state in the EditFoodScreen
               () =>
@@ -274,15 +309,23 @@ export default class HomeScreen extends React.Component {
           </TouchableOpacity>
         </View>
 
-        <Text style={styles.title}>Enter a food:</Text>
-        <View style={styles.list}>
-          <List style={styles.list} />
-        </View>
+        {/* Bottommost content*/}
+        <View
+          style={{
+            backgroundColor: "green",
+            zIndex: -1
+          }}
+        >
+          <Text style={styles.title}>Enter a food:</Text>
+          <View style={styles.list}>
+            <List style={styles.list} />
+          </View>
 
-        <View>
-          <TouchableOpacity onPress={() => this._resultsClick()}>
-            <Text style={styles.title}>Submit</Text>
-          </TouchableOpacity>
+          <View>
+            <TouchableOpacity onPress={() => this._resultsClick()}>
+              <Text style={styles.title}>Submit</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/**view start**/}

@@ -155,7 +155,7 @@ Food.defaultProps = {
 };
 
 const styles = StyleSheet.create({
-  zIndex: 10,
+  zIndex: 11,
   image: {
     width: 40, height: 40
   }
