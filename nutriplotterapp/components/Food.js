@@ -39,10 +39,11 @@ export default class Food extends Component {
     this.plate = props.plate; // Does not change as frequently as state
     this.state = {
       name: props.name,
-      foodCategory: props.foodCategory,
       onPlate: false,
-      portions: 1, // Make the amount of food item (i.e., the portion) dragged onto the plate 1 to start with
+      amount: 1, // Make the amount of food item (i.e., the portion) dragged onto the plate 1 to start with
+      group: props.foodCategory
     }; // Set the name of the food from the name prop if given, otherwise default is ''
+
 
     // Record the x,y position of the component: this can be used to check if we've added it
     // to the plate or not.
