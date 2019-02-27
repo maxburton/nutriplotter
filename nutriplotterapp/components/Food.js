@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Image, Animated, PanResponder, StyleSheet } from "react-native";
-
+import windowDimensions from '../screens/HomeScreen';
 /*
     React Component representing an item of food by a draggable image.
     The idea is to be able to encapsulate an individual item of food and allow the
@@ -41,7 +41,8 @@ export default class Food extends Component {
       name: props.name,
       onPlate: false,
       amount: 1, // Make the amount of food item (i.e., the portion) dragged onto the plate 1 to start with
-      group: props.foodCategory
+      group: props.foodCategory,
+      previous: {x: 0, y: 0}
     }; // Set the name of the food from the name prop if given, otherwise default is ''
 
 
@@ -89,7 +90,7 @@ export default class Food extends Component {
         }).start();
         
         this.handleInteraction();  // Handle if the food item is added or removed from the plate
-        this.state.pos = this._value; // Update the position
+        this.state.previous = this._value; // Update the position
       }
     });
   }
@@ -104,7 +105,6 @@ export default class Food extends Component {
         this.plate.removeFood(this);
         this.state.onPlate = false;
     }
-    console.log(this.plate.getFoodNames());
   }
 
 
@@ -112,11 +112,15 @@ export default class Food extends Component {
     const animatedStyle = {
       transform: this.animatedValue.getTranslateTransform()
     };
-    console.log(this.state.image);
-
+    console.log(this.state.previous);
+    console.log(this.plate.state);
     return (
       <Animated.View
-        style={[animatedStyle, styles]}
+        style={[animatedStyle, styles, {
+          position: 'absolute',
+          left: this.state.previous.x-this._value.x,
+          top: this.state.previous.y-this._value.y
+        }]}
         {...this.panResponder.panHandlers}
       >
         <Image style={styles.image} source={require("../assets/images/fruit.png")} />

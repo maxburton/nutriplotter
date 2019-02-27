@@ -45,7 +45,6 @@ export default class EditFoodScreen extends Component {
       <Button
         title="Back"
         onPress={() => {
-          console.log(this.plate);
           navigation.navigate("Home", {
             foods: navigation.getParam("foods", []), //this.state.foods,
             score: navigation.getParam("score", defaultScore)
@@ -65,7 +64,6 @@ export default class EditFoodScreen extends Component {
   constructor(props) {
     super(props);
     this.state.foods = props.foods;
-    console.log(this.state.foods);
     this.state.score = props.score;
   }
 
@@ -127,6 +125,8 @@ export default class EditFoodScreen extends Component {
     );
     deletePlate = () => {
       this.setState({ foods: [] });
+      this.state.score = defaultScore;
+      this.state.foods = [];
     };
   };
   ///////
@@ -146,13 +146,6 @@ export default class EditFoodScreen extends Component {
       vitB1: 0,
       vitB9: 0,
       vitC: 0
-    });
-
-    // Each time this screen is loaded, we create a new plate from the previous one's properties
-    this.plate = new Plate({
-      style: getStyleSheet(false),
-      score: this.state.score,
-      foods: this.state.foods
     });
 
     if (!this.state.promiseIsResolved) {
@@ -196,21 +189,13 @@ export default class EditFoodScreen extends Component {
       });
       maximumGrams -= global.plate[i].amount;
     }
-    this.setState({ foods: allFoods });
+    //this.setState({ foods: allFoods });
 
     function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
   };
 }
-
-EditFoodScreen.defaultProps = {
-  plate: null,
-  foods: [],
-  score: {}
-};
-
-
 
 // Represents an food entry in the plate as an item in a list with controls used to change amount
 class FlatListItem extends Component {
@@ -360,8 +345,6 @@ class FlatListItem extends Component {
   }
 
   deleteItem = foodName => {
-    console.log(this.props.item.plate.state.foods);
-    console.log("DELETE PRESSED");
     var foods = this.props.item.plate.state.foods;
     for (let i = 0; i < foods.length; i++) {
       //console.log(global.plate[i]._id + "  --  " + foodName);
@@ -388,8 +371,6 @@ class FlatListItem extends Component {
     ) {});
     this.props.flatListParent.refreshFlatList();
     console.log("Food removed from plate");
-    console.log(foods);
-    console.log(this.item.plate.state.foods);
   };
 }
 

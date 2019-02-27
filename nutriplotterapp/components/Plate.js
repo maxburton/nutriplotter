@@ -53,7 +53,6 @@ export default class Plate extends Component {
   }
 
   onPlateClick = () => {
-    console.log("Plate Clicked");
     var dbQuery = "select name, amount from plate;";
     //alert(item.name);
     // Promises are for error handling operations, particularly asynchronous I/O operations:
@@ -113,11 +112,18 @@ export default class Plate extends Component {
 
   render() {
     return (
-      <View style={styles.viewContainer}>
-        <View
+        <View style={[
+          {
+            height: 200,
+            backgroundColor: "red",
+            marginHorizontal: "10%", //20,
+            zIndex: -1
+          }
+        ]}
           style={styles.plate}
           onLayout={event => {
             var dimension = event.nativeEvent.layout;
+            
             this.state.dimensions = {
               x: dimension.x,
               y: dimension.y,
@@ -147,11 +153,12 @@ export default class Plate extends Component {
               colors={this.state.pieColours}
               style={StyleSheet.create({ zIndex: 1 })}
             />
+
           </ImageBackground>
+
+            {this.renderFoodFromState()}
         </View>
 
-        {this.renderFoodFromState()}
-      </View>
     );
   }
 
@@ -162,7 +169,6 @@ export default class Plate extends Component {
 
     for (const food of this.state.foods) {
       foodRender.push(food.render());
-      console.log(food);
     }
     return foodRender;
   }
@@ -185,7 +191,6 @@ export default class Plate extends Component {
       this.state.score[scoreKey] += food.score[scoreKey];
     }
     console.log("Added " + food.state.name + " to plate.");
-    console.log(this.getNutritionScores());
   }
 
   // Remove a food object from this plate.
@@ -214,12 +219,10 @@ export default class Plate extends Component {
     this.state.score = newScores;
     
     console.log("Removed " + food.state.name + " from plate.");
-    console.log(this.getNutritionScores());
   }
 
   // Get the names of all food items on the plate
   getFoodNames() {
-    console.log("Getting food names");
     if (this.state.foods.length < 1) {
       return "The plate is empty.";
     } else {

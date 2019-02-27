@@ -46,6 +46,11 @@ let defaultScore = {
   vitC: 0
 };
 
+export const windowDimensions = {
+  height: Dimensions.get('window').height,
+  width: Dimensions.get('window').width
+}
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: "Play with Your Food"
@@ -249,7 +254,6 @@ export default class HomeScreen extends React.Component {
     //const styles = getStyleSheet(this.state.darkTheme);
     //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
 
-    console.log(this.plate);
     return (
       <KeyboardAvoidingView
         style={[
@@ -277,37 +281,13 @@ export default class HomeScreen extends React.Component {
             zIndex: 10
           }}
         >
-          <Text style={{fontSize: 24}}>Edit</Text>
+          <Text style={{ fontSize: 24 }}>Edit</Text>
         </TouchableOpacity>
 
         {apple.render()}
         {/* Central block */}
-        <View
-          style={[
-            styles.list,
-            {
-              height: 200,
-              backgroundColor: "red",
-              marginHorizontal: "10%", //20,
-              zIndex: -1
-            }
-          ]}
-        >
-          <TouchableOpacity
-            style={[styles.list]}
-            onPress={
-              // Pass a reference to the plate so we can edit its state in the EditFoodScreen
-              () =>
-                this.props.navigation.navigate("EditFoodScreen", {
-                  plate: this.plate,
-                  foods: this.plate.state.foods,
-                  score: this.plate.state.score
-                })
-            }
-          >
-            {this.plate.render()}
-          </TouchableOpacity>
-        </View>
+
+        {this.plate.render()}
 
         {/* Bottommost content*/}
         <View
@@ -331,7 +311,7 @@ export default class HomeScreen extends React.Component {
         {/**view start**/}
         <Modal
           backdropOpacity={0.5}
-          swipeDirection="up"
+          swipeDirection="left"
           onSwipe={this.closeModal}
           isVisible={this.state.isModalVisible}
         >
