@@ -47,9 +47,9 @@ let defaultScore = {
 };
 
 export const windowDimensions = {
-  height: Dimensions.get('window').height,
-  width: Dimensions.get('window').width
-}
+  height: Dimensions.get("window").height,
+  width: Dimensions.get("window").width
+};
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -259,10 +259,9 @@ export default class HomeScreen extends React.Component {
         style={[
           styles.container,
           {
-            flex: 1,
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "stretch"
+           // alignItems: "stretch"
           }
         ]}
         behavior="position"
@@ -290,23 +289,18 @@ export default class HomeScreen extends React.Component {
         {this.plate.render()}
 
         {/* Bottommost content*/}
-        <View
-          style={{
-            backgroundColor: "green",
+
+        <View style={{zIndex: -1}}>
+          <Button title={'Submit'} 
+            onPress={() => this._resultsClick()}>
+          </Button>
+        </View>
+
+          <View style={[styles.list, {
             zIndex: -1
-          }}
-        >
-          <Text style={styles.title}>Enter a food:</Text>
-          <View style={styles.list}>
+          }]}>
             <List style={styles.list} />
           </View>
-
-          <View>
-            <TouchableOpacity onPress={() => this._resultsClick()}>
-              <Text style={styles.title}>Submit</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
 
         {/**view start**/}
         <Modal
@@ -423,12 +417,12 @@ export default class HomeScreen extends React.Component {
           </View>
         </Modal>
 
-        <Button
+        {/*<Button
           title="Increment Score By 200"
           onPress={() => this.updateScore(global.isLoggedIn, 200)}
         >
           <Text>Increment Score By 200</Text>
-        </Button>
+        </Button>*/}
       </KeyboardAvoidingView>
     );
   }
