@@ -47,22 +47,8 @@ export default class HomeScreen extends React.Component {
     this.state = {
       isModalVisible: false,
       darkTheme: false,
-      totals: {
-        calories: 0,
-        carbs: 0,
-        fats: 0,
-        protein: 0,
-        sugar: 0,
-        satfat: 0,
-        fibre: 0,
-        omega3: 0,
-        calcium: 0,
-        vitA: 0,
-        vitB1: 0,
-        vitB9: 0,
-        vitC: 0
-      }
     };
+	this.resetGlobalTotals();
     this.toggleTheme = this.toggleTheme.bind(this);
 
     // When creating the homescreen, create a reference to the plate to be rendered
@@ -135,77 +121,74 @@ export default class HomeScreen extends React.Component {
       this._toggleModal();
     }
   }
-
-  componentDidMount() {
-    var totals = {
-      calories: 0,
-      carbs: 0,
-      fats: 0,
-      protein: 0,
-      sugar: 0,
-      satfat: 0,
-      fibre: 0,
-      omega3: 0,
-      calcium: 0,
-      vitA: 0,
-      vitB1: 0,
-      vitB9: 0,
-      vitC: 0
+  
+  
+	resetGlobalTotals = () => {
+	  global.totals = {
+        calories: 0,
+        carbs: 0,
+        fats: 0,
+        protein: 0,
+        sugar: 0,
+        satfat: 0,
+        fibre: 0,
+        omega3: 0,
+        calcium: 0,
+        vitA: 0,
+        vitB1: 0,
+        vitB9: 0,
+        vitC: 0
+      };
     };
+
+  render() {
 	
 	var foodDocs = global.plate;
     if (foodDocs.length > 0) {
+		this.resetGlobalTotals();
         for (let i = 0; i < foodDocs.length; i++) {
-          totals["calories"] += Math.round(
+          global.totals["calories"] += Math.round(
             (foodDocs[i].data.calories * (foodDocs[i].amount * 0.01) * 100) /
               100
           );
-          totals["carbs"] += Math.round(
+          global.totals["carbs"] += Math.round(
             (foodDocs[i].data.carbs * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["fats"] += Math.round(
+          global.totals["fats"] += Math.round(
             (foodDocs[i].data.fats * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["protein"] += Math.round(
+          global.totals["protein"] += Math.round(
             (foodDocs[i].data.protein * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["sugar"] += Math.round(
+          global.totals["sugar"] += Math.round(
             (foodDocs[i].data.sugar * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["satfat"] += Math.round(
+          global.totals["satfat"] += Math.round(
             (foodDocs[i].data.satfat * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["fibre"] += Math.round(
+          global.totals["fibre"] += Math.round(
             (foodDocs[i].data.fibre * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["omega3"] += Math.round(
+          global.totals["omega3"] += Math.round(
             (foodDocs[i].data.omega3 * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["calcium"] += Math.round(
+          global.totals["calcium"] += Math.round(
             (foodDocs[i].data.calcium * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["vitA"] += Math.round(
+          global.totals["vitA"] += Math.round(
             (foodDocs[i].data.vitA * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["vitB1"] += Math.round(
+          global.totals["vitB1"] += Math.round(
             (foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["vitB9"] += Math.round(
+          global.totals["vitB9"] += Math.round(
             (foodDocs[i].data.vitB9 * (foodDocs[i].amount * 0.01) * 100) / 100
           );
-          totals["vitC"] += Math.round(
+          global.totals["vitC"] += Math.round(
             (foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01) * 100) / 100
           );
         }
-        updateState();
     }
-
-    updateState = () => {
-      this.setState({ totals: totals });
-    };
-  }
-
-  render() {
     const styles = getStyleSheet(this.state.darkTheme);
 
     //const styles = getStyleSheet(this.state.darkTheme);
@@ -308,19 +291,19 @@ export default class HomeScreen extends React.Component {
                 }}
               >
                 {[
-                  "\n\n" + this.state.totals["calories"] + "\n",
-                  this.state.totals["carbs"] + "\n",
-                  this.state.totals["fats"] + "\n",
-                  this.state.totals["protein"] + "\n",
-                  this.state.totals["sugar"] + "\n",
-                  this.state.totals["satfat"] + "\n",
-                  this.state.totals["fibre"] + "\n",
-                  this.state.totals["omega3"] + "\n",
-                  this.state.totals["calcium"] + "\n",
-                  this.state.totals["vitA"] + "\n",
-                  this.state.totals["vitB1"] + "\n",
-                  this.state.totals["vitB9"] + "\n",
-                  this.state.totals["vitC"] + "\n"
+                  "\n\n" + global.totals["calories"] + "\n",
+                  global.totals["carbs"] + "\n",
+                  global.totals["fats"] + "\n",
+                  global.totals["protein"] + "\n",
+                  global.totals["sugar"] + "\n",
+                  global.totals["satfat"] + "\n",
+                  global.totals["fibre"] + "\n",
+                  global.totals["omega3"] + "\n",
+                  global.totals["calcium"] + "\n",
+                  global.totals["vitA"] + "\n",
+                  global.totals["vitB1"] + "\n",
+                  global.totals["vitB9"] + "\n",
+                  global.totals["vitC"] + "\n"
                 ]}
               </Text>
             </View>
