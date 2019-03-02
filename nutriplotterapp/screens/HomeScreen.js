@@ -59,8 +59,8 @@ export default class HomeScreen extends React.Component {
 
   // ************* NEEDS A 'SUBMIT' BUTTON TO WORK, CURRENTLY NOT ONE *************
   updateScore = async (name, score) => {
-    console.log(global.isLoggedIn);
     //get scores as dict
+	name = global.isLoggedIn;
     firebase
       .database()
       .ref("scores/")
@@ -122,6 +122,39 @@ export default class HomeScreen extends React.Component {
     }
   }
   
+  calculateScore(){
+	  idealNutrients = {
+		calories: new Array("-", 600, 800),
+        carbs: new Array("-", 17, 51),
+        fats: new Array("-", 15, 26),
+        protein: new Array("-", 15, 33),
+        sugar: new Array("<", 10),
+        satfat: new Array("<", 8),
+        fibre: new Array(">", 10),
+        omega3: new Array(">", 150),
+        calcium: new Array(">", 10),
+        vitA: new Array(">", 10),
+        vitB1: new Array(">", 10),
+        vitB9: new Array(">", 10),
+        vitC: new Array(">", 10),
+	  }
+	  let score = 10000;
+	  for (var key in global.totals) {
+		  
+	  }
+	  return score;
+  }
+  
+  submitPlate = () => {
+	  this.setState({ isModalVisible: false });
+	  this.updateScore(this.calculateScore());
+  }
+  
+  tweakPlate = () => {
+	  this.setState({ isModalVisible: false });
+	  global.tweak++;
+  }
+  
   
 	resetGlobalTotals = () => {
 	  global.totals = {
@@ -147,46 +180,24 @@ export default class HomeScreen extends React.Component {
     if (foodDocs.length > 0) {
 		this.resetGlobalTotals();
         for (let i = 0; i < foodDocs.length; i++) {
-          global.totals["calories"] += Math.round(
-            (foodDocs[i].data.calories * (foodDocs[i].amount * 0.01) * 100) /
-              100
-          );
-          global.totals["carbs"] += Math.round(
-            (foodDocs[i].data.carbs * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["fats"] += Math.round(
-            (foodDocs[i].data.fats * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["protein"] += Math.round(
-            (foodDocs[i].data.protein * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["sugar"] += Math.round(
-            (foodDocs[i].data.sugar * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["satfat"] += Math.round(
-            (foodDocs[i].data.satfat * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["fibre"] += Math.round(
-            (foodDocs[i].data.fibre * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["omega3"] += Math.round(
-            (foodDocs[i].data.omega3 * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["calcium"] += Math.round(
-            (foodDocs[i].data.calcium * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["vitA"] += Math.round(
-            (foodDocs[i].data.vitA * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["vitB1"] += Math.round(
-            (foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["vitB9"] += Math.round(
-            (foodDocs[i].data.vitB9 * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          global.totals["vitC"] += Math.round(
-            (foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
+			
+			global.totals["calories"] += foodDocs[i].data.calories * (foodDocs[i].amount * 0.01);
+			global.totals["carbs"] += foodDocs[i].data.carbs * (foodDocs[i].amount * 0.01);
+			global.totals["fats"] += foodDocs[i].data.fats * (foodDocs[i].amount * 0.01);
+			global.totals["protein"] += foodDocs[i].data.protein * (foodDocs[i].amount * 0.01);
+			global.totals["sugar"] += foodDocs[i].data.sugar * (foodDocs[i].amount * 0.01);
+			global.totals["satfat"] += foodDocs[i].data.satfat * (foodDocs[i].amount * 0.01);
+			global.totals["fibre"] += foodDocs[i].data.fibre * (foodDocs[i].amount * 0.01);
+			global.totals["omega3"] += foodDocs[i].data.omega3 * (foodDocs[i].amount * 0.01 * 1000); //multiplied by 1000 because data is in grams but should be in mg
+			global.totals["calcium"] += foodDocs[i].data.calcium * (foodDocs[i].amount * 0.01);
+			global.totals["vitA"] += foodDocs[i].data.vitA * (foodDocs[i].amount * 0.01);
+			global.totals["vitB1"] += foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01);
+			global.totals["vitB9"] += foodDocs[i].data.vitB9 * (foodDocs[i].amount * 0.01);
+			global.totals["vitC"] += foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01);
+			
+			for(var key in global.totals){
+				global.totals[key] = Math.round(global.totals[key] * 10) / 10;
+			}
         }
     }
     const styles = getStyleSheet(this.state.darkTheme);
@@ -291,26 +302,26 @@ export default class HomeScreen extends React.Component {
                 }}
               >
                 {[
-                  "\n\n" + global.totals["calories"] + "\n",
-                  global.totals["carbs"] + "\n",
-                  global.totals["fats"] + "\n",
-                  global.totals["protein"] + "\n",
-                  global.totals["sugar"] + "\n",
-                  global.totals["satfat"] + "\n",
-                  global.totals["fibre"] + "\n",
-                  global.totals["omega3"] + "\n",
-                  global.totals["calcium"] + "\n",
-                  global.totals["vitA"] + "\n",
-                  global.totals["vitB1"] + "\n",
-                  global.totals["vitB9"] + "\n",
-                  global.totals["vitC"] + "\n"
+                  "\n\n" + global.totals["calories"] + " kcal\n",
+                  global.totals["carbs"] + "g\n",
+                  global.totals["fats"] + "g\n",
+                  global.totals["protein"] + "g\n",
+                  global.totals["sugar"] + "g\n",
+                  global.totals["satfat"] + "g\n",
+                  global.totals["fibre"] + "g\n",
+                  global.totals["omega3"] + "mg\n",
+                  global.totals["calcium"] + "mg\n",
+                  global.totals["vitA"] + "mg\n",
+                  global.totals["vitB1"] + "mg\n",
+                  global.totals["vitB9"] + "μg\n",
+                  global.totals["vitC"] + "mg\n"
                 ]}
               </Text>
             </View>
             <View style={{ flex: 1, alignItems: "center" }}>
               <TouchableOpacity
                 style={{ flex: 1 }}
-                onPress={() => this.setState({ isModalVisible: false })}
+                onPress={() => this.tweakPlate()}
               >
                 <Text
                   style={{
@@ -324,7 +335,7 @@ export default class HomeScreen extends React.Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={{ flex: 1 }}
-                onPress={() => this.setState({ isModalVisible: false })}
+                onPress={() => this.submitPlate()}
               >
                 <Text
                   style={{
@@ -339,13 +350,6 @@ export default class HomeScreen extends React.Component {
             </View>
           </View>
         </Modal>
-
-        <Button
-          title="Increment Score By 200"
-          onPress={() => this.updateScore(global.isLoggedIn, 200)}
-        >
-          <Text>Increment Score By 200</Text>
-        </Button>
       </KeyboardAvoidingView>
     );
   }

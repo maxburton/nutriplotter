@@ -69,8 +69,6 @@ export default class App extends React.Component {
         const value = await AsyncStorage.getItem("isFirstLaunch");
         if (value !== null) {
           isFirstLaunch = value;
-          console.log(value);
-          console.log(isFirstLaunch);
         }
       } catch (error) {
         console.log("error fetching data");
@@ -80,6 +78,7 @@ export default class App extends React.Component {
 
 	var p = new popArray();
 	var q = new popList();
+	global.tweaks = 0;
 	global.plate = [];
 	platedb.find({}, function (err, newDocs) {
 		global.plate = newDocs;
