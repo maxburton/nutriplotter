@@ -207,9 +207,6 @@ export default class HomeScreen extends React.Component {
 
   render() {
     const styles = getStyleSheet(this.state.darkTheme);
-    var food = new Food({ name: "Foo", plate: this.plate });
-    var food2 = new Food({ name: "Foo2", plate: this.plate });
-    var food3 = new Food({ name: "Foo3", plate: this.plate });
 
     //const styles = getStyleSheet(this.state.darkTheme);
     //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
@@ -219,7 +216,6 @@ export default class HomeScreen extends React.Component {
         behavior="position"
         contentContainerStyle={styles.container}
       >
-        {food.render()}
         <View style={styles.list}>
           <TouchableOpacity
             style={styles.list}
@@ -242,7 +238,7 @@ export default class HomeScreen extends React.Component {
 
         <View>
           <TouchableOpacity onPress={() => this._resultsClick()}>
-            <Text style={styles.title}>Submit</Text>
+            <Text style={styles.title}>Submit Plate</Text>
           </TouchableOpacity>
         </View>
 
