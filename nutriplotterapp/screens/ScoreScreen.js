@@ -8,16 +8,18 @@ import {
   TouchableOpacity,
   View,
   TextInput,
+  Button
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 
 export default class ScoreScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = ({navigation}) => ({
     //header: null,
 	title: 'Score',
-  };
+	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
+  });
   
   savePlate(){
 	  global.savedPlates.push(this.state.plate);
