@@ -429,7 +429,7 @@ const styles = StyleSheet.create ({
       color: '#4f603c'
    },
    scrollStyle: {
-	  height: '70%',  
+	  height: '80%',  
    },
   checkDB: {
 	  textAlign: 'center',
@@ -437,7 +437,10 @@ const styles = StyleSheet.create ({
    },
   nameInput: {
      height: '15%',
-     margin: '5%',
+     marginRight: '5%',
+	 marginLeft: '5%',
+	 marginTop: 5,
+	 marginBottom: 5,
      paddingHorizontal: '5%',
      borderColor: '#111111',
      borderWidth: 1,

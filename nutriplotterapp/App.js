@@ -15,6 +15,7 @@ import firebase from "./components/Firebase.js";
 var Datastore = require('react-native-local-mongodb'), 
 db = new Datastore({ filename: 'foods', autoload: true });
 platedb = new Datastore({ filename: 'plate', autoload: true });
+savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
 
 export default class App extends React.Component {
   state = {
@@ -80,6 +81,10 @@ export default class App extends React.Component {
 	var q = new popList();
 	global.tweaks = 0;
 	global.plate = [];
+	global.savedPlates = new Array();
+	savedPlatesdb.find({}, function (err, newDocs) {
+		global.savedPlates = newDocs;
+	});
 	platedb.find({}, function (err, newDocs) {
 		global.plate = newDocs;
 		let foodDocs = global.plate;

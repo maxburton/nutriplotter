@@ -194,8 +194,17 @@ export default class HomeScreen extends React.Component {
 	  let warnings = scoreArray["warnings"];
 	  let score = scoreArray["score"];
 	  this.updateScore(score);
-	  global.tweaks = 0;
-	  console.log(score);
+	  console.log("Score: " + score);
+	  this.props.navigation.navigate("ScoreScreen", {
+		plate: global.plate,
+		tweaks: global.tweaks,
+		score: score,
+		warnings: warnings,
+	  })
+	  platedb.remove({}, function (err, numRemoved) {
+		  global.tweaks = 0;
+		  global.plate = new Array();
+	  });
   }
   
   tweakPlate = () => {
@@ -248,7 +257,7 @@ export default class HomeScreen extends React.Component {
 			}
         }
     }
-    const styles = getStyleSheet(this.state.darkTheme);
+    //const styles = getStyleSheet(this.state.darkTheme);
 
     //const styles = getStyleSheet(this.state.darkTheme);
     //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
@@ -279,8 +288,8 @@ export default class HomeScreen extends React.Component {
         </View>
 
         <View>
-          <TouchableOpacity onPress={() => this._resultsClick()}>
-            <Text style={styles.title}>Submit Plate</Text>
+          <TouchableOpacity style={styles.submitPlate} onPress={() => this._resultsClick()}>
+            <Text style={styles.submitPlate}>Submit Plate</Text>
           </TouchableOpacity>
         </View>
 
@@ -416,6 +425,12 @@ const styles = StyleSheet.create({
     marginTop: offset,
     marginLeft: offset,
     fontSize: offset
+  },
+  submitPlate: {
+    alignItems: "center",
+	marginBottom: 2,
+	marginTop: 3,
+    fontSize: offset,
   },
   buttonText: {
     marginLeft: offset,
