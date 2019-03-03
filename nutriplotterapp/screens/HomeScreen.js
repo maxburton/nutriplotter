@@ -17,7 +17,8 @@ import {
   KeyboardAvoidingView,
   Button,
   Dimensions,
-  measure
+  measure,
+  Alert,
 } from "react-native";
 import Modal from "react-native-modal";
 import { WebBrowser, SQLite } from "expo";
@@ -57,8 +58,7 @@ export default class HomeScreen extends React.Component {
     this.plate = new Plate({ styles: getStyleSheet(this.state.darkTheme) });
   }
 
-  // ************* NEEDS A 'SUBMIT' BUTTON TO WORK, CURRENTLY NOT ONE *************
-  updateScore = async (name, score) => {
+  updateScore = async (score) => {
     //get scores as dict
 	name = global.isLoggedIn;
     firebase
@@ -84,7 +84,11 @@ export default class HomeScreen extends React.Component {
     //get currentscore and add this score
     if (orgDict[name]) {
       currentscore = orgDict[name];
-      newscore = currentscore + score;
+	  if(score > currentscore){
+		  newscore = score;
+	  }else{
+		  newscore = currentscore;
+	  }
     } else {
       newscore = score;
     }
@@ -123,7 +127,7 @@ export default class HomeScreen extends React.Component {
   }
   
   calculateScore(){
-	  idealNutrients = {
+	  let idealNutrients = {
 		calories: new Array("-", 600, 800),
         carbs: new Array("-", 17, 51),
         fats: new Array("-", 15, 26),
@@ -132,22 +136,65 @@ export default class HomeScreen extends React.Component {
         satfat: new Array("<", 8),
         fibre: new Array(">", 10),
         omega3: new Array(">", 150),
-        calcium: new Array(">", 10),
-        vitA: new Array(">", 10),
-        vitB1: new Array(">", 10),
-        vitB9: new Array(">", 10),
-        vitC: new Array(">", 10),
+        calcium: new Array(">", 333),
+        vitA: new Array(">", 275),
+        vitB1: new Array(">", 275),
+        vitB9: new Array("-", 160, 333),
+        vitC: new Array(">", 25),
 	  }
-	  let score = 10000;
+	  let score = 13000;
+	  let dangerLevel = 500;
+	  let warnings = new Array();
 	  for (var key in global.totals) {
-		  
+		  let nutrientTotal = global.totals[key];
+		  let operator = idealNutrients[key][0];
+		  let weight = 1000/idealNutrients[key][1];
+		  if(operator == "-"){
+			  let min = idealNutrients[key][1];
+			  let max = idealNutrients[key][2];
+			  if(nutrientTotal < min){
+				  let pointLoss =  Math.round((min - nutrientTotal) * weight);
+				  score -= pointLoss;
+				  if(pointLoss > dangerLevel){warnings.push([key, "-"])};
+			  }else if(nutrientTotal > max){
+				  let pointLoss =  Math.round((nutrientTotal - max) * weight);
+				  score -= pointLoss;
+				  if(pointLoss > dangerLevel){warnings.push([key, "+"])};
+			  }
+		  }else if(operator == "<"){
+			  let max = idealNutrients[key][1];
+			  if(nutrientTotal > max){
+				  let pointLoss =  Math.round((nutrientTotal - max) * weight);
+				  score -= pointLoss
+				  if(pointLoss > dangerLevel){warnings.push([key, "+"])};
+			  }
+		  }else if(operator == ">"){
+			  let min = idealNutrients[key][1];
+			  if(nutrientTotal < min){
+				  let pointLoss =  Math.round((min - nutrientTotal) * weight);
+				  score -= pointLoss
+				  if(pointLoss > dangerLevel){warnings.push([key, "-"])};
+			  }
+		  }
 	  }
-	  return score;
+	  score -= global.tweaks * 500;
+	  if(score < 0){
+		  score = 0;
+	  }
+	  console.log("Score: " + score);
+	  return {
+		  score: score,
+		  warnings: warnings
+	  };
   }
   
   submitPlate = () => {
 	  this.setState({ isModalVisible: false });
-	  this.updateScore(this.calculateScore());
+	  let scoreArray = this.calculateScore();
+	  let warnings = scoreArray["warnings"];
+	  let score = scoreArray["score"];
+	  this.updateScore(score);
+	  console.log(score);
   }
   
   tweakPlate = () => {
@@ -191,7 +238,7 @@ export default class HomeScreen extends React.Component {
 			global.totals["omega3"] += foodDocs[i].data.omega3 * (foodDocs[i].amount * 0.01 * 1000); //multiplied by 1000 because data is in grams but should be in mg
 			global.totals["calcium"] += foodDocs[i].data.calcium * (foodDocs[i].amount * 0.01);
 			global.totals["vitA"] += foodDocs[i].data.vitA * (foodDocs[i].amount * 0.01);
-			global.totals["vitB1"] += foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01);
+			global.totals["vitB1"] += foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01 / 1000); //divided by 1000 because data is in mg but should be in micrograms
 			global.totals["vitB9"] += foodDocs[i].data.vitB9 * (foodDocs[i].amount * 0.01);
 			global.totals["vitC"] += foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01);
 			
@@ -312,7 +359,7 @@ export default class HomeScreen extends React.Component {
                   global.totals["omega3"] + "mg\n",
                   global.totals["calcium"] + "mg\n",
                   global.totals["vitA"] + "mg\n",
-                  global.totals["vitB1"] + "mg\n",
+                  global.totals["vitB1"] + "μg\n",
                   global.totals["vitB9"] + "μg\n",
                   global.totals["vitC"] + "mg\n"
                 ]}
@@ -330,7 +377,7 @@ export default class HomeScreen extends React.Component {
                     color: "blue"
                   }}
                 >
-                  Tweak Your Plate
+                  Tweak Your Plate (-500 points)
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
