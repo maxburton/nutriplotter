@@ -194,12 +194,13 @@ export default class HomeScreen extends React.Component {
 	  let warnings = scoreArray["warnings"];
 	  let score = scoreArray["score"];
 	  this.updateScore(score);
+	  global.tweaks = 0;
 	  console.log(score);
   }
   
   tweakPlate = () => {
 	  this.setState({ isModalVisible: false });
-	  global.tweak++;
+	  global.tweaks++;
   }
   
   
