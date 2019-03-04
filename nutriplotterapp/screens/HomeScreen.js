@@ -115,14 +115,11 @@ export default class HomeScreen extends React.Component {
   }
 
   _resultsClick() {
-    /**check plate size**/
-    /**var contents = this._getPlateContents();**/
-    var contents = 1;
-    if (contents == 0) {
-      alert("Try adding some food first!");
-    } else {
-      /**display results**/
-      this._toggleModal();
+    //check plate size
+    if(global.plate.length > 0){
+		this._toggleModal();
+    }else {
+		Alert.alert("Your plate is empty!");
     }
   }
   

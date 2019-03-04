@@ -8,11 +8,14 @@ import {
   TouchableOpacity,
   View,
   TextInput,
-  Button
+  Button,
+  Alert,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
+var Datastore = require('react-native-local-mongodb');
+savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
 
 export default class ScoreScreen extends React.Component {
   static navigationOptions = ({navigation}) => ({
@@ -21,8 +24,22 @@ export default class ScoreScreen extends React.Component {
 	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
   });
   
-  savePlate(){
-	  global.savedPlates.push(this.state.plate);
+  savePlate = (plate) => {
+	  savedPlatesdb.insert(plate, function (err, newDoc) {
+		  global.savedPlates.push(plate);
+		  Alert.alert(
+			  'Plate Saved',
+			  '',
+			  [
+				{text: 'OK', onPress: () => this.goHome()},
+			  ],
+			  {cancelable: false},
+			);
+	  });
+	  
+	  goHome = () => {
+		  this.props.navigation.navigate("Home");
+	  }
   }
   
   state = {}
@@ -53,8 +70,8 @@ export default class ScoreScreen extends React.Component {
 	    <Text style={styles.score}>You Scored: {score} points!{newline}</Text> 
 		<Text style={styles.text}>You made {tweaks} adjustments to your plate</Text>
 		{renderWarnings}
-		<TouchableOpacity style={styles.container} onPress={this.savePlate()}>
-          <Text style={styles.buttonText}>Save Plate</Text>
+		<TouchableOpacity style={styles.container} onPress={() => this.savePlate(plate)}>
+          <Text style={styles.buttonText}>{newline}Save Plate</Text>
         </TouchableOpacity>
       </ScrollView>
 	  );
@@ -86,6 +103,7 @@ const styles = StyleSheet.create({
   buttonText: {
 	flex: 1,
 	marginTop: "5%",
-    fontSize: offset,
+    fontSize: 24,
+	marginBottom: "5%",
   },
 });
