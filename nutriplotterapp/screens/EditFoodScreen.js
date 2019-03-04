@@ -22,7 +22,7 @@ class FlatListItem extends Component{
 	
 	state = {
 		grams: this.props.item.name[1],
-		maximum: 500,
+		maximum: global.maximum,
 		refresh: 0,
 	}
 	
@@ -33,18 +33,19 @@ class FlatListItem extends Component{
 			}
 		}
 		platedb.update({ _id: this.props.item.name[0].toLowerCase() }, { $set: { amount: val }}, {}, function (err, numReplaced) {
-			console.log(numReplaced);
 			platedb.find({}, function (err, docs) {
-				console.log(docs);
+				//console.log(docs);
 			});
 		});
 	}
 	plusButtonPressed = () => {
 		var oldWeight = this.state.grams;
 		var newWeight = oldWeight + 1;
-		if(!(newWeight > 500)){
-			this.setState({grams: newWeight});
+		if(!(newWeight > (this.state.maximum + oldWeight))){
+			this.sliderChange(newWeight);
 			this.updatePlate(newWeight);
+		}else{
+			console.log("Degrees of plate left: " + this.state.maximum);
 		}
 		
 	}
@@ -53,7 +54,7 @@ class FlatListItem extends Component{
 		var oldWeight = this.state.grams;
 		var newWeight = oldWeight - 1;
 		if(!(newWeight < 0)){
-			this.setState({grams: newWeight});
+			this.sliderChange(newWeight);
 			this.updatePlate(newWeight);
 		}
 	}
@@ -124,24 +125,29 @@ class FlatListItem extends Component{
 					style={styles.slider}
 					step={1}
 					minimumValue={0}
-					maximumValue={this.state.maximum}
+					maximumValue={this.state.grams + this.state.maximum}
 					value={this.state.grams}
-					onValueChange={val => this.setState({ grams: val })}
+					onValueChange={val => this.sliderChange(val) }
 					onSlidingComplete={val => this.updatePlate(val)}
 				/>
 				<TouchableOpacity onPress = {() => this.plusButtonPressed()}>
 					<Text style={styles.plusText}><IconFA name="plus-circle" size={22}/></Text>
 				</TouchableOpacity>
-				<Text style={styles.sliderText}>{this.state.grams}g</Text>
+				<Text style={styles.sliderText}>{this.state.grams}°</Text>
 				</View>
 			</View>
 		);
 	}
 	
+	sliderChange = (newVal) =>{
+		global.maximum -= (newVal - this.state.grams);
+		this.setState({grams: newVal, maximum: global.maximum});
+		console.log("Degrees of plate left: " + this.state.maximum);
+	}
+	
 	deleteItem = (foodName) =>{
 		console.log("DELETE PRESSED");
 		for(let i = 0; i < global.plate.length; i++){
-			console.log(global.plate[i]._id + "  --  " + foodName);
 			if(global.plate[i]._id.toLowerCase() == foodName.toLowerCase()){
 				global.plate.splice(i, 1);
 				var newVal = this.state.refresh + 1
@@ -149,8 +155,19 @@ class FlatListItem extends Component{
 			}
 		}
 		platedb.remove({_id: foodName.toLowerCase()}, function (err, numRemoved) {
+			this.recalculateMaximum();
 		});
+		recalculateMaximum = () =>{
+			this.recalculateMaximum();
+		}
 		this.props.flatListParent.refreshFlatList();
+	}
+	
+	recalculateMaximum = () =>{
+		global.maximum = 360;
+		for(let i = 0; i < global.plate.length; i++){
+			global.maximum -= global.plate[i].amount;
+		}
 	}
 	
 	
@@ -211,6 +228,7 @@ export default class EditFoodScreen extends Component {
 		deletePlate = () => {
 			global.plate = [];
 			this.setState({foods:[]});
+			global.maximum = 360;
 		}
    }
    

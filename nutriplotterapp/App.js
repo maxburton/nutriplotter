@@ -82,6 +82,7 @@ export default class App extends React.Component {
 	global.tweaks = 0;
 	global.plate = [];
 	global.savedPlates = new Array();
+	global.maximum = 360;
 	savedPlatesdb.find({}, function (err, newDocs) {
 		global.savedPlates = newDocs;
 	});
@@ -105,6 +106,7 @@ export default class App extends React.Component {
     };
     if (foodDocs.length > 0) {
         for (let i = 0; i < foodDocs.length; i++) {
+		  global.maximum -= foodDocs[i].amount;
           totals["calories"] += Math.round(
             (foodDocs[i].data.calories * (foodDocs[i].amount * 0.01) * 100) /
               100
@@ -146,6 +148,7 @@ export default class App extends React.Component {
             (foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01) * 100) / 100
           );
         }
+		console.log(global.maximum)
 		global.totals = totals;
 	}
 	});
