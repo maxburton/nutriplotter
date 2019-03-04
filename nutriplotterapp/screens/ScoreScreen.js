@@ -33,42 +33,59 @@ export default class ScoreScreen extends React.Component {
 	const tweaks = navigation.getParam('tweaks', 0);
 	const score = navigation.getParam('score', 0);
 	const warnings = navigation.getParam('warnings', new Array());
+	let renderWarnings = new Array();
+	let newline = "\n\n";
+	for(let i = 0; i < warnings.length; i++){
+		let nutrient = warnings[i][0];
+		let operator = warnings[i][1];
+		let advice = "";
+		if(operator == "-"){
+			advice = "levels are too low! Try increasing it for a higher score";
+		}else{
+			advice = "levels are too high! Try decreasing it for a higher score";
+		}
+		renderWarnings.push(
+			<Text style={styles.text}>Your {nutrient} {advice}</Text>
+		)
+	}
     return (
-      <View>
-	    <Text style={styles.title}>You Scored: {score} points!</Text> 
-		<TouchableOpacity onPress={this.savePlate()}>
+      <ScrollView style={styles.container}>
+	    <Text style={styles.score}>You Scored: {score} points!{newline}</Text> 
+		<Text style={styles.text}>You made {tweaks} adjustments to your plate</Text>
+		{renderWarnings}
+		<TouchableOpacity style={styles.container} onPress={this.savePlate()}>
           <Text style={styles.buttonText}>Save Plate</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
 	  );
   };
   
   
 };
 
-const offset = 24;
+const offset = 16;
 const styles = StyleSheet.create({
-  nameInput: {
-    height: offset * 2,
-    margin: offset,
-    paddingHorizontal: offset,
-    borderColor: '#111111',
-    borderWidth: 1,
+  container: {
+	flex: 1,
+	alignItems: "center",
   },
-  title: {
+  score: {
+	marginTop: offset,
+	flex: 1,
+	fontSize: 24,
+	textAlign: "center",
+  },
+  text: {
+	flex: 1,
     marginTop: offset,
-    marginLeft: offset,
     fontSize: offset,
+	textAlign: "center",
+	marginLeft: offset,
+	marginRight: offset,
   },
   buttonText: {
-    marginLeft: offset,
+	flex: 1,
+	marginTop: "5%",
     fontSize: offset,
-	justifyContent: 'center',
-  },
-  image: {
-    flex: 1,
-    width: null,
-    height: null,
-    resizeMode: 'contain'
   },
 });
