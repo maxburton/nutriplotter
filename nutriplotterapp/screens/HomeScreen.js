@@ -198,10 +198,6 @@ export default class HomeScreen extends React.Component {
 		score: score,
 		warnings: warnings,
 	  })
-	  platedb.remove({}, function (err, numRemoved) {
-		  global.tweaks = 0;
-		  global.plate = new Array();
-	  });
   }
   
   tweakPlate = () => {

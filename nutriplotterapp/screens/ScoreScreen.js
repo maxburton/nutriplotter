@@ -25,24 +25,39 @@ export default class ScoreScreen extends React.Component {
   });
   
   savePlate = (plate) => {
-	  savedPlatesdb.insert(plate, function (err, newDoc) {
-		  global.savedPlates.push(plate);
-		  Alert.alert(
-			  'Plate Saved',
-			  '',
-			  [
-				{text: 'OK', onPress: () => this.goHome()},
-			  ],
-			  {cancelable: false},
-			);
+	  if(!this.state.plateSaved){
+		  this.setState({plateSaved: true});
+		  savedPlatesdb.insert(plate, function (err, newDoc) {
+			  global.savedPlates.push(plate);
+			  Alert.alert("Plate Saved");
+			  console.log("Saved Plates: " + global.savedPlates);
+		  });
+	  }else{
+		  Alert.alert("You've already saved this plate!");
+	  }
+  }
+  
+  tweakPlate = () => {
+	  global.tweaks++;
+	  this.props.navigation.navigate("Home");
+  }
+  
+  newPlate = () => {
+	  platedb.remove({}, function (err, numRemoved) {
+		  global.tweaks = 0;
+		  global.plate = new Array();
+		  this.goHome();
 	  });
-	  
 	  goHome = () => {
 		  this.props.navigation.navigate("Home");
 	  }
   }
   
-  state = {}
+  componentDidMount(){
+	  this.setState({plateSaved: false});
+  }
+  
+  state = {plateSaved: false}
   
   render() {
 	const {navigation} = this.props;
@@ -68,10 +83,16 @@ export default class ScoreScreen extends React.Component {
     return (
       <ScrollView style={styles.container}>
 	    <Text style={styles.score}>You Scored: {score} points!{newline}</Text> 
-		<Text style={styles.text}>You made {tweaks} adjustments to your plate</Text>
+		<Text style={styles.text}>You made {tweaks} adjustment(s) to your plate</Text>
 		{renderWarnings}
 		<TouchableOpacity style={styles.container} onPress={() => this.savePlate(plate)}>
           <Text style={styles.buttonText}>{newline}Save Plate</Text>
+        </TouchableOpacity>
+		<TouchableOpacity style={styles.container} onPress={() => this.tweakPlate()}>
+          <Text style={styles.buttonText}>Tweak Your Plate</Text>
+        </TouchableOpacity>
+		<TouchableOpacity style={styles.container} onPress={() => this.newPlate()}>
+          <Text style={styles.buttonText}>Make A New Plate</Text>
         </TouchableOpacity>
       </ScrollView>
 	  );
@@ -105,5 +126,6 @@ const styles = StyleSheet.create({
 	marginTop: "5%",
     fontSize: 24,
 	marginBottom: "5%",
+	color: "blue",
   },
 });
