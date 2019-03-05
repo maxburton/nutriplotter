@@ -309,6 +309,7 @@ const styles = StyleSheet.create ({
   },
   plateView: {
 	  flex: 1,
+	  marginTop: "15%",
   },
   scrollContainer: {
      flex: 1,
@@ -319,8 +320,8 @@ const styles = StyleSheet.create ({
 		fontSize: 18,
 		color: 'red',
 		justifyContent: 'flex-end',
-		marginBottom: 30,
-		marginTop: 30,
+		marginBottom: 20,
+		marginTop: 20,
   },
   imageView: {
 	  flex: 1,
