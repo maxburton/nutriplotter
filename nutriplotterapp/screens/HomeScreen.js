@@ -158,52 +158,53 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
     var totals = defaultScore;
-
-    var foodDocs = global.plate;
-    if (foodDocs.length > 0) {
-      for (let i = 0; i < foodDocs.length; i++) {
-        totals["calories"] += Math.round(
-          (foodDocs[i].data.calories * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["carbs"] += Math.round(
-          (foodDocs[i].data.carbs * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["fats"] += Math.round(
-          (foodDocs[i].data.fats * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["protein"] += Math.round(
-          (foodDocs[i].data.protein * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["sugar"] += Math.round(
-          (foodDocs[i].data.sugar * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["satfat"] += Math.round(
-          (foodDocs[i].data.satfat * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["fibre"] += Math.round(
-          (foodDocs[i].data.fibre * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["omega3"] += Math.round(
-          (foodDocs[i].data.omega3 * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["calcium"] += Math.round(
-          (foodDocs[i].data.calcium * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["vitA"] += Math.round(
-          (foodDocs[i].data.vitA * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["vitB1"] += Math.round(
-          (foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["vitB9"] += Math.round(
-          (foodDocs[i].data.vitB9 * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
-        totals["vitC"] += Math.round(
-          (foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01) * 100) / 100
-        );
+    platedb.find({}, function(err, foodDocs) {
+      if (foodDocs.length > 0) {
+        for (let i = 0; i < foodDocs.length; i++) {
+          totals["calories"] += Math.round(
+            (foodDocs[i].data.calories * (foodDocs[i].amount * 0.01) * 100) /
+              100
+          );
+          totals["carbs"] += Math.round(
+            (foodDocs[i].data.carbs * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["fats"] += Math.round(
+            (foodDocs[i].data.fats * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["protein"] += Math.round(
+            (foodDocs[i].data.protein * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["sugar"] += Math.round(
+            (foodDocs[i].data.sugar * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["satfat"] += Math.round(
+            (foodDocs[i].data.satfat * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["fibre"] += Math.round(
+            (foodDocs[i].data.fibre * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["omega3"] += Math.round(
+            (foodDocs[i].data.omega3 * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["calcium"] += Math.round(
+            (foodDocs[i].data.calcium * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["vitA"] += Math.round(
+            (foodDocs[i].data.vitA * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["vitB1"] += Math.round(
+            (foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["vitB9"] += Math.round(
+            (foodDocs[i].data.vitB9 * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["vitC"] += Math.round(
+            (foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+        }
+        updateState();
       }
-      updateState();
-    }
+    });
 
     updateState = () => {
       this.setState({ totals: totals });

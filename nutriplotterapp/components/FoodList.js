@@ -70,31 +70,27 @@ class FlatListItem extends Component{
 	}
 	
 	alertItemName = (item) => {
-		var isPlateIn = false;
 		var newFoodId = item.name.toLowerCase()
-		for(let i = 0; i < global.plate.length; i++){
-			console.log(item.name.toLowerCase() + "  --  " + global.plate[i]._id.toLowerCase());
-			if(item.name.toLowerCase() == global.plate[i]._id.toLowerCase()){
-				isPlateIn = true;
-				break;
-			}
-		}
-		if(!isPlateIn){
-			global.plate.push({"_id": item.name, "amount": 0, "group": item.group, "data": item.data});
-			Alert.alert("\"" + newFoodId + "\" has been added to your plate")
-			console.log(newFoodId + " Inserted");
-		}else{
-			Alert.alert("\"" + newFoodId + "\" is already on your plate!")
-			console.log(newFoodId + " already in database!");
-		}
-		
 		platedb.find({_id: newFoodId}, function (err, newDocs) {
 			if(newDocs.length == []){
 				platedb.update({ _id: newFoodId}, { $set: { amount: 0, group: item.group, data: item.data } }, { upsert: true }, function (err, numReplaced, upsert) {
+					Alert.alert("\"" + newFoodId + "\" has been added to your plate")
+					console.log(newFoodId + " Inserted");
+					remount();
 				});
+			}else{
+				Alert.alert("\"" + newFoodId + "\" is already on your plate!")
+				console.log(newFoodId + " already in database!");
 			}
-		}); 		
-	};	
+		}); 
+		
+		remount = () => {
+			this.forceRemount;
+		}
+		
+	};
+	
+	
 }
    
 class List extends Component {
@@ -142,28 +138,7 @@ class List extends Component {
 		}
 		
 		handleStateChange = (foodlen, searchlen, foods) => {
-			
-		}
-		
-		
-		if(searchString.length > 0){
-			var stringToGoIntoTheRegex = searchString.toLowerCase();//
-			var regex = new RegExp(stringToGoIntoTheRegex, "g");
-			var foods = [];
-			var count = 0;
-			
-			for(let i = 0; i < global.nameList.length; i++) {
-				let entry = global.nameList[i];
-				if(entry.search(regex) != -1){
-					var data = global.foods[entry];
-					var formattedString = entry.replace(/['"]+/g, '');
-					formattedString = capitalizeFirstLetter(formattedString);
-					var group = determineGroup(data.group.toLowerCase());
-					foods.push({"id":count,"name":formattedString,"group":group,"data":data});
-					count++;
-				}
-			}
-			if(count > 0 || searchString.length == 0){
+			if(foodlen > 0 || searchlen == 0){
 				this.setState({
 					test: '',
 					names: foods,
@@ -174,6 +149,26 @@ class List extends Component {
 					names: foods,
 				})
 			}
+		}
+		
+		var stringToGoIntoTheRegex = searchString.toLowerCase();//
+		var regex = new RegExp(stringToGoIntoTheRegex, "g");
+		if(searchString.length > 0){
+			db.find({_id: regex}, function (err, docs) {
+				console.log(docs); // here the returned Promise is resolved
+				var foods = [];
+				var count = 0;
+				if(docs.length > 0){
+					for(let i = 0; i < docs.length; i++){ 
+						var formattedString = docs[i]._id.replace(/['"]+/g, '');
+						formattedString = capitalizeFirstLetter(formattedString);
+						var group = determineGroup(docs[i].group.toLowerCase());
+						foods.push({"id":count,"name":formattedString,"group":group,"data":docs[i]});
+						count++;
+					}
+				}
+				handleStateChange(foods.length, searchString.length, foods);
+			});
 		}else{
 			this.setState({
 				test: '',

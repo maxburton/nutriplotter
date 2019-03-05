@@ -9,12 +9,10 @@ import {
 import { AppLoading, Asset, Font, Icon } from "expo";
 import AppNavigator from "./navigation/AppNavigator";
 import popArray from "./populateArray";
-import popList from "./populateNameList";
 import firebase from "./components/Firebase.js";
 
 var Datastore = require('react-native-local-mongodb'), 
 db = new Datastore({ filename: 'foods', autoload: true });
-platedb = new Datastore({ filename: 'plate', autoload: true });
 
 export default class App extends React.Component {
   state = {
@@ -78,13 +76,19 @@ export default class App extends React.Component {
     };
     _retrieveData();
 
+	/*
+    db.transaction(tx => {
+      tx.executeSql(
+        "create table if not exists plate(name varchar(255) primary key not null, amount int);"
+      );
+      if (isFirstLaunch == "1") {
+        var p = new popDB();
+        console.log("First LAUNCH");
+      }
+    });
+	*/
 	var p = new popArray();
-	var q = new popList();
-	global.plate = [];
-	platedb.find({}, function (err, newDocs) {
-		global.plate = newDocs;
-	});
-	
+	console.log(global.foods["ackee, canned, drained"]);
 	
     _storeData = async () => {
       try {
