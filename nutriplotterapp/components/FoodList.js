@@ -9,7 +9,14 @@ db = new Datastore({ filename: 'foods', autoload: true });
 platedb = new Datastore({ filename: 'plate', autoload: true });
 
 class FlatListItem extends Component{
+	state = {isSelected: false}
 	render(){
+		let isSelected = this.state.isSelected;
+		for(let i = 0; i < global.plate.length; i++){
+			if(global.plate[i].data.name == this.props.item.name.toLowerCase()){
+				isSelected = true;
+			}
+		}
 		var randomImages = {
 			savouries:require('../assets/images/savouries.png'),
 			misc:require('../assets/images/misc.png'),
@@ -54,7 +61,7 @@ class FlatListItem extends Component{
 		var group = this.props.item.group;
 		return(
 		<TouchableOpacity onPress = {() => this.alertItemName(this.props.item)}>
-			<View style={styles.itemStyle}>
+			<View style={isSelected ? styles.itemStyleSelected : styles.itemStyle}>
 				<Image
 					source={randomImages[group]}
 					style={styles.image}
@@ -72,25 +79,32 @@ class FlatListItem extends Component{
 	alertItemName = (item) => {
 		var isPlateIn = false;
 		var newFoodId = item.name.toLowerCase()
+		let index = 0;
 		for(let i = 0; i < global.plate.length; i++){
-			console.log(item.name.toLowerCase() + "  --  " + global.plate[i]._id.toLowerCase());
+			//console.log(item.name.toLowerCase() + "  --  " + global.plate[i]._id.toLowerCase());
 			if(item.name.toLowerCase() == global.plate[i]._id.toLowerCase()){
+				index = i
 				isPlateIn = true;
 				break;
 			}
 		}
 		if(!isPlateIn){
 			global.plate.push({"_id": item.name, "amount": 0, "group": item.group, "data": item.data});
-			Alert.alert("\"" + newFoodId + "\" has been added to your plate")
+			this.setState({isSelected: true});
 			console.log(newFoodId + " Inserted");
 		}else{
-			Alert.alert("\"" + newFoodId + "\" is already on your plate!")
-			console.log(newFoodId + " already in database!");
+			this.setState({isSelected: false});
+			global.plate.splice(index, 1);
+			console.log(newFoodId + " Deleted");
 		}
 		
 		platedb.find({_id: newFoodId}, function (err, newDocs) {
 			if(newDocs.length == []){
 				platedb.update({ _id: newFoodId}, { $set: { amount: 0, group: item.group, data: item.data } }, { upsert: true }, function (err, numReplaced, upsert) {
+				});
+			}else{
+				platedb.remove({_id: newFoodId}, function (err, numRemoved) {
+					console.log("Removed from DB!");
 				});
 			}
 		}); 		
@@ -460,6 +474,15 @@ const styles = StyleSheet.create ({
     marginTop: 3,
     alignItems: 'flex-start',
 	backgroundColor: '#c1c1c1',
+	justifyContent: 'center',
+  },
+  itemStyleSelected: {
+	flex: 1,  
+	flexDirection: 'row',
+	padding: 8,
+    marginTop: 3,
+    alignItems: 'flex-start',
+	backgroundColor: 'yellow',
 	justifyContent: 'center',
   },
   image: {

@@ -184,9 +184,17 @@ export default class EditFoodScreen extends Component {
 		empty:'Your plate is empty! Add some by searching on the plate screen.',
 		promiseIsResolved:false,
 		foods:[],
+	}
+
+	recalculateMaximum = () =>{
+		global.maximum = 360;
+		for(let i = 0; i < global.plate.length; i++){
+			global.maximum -= global.plate[i].amount;
+		}
 	}	
   
 	componentDidMount() {
+		this.recalculateMaximum();
 		setPromiseToResolved = () => {
 			this.setState({promiseIsResolved: true})
 		}		

@@ -43,9 +43,9 @@ export default class ScoreScreen extends React.Component {
   }
   
   newPlate = () => {
-	  platedb.remove({}, function (err, numRemoved) {
+	  platedb.remove({}, { multi: true }, function (err, numRemoved) {
 		  global.tweaks = 0;
-		  global.plate = new Array();
+		  global.plate = [];
 		  this.goHome();
 	  });
 	  goHome = () => {
