@@ -24,11 +24,11 @@ export default class ScoreScreen extends React.Component {
 	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
   });
   
-  savePlate = (plate) => {
+  savePlate = (plate, score, tweaks, warnings) => {
 	  if(!this.state.plateSaved){
 		  this.setState({plateSaved: true});
-		  savedPlatesdb.insert(plate, function (err, newDoc) {
-			  global.savedPlates.push(plate);
+		  savedPlatesdb.insert({plate: plate, score: score, tweaks: tweaks, warnings: warnings}, function (err, newDoc) {
+			  global.savedPlates.push({plate: plate, score: score, tweaks: tweaks, warnings: warnings});
 			  Alert.alert("Plate Saved");
 			  console.log("Saved Plates: " + global.savedPlates);
 		  });
@@ -85,7 +85,7 @@ export default class ScoreScreen extends React.Component {
 	    <Text style={styles.score}>You Scored: {score} points!{newline}</Text> 
 		<Text style={styles.text}>You made {tweaks} adjustment(s) to your plate</Text>
 		{renderWarnings}
-		<TouchableOpacity style={styles.container} onPress={() => this.savePlate(plate)}>
+		<TouchableOpacity style={styles.container} onPress={() => this.savePlate(plate, score, tweaks, warnings)}>
           <Text style={styles.buttonText}>{newline}Save Plate</Text>
         </TouchableOpacity>
 		<TouchableOpacity style={styles.container} onPress={() => this.tweakPlate()}>
