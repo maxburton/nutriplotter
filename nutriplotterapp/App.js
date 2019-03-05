@@ -81,11 +81,56 @@ export default class App extends React.Component {
 	var q = new popList();
 	global.tweaks = 0;
 	global.plate = [];
+	global.totals = {};
 	global.savedPlates = new Array();
-	global.maximum = 360;
+	global.maximum = 100;
 	savedPlatesdb.find({}, function (err, newDocs) {
 		global.savedPlates = newDocs;
 	});
+	
+	global.colours = {
+		"grains": "#EFCC6D",
+		"sandwich": "#AF881F",
+		"rice": "#F3EAD2",
+		"pasta": "#F4E57E",
+		"pizza": "#E37536",
+		"bread": "#CA952A",
+		"cereals": "#F4C973",
+		"biscuits": "#9D6F13",
+		"cakes": "#DE3BA7",
+		"pastries": "#CD9848",
+		"pudding": "#6B4610",
+		"savouries": "#AB854B",
+		"milk": "#F7F0E6",
+		"cream": "#E6F1F7",
+		"cheese": "#FEF602",
+		"icecream": "#E9F7E6",
+		"egg": "#FEDD02",
+		"potato": "#E6CE56",
+		"beans": "#4A7325",
+		"veg": "#75D125",
+		"vegdish": "#B4E888",
+		"fruit": "#EA0606",
+		"juice": "#FEB201", 
+		"nuts": "#C19A3F",
+		"herbs": "#2A9547",
+		"fish": "#668390",
+		"bacon": "#CB5639",
+		"beef": "#BA492D",
+		"chicken": "9D721D",
+		"game": "#8D6E31",
+		"burger": "#82581A",
+		"oil": "#FAF5B0",
+		"drinks": "#22C9F3",
+		"booze": "#6132BF",
+		"sweets": "#D805F9",
+		"chocolate": "#603C12",
+		"snacks": "#D1C737",
+		"soup": "#ECD6E8",
+		"sauce": "#BD2121",
+		"misc": "#010101",
+	}
+	
 	platedb.find({}, function (err, newDocs) {
 		global.plate = newDocs;
 		let foodDocs = global.plate;
@@ -105,51 +150,27 @@ export default class App extends React.Component {
       vitC: 0
     };
     if (foodDocs.length > 0) {
+		let multiplier = 0.05; // 0.01 to get nutrients per gram, then x5 to have a total plate weight of 500g
         for (let i = 0; i < foodDocs.length; i++) {
-		  global.maximum -= foodDocs[i].amount;
-          totals["calories"] += Math.round(
-            (foodDocs[i].data.calories * (foodDocs[i].amount * 0.01) * 100) /
-              100
-          );
-          totals["carbs"] += Math.round(
-            (foodDocs[i].data.carbs * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["fats"] += Math.round(
-            (foodDocs[i].data.fats * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["protein"] += Math.round(
-            (foodDocs[i].data.protein * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["sugar"] += Math.round(
-            (foodDocs[i].data.sugar * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["satfat"] += Math.round(
-            (foodDocs[i].data.satfat * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["fibre"] += Math.round(
-            (foodDocs[i].data.fibre * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["omega3"] += Math.round(
-            (foodDocs[i].data.omega3 * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["calcium"] += Math.round(
-            (foodDocs[i].data.calcium * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["vitA"] += Math.round(
-            (foodDocs[i].data.vitA * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["vitB1"] += Math.round(
-            (foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["vitB9"] += Math.round(
-            (foodDocs[i].data.vitB9 * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
-          totals["vitC"] += Math.round(
-            (foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01) * 100) / 100
-          );
+			
+			global.totals["calories"] += foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);
+			global.totals["carbs"] += foodDocs[i].data.carbs * (foodDocs[i].amount * multiplier);
+			global.totals["fats"] += foodDocs[i].data.fats * (foodDocs[i].amount * multiplier);
+			global.totals["protein"] += foodDocs[i].data.protein * (foodDocs[i].amount * multiplier);
+			global.totals["sugar"] += foodDocs[i].data.sugar * (foodDocs[i].amount * multiplier);
+			global.totals["satfat"] += foodDocs[i].data.satfat * (foodDocs[i].amount * multiplier);
+			global.totals["fibre"] += foodDocs[i].data.fibre * (foodDocs[i].amount * multiplier);
+			global.totals["omega3"] += foodDocs[i].data.omega3 * (foodDocs[i].amount * multiplier * 1000); //multiplied by 1000 because data is in grams but should be in mg
+			global.totals["calcium"] += foodDocs[i].data.calcium * (foodDocs[i].amount * multiplier);
+			global.totals["vitA"] += foodDocs[i].data.vitA * (foodDocs[i].amount * multiplier);
+			global.totals["vitB1"] += foodDocs[i].data.vitB1 * (foodDocs[i].amount * multiplier / 1000); //divided by 1000 because data is in mg but should be in micrograms
+			global.totals["vitB9"] += foodDocs[i].data.vitB9 * (foodDocs[i].amount * multiplier);
+			global.totals["vitC"] += foodDocs[i].data.vitC * (foodDocs[i].amount * multiplier);
+			
+			for(var key in global.totals){
+				global.totals[key] = Math.round(global.totals[key] * 10) / 10;
+			}
         }
-		console.log(global.maximum)
-		global.totals = totals;
 	}
 	});
 	

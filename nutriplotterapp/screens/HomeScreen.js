@@ -229,21 +229,22 @@ export default class HomeScreen extends React.Component {
 	var foodDocs = global.plate;
     if (foodDocs.length > 0) {
 		this.resetGlobalTotals();
+		let multiplier = 0.05; // 0.01 to get nutrients per gram, then x5 to have a total plate weight of 500g
         for (let i = 0; i < foodDocs.length; i++) {
 			
-			global.totals["calories"] += foodDocs[i].data.calories * (foodDocs[i].amount * 0.01);
-			global.totals["carbs"] += foodDocs[i].data.carbs * (foodDocs[i].amount * 0.01);
-			global.totals["fats"] += foodDocs[i].data.fats * (foodDocs[i].amount * 0.01);
-			global.totals["protein"] += foodDocs[i].data.protein * (foodDocs[i].amount * 0.01);
-			global.totals["sugar"] += foodDocs[i].data.sugar * (foodDocs[i].amount * 0.01);
-			global.totals["satfat"] += foodDocs[i].data.satfat * (foodDocs[i].amount * 0.01);
-			global.totals["fibre"] += foodDocs[i].data.fibre * (foodDocs[i].amount * 0.01);
-			global.totals["omega3"] += foodDocs[i].data.omega3 * (foodDocs[i].amount * 0.01 * 1000); //multiplied by 1000 because data is in grams but should be in mg
-			global.totals["calcium"] += foodDocs[i].data.calcium * (foodDocs[i].amount * 0.01);
-			global.totals["vitA"] += foodDocs[i].data.vitA * (foodDocs[i].amount * 0.01);
-			global.totals["vitB1"] += foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01 / 1000); //divided by 1000 because data is in mg but should be in micrograms
-			global.totals["vitB9"] += foodDocs[i].data.vitB9 * (foodDocs[i].amount * 0.01);
-			global.totals["vitC"] += foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01);
+			global.totals["calories"] += foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);
+			global.totals["carbs"] += foodDocs[i].data.carbs * (foodDocs[i].amount * multiplier);
+			global.totals["fats"] += foodDocs[i].data.fats * (foodDocs[i].amount * multiplier);
+			global.totals["protein"] += foodDocs[i].data.protein * (foodDocs[i].amount * multiplier);
+			global.totals["sugar"] += foodDocs[i].data.sugar * (foodDocs[i].amount * multiplier);
+			global.totals["satfat"] += foodDocs[i].data.satfat * (foodDocs[i].amount * multiplier);
+			global.totals["fibre"] += foodDocs[i].data.fibre * (foodDocs[i].amount * multiplier);
+			global.totals["omega3"] += foodDocs[i].data.omega3 * (foodDocs[i].amount * multiplier * 1000); //multiplied by 1000 because data is in grams but should be in mg
+			global.totals["calcium"] += foodDocs[i].data.calcium * (foodDocs[i].amount * multiplier);
+			global.totals["vitA"] += foodDocs[i].data.vitA * (foodDocs[i].amount * multiplier);
+			global.totals["vitB1"] += foodDocs[i].data.vitB1 * (foodDocs[i].amount * multiplier / 1000); //divided by 1000 because data is in mg but should be in micrograms
+			global.totals["vitB9"] += foodDocs[i].data.vitB9 * (foodDocs[i].amount * multiplier);
+			global.totals["vitC"] += foodDocs[i].data.vitC * (foodDocs[i].amount * multiplier);
 			
 			for(var key in global.totals){
 				global.totals[key] = Math.round(global.totals[key] * 10) / 10;
@@ -264,11 +265,8 @@ export default class HomeScreen extends React.Component {
           <TouchableOpacity
             style={styles.list}
             onPress={
-              // Pass a reference to the plate so we can edit its state in the EditFoodScreen
               () =>
-                this.props.navigation.navigate("EditFoodScreen", {
-                  plate: this.plate
-                })
+                this.props.navigation.navigate("EditFoodScreen")
             }
           >
             {this.plate.render()}

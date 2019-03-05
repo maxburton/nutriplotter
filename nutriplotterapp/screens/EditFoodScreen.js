@@ -18,6 +18,9 @@ import IconFA from 'react-native-vector-icons/FontAwesome'
 var Datastore = require('react-native-local-mongodb'), 
 platedb = new Datastore({ filename: 'plate', autoload: true });
 
+import Plate from "../components/Plate.js";
+import getStyleSheet from "../themes/style";
+
 class FlatListItem extends Component{
 	
 	state = {
@@ -133,7 +136,7 @@ class FlatListItem extends Component{
 				<TouchableOpacity onPress = {() => this.plusButtonPressed()}>
 					<Text style={styles.plusText}><IconFA name="plus-circle" size={22}/></Text>
 				</TouchableOpacity>
-				<Text style={styles.sliderText}>{this.state.grams}°</Text>
+				<Text style={styles.sliderText}>{this.state.grams}%</Text>
 				</View>
 			</View>
 		);
@@ -143,6 +146,8 @@ class FlatListItem extends Component{
 		global.maximum -= (newVal - this.state.grams);
 		this.setState({grams: newVal, maximum: global.maximum});
 		console.log("Degrees of plate left: " + this.state.maximum);
+		this.props.flatListParent.plate.render();
+		this.props.flatListParent.plate.setState({refresh: Math.random()});
 	}
 	
 	deleteItem = (foodName) =>{
@@ -164,7 +169,7 @@ class FlatListItem extends Component{
 	}
 	
 	recalculateMaximum = () =>{
-		global.maximum = 360;
+		global.maximum = 100;
 		for(let i = 0; i < global.plate.length; i++){
 			global.maximum -= global.plate[i].amount;
 		}
@@ -176,9 +181,8 @@ class FlatListItem extends Component{
 export default class EditFoodScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Edit Food',
-	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
+	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home')}} />,
   });
-    
   
     state = { 
 		empty:'Your plate is empty! Add some by searching on the plate screen.',
@@ -187,7 +191,7 @@ export default class EditFoodScreen extends Component {
 	}
 
 	recalculateMaximum = () =>{
-		global.maximum = 360;
+		global.maximum = 100;
 		for(let i = 0; i < global.plate.length; i++){
 			global.maximum -= global.plate[i].amount;
 		}
@@ -203,7 +207,7 @@ export default class EditFoodScreen extends Component {
 		setPromiseToResolved();
 		var length = global.plate.length;
 		var allFoods = [];
-		var maximumGrams = 500;
+		var maximumGrams = 100;
 		for (i = 0; i < length; i++) {
 			allFoods.push({"name": [capitalizeFirstLetter(global.plate[i]._id), global.plate[i].amount, global.plate[i].group]});
 			maximumGrams -= global.plate[i].amount;
@@ -236,14 +240,14 @@ export default class EditFoodScreen extends Component {
 		deletePlate = () => {
 			global.plate = [];
 			this.setState({foods:[]});
-			global.maximum = 360;
+			global.maximum = 100;
 		}
    }
    
    refreshFlatList = () =>{
 		var length = global.plate.length;
 		var allFoods = [];
-		var maximumGrams = 500;
+		var maximumGrams = 100;
 		for (i = 0; i < length; i++) {
 			allFoods.push({"name": [capitalizeFirstLetter(global.plate[i]._id), global.plate[i].amount, global.plate[i].group]});
 			maximumGrams -= global.plate[i].amount;
@@ -256,8 +260,8 @@ export default class EditFoodScreen extends Component {
 	}	
   
   render() {
+	this.plate = new Plate();
 	const {navigation}  = this.props;
-	this.plate = navigation.getParam('plate', null);
 	
 		if(!this.state.promiseIsResolved){
 			return null
@@ -265,6 +269,17 @@ export default class EditFoodScreen extends Component {
   
 		return (
 		  <View style={styles.bigContainer}>
+		    <View style={styles.plateView}>
+			  <TouchableOpacity
+				style={styles.list}
+				onPress={
+				  () =>
+					this.props.navigation.navigate("Home")
+				}
+			  >
+				{this.plate.render()}
+			  </TouchableOpacity>
+			</View>
 			<View style = {styles.scrollContainer}>
 			<FlatList
 				data={this.state.foods}
@@ -292,9 +307,12 @@ const styles = StyleSheet.create ({
   bigContainer: {
      flex: 1,
   },
+  plateView: {
+	  flex: 1,
+  },
   scrollContainer: {
      flex: 1,
-	 justifyContent: 'flex-start',
+	 justifyContent: 'flex-end',
   },
   clearButton:{
 		textAlign: 'center',

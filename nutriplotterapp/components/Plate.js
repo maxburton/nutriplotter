@@ -28,10 +28,32 @@ export default class Plate extends Component {
 	  pieSeries: [],
 	  pieColours: [],
 	  empty: true,
+	  refresh: 0,
    }
-
-
-
+   
+   drawPie = () =>{
+	   console.log("DRAWING PIE CHART");
+	   let drawPieKeys = {};
+	   let drawPieColours = [];
+	   let plate = global.plate;
+	   for(let i = 0; i < plate.length; i++){
+		   let group = plate[i].group;
+		   if(group in drawPieKeys){
+			   drawPieKeys[group] += plate[i].amount;
+		   }else{
+			   drawPieKeys[group] = plate[i].amount;
+			   drawPieColours.push(global.colours[group]);
+		   }
+	   }
+	   let drawPieSeries = [];
+	   for(let pieGroup in drawPieKeys){
+		   console.log(pieGroup);
+		   drawPieSeries.push(drawPieKeys[pieGroup]);
+	   }
+	   console.log("PieChart Series: " + drawPieSeries + " -- Colours: " + drawPieColours);
+	   return {series: drawPieSeries, colours: drawPieColours};
+   }
+   
    onPlateClick = () => {
 	   console.log("Plate Clicked");
 	    var dbQuery = 'select name, amount from plate;';
@@ -80,7 +102,7 @@ export default class Plate extends Component {
 
 
    render() {
-
+	  let pieData = this.drawPie();
       return (
 	  <View style={styles.viewContainer}>
 	    <View style={styles.plate} onLayout={(event) => {
@@ -105,16 +127,15 @@ export default class Plate extends Component {
 		 	 // Make the pie chart a ring around the plate which fills up based on the foods present
 			  radius={105} innerRadius={81} on
 			  left={25}
-          	series={this.state.pieSeries}
+          	series={pieData["series"]}
          	 //values to show and color sequentially
-		  	colors={this.state.pieColours}
+		  	colors={pieData["colours"]}
 			
 			style={StyleSheet.create({zIndex: 1})}/>
 		</ImageBackground>
 		
 		</View>
 		
-		{this.renderFoodFromState()}
 	  </View>
       )
    }
