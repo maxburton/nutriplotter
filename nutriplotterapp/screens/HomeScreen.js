@@ -264,9 +264,13 @@ export default class HomeScreen extends React.Component {
               // Pass a reference to the plate so we can edit its state in the EditFoodScreen
               () =>
                 this.props.navigation.navigate("EditFoodScreen", {
+<<<<<<< HEAD
                   plate: this.plate,
                   foods: this.plate.state.foods,
                   score: this.plate.state.score
+=======
+                  plate: this.plate
+>>>>>>> parent of 502d547... Allow food items to be saved in the plate. Add NutritionChart component for later presentation of plate nutrition stats.
                 })
             }
           >

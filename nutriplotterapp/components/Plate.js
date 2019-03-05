@@ -45,12 +45,16 @@ export default class Plate extends Component {
     }
   };
 
+<<<<<<< HEAD
   // Set up the plate to be constructed with score and foods, which are 0s and empty (resp.) by default
   constructor(props){
     super(props);
     this.state.score = props.score;
     this.state.foods = props.foods;
   }
+=======
+  
+>>>>>>> parent of 502d547... Allow food items to be saved in the plate. Add NutritionChart component for later presentation of plate nutrition stats.
 
   onPlateClick = () => {
     console.log("Plate Clicked");
@@ -184,20 +188,21 @@ export default class Plate extends Component {
     for (var scoreKey in this.state.score) {
       this.state.score[scoreKey] += food.score[scoreKey];
     }
+<<<<<<< HEAD
     console.log("Added " + food.state.name + " to plate.");
     console.log(this.getNutritionScores());
+=======
+    console.log("Added "+food.name +" to plate.");
+>>>>>>> parent of 502d547... Allow food items to be saved in the plate. Add NutritionChart component for later presentation of plate nutrition stats.
   }
 
   // Remove a food object from this plate.
   removeFood(food) {
     if (this.state.foods.length < 1) {
-      console.log(
-        "Failed to remove " +
-          food.state.name +
-          " from plate: there are no foods stored within this plate's state."
-      );
+      console.log("Failed to remove "+ food.name + " from plate: there are no foods stored within this plate's state.");
       return;
     }
+<<<<<<< HEAD
     
     let newFoods = this.state.foods.slice()
                                     .filter(item => item.state.name !== food.state.name);
@@ -215,12 +220,25 @@ export default class Plate extends Component {
     
     console.log("Removed " + food.state.name + " from plate.");
     console.log(this.getNutritionScores());
+=======
+
+    for (var i = 0; i < this.state.foods.length; i++) {
+      if (this.state.foods[i] == food) {
+        this.state.foods = this.state.foods.splice(i, 1); // Remove the element at i in-place
+        for (var scoreKey in this.state.foods) {
+          // Take the score of the removed food from the plate's total score.
+          this.state.score[scoreKey] -= food.state.score[scoreKey]; 
+        }
+        console.log("Removed "+food.name+ " from plate.");
+      }
+    }
+>>>>>>> parent of 502d547... Allow food items to be saved in the plate. Add NutritionChart component for later presentation of plate nutrition stats.
   }
 
   // Get the names of all food items on the plate
   getFoodNames() {
     console.log("Getting food names");
-    if (this.state.foods.length < 1) {
+    if (this.state.empty) {
       return "The plate is empty.";
     } else {
       //console.log(this.state.foods);
@@ -233,12 +251,15 @@ export default class Plate extends Component {
     }
   }
 
+<<<<<<< HEAD
   getNutritionScores(){
     for (var scoreKey in this.state.score){
       console.log(scoreKey + ": " + this.state.score[scoreKey]);
     }
   }
 
+=======
+>>>>>>> parent of 502d547... Allow food items to be saved in the plate. Add NutritionChart component for later presentation of plate nutrition stats.
   deleteItem = searchString => {
     var dbQuery = "select name from foods;";
     var promise = new Promise(function(resolve, reject) {
