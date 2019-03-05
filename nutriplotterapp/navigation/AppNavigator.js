@@ -10,6 +10,7 @@ import SettingsScreen from "../screens/SettingsScreen";
 import LoginScreen from "../screens/LoginScreen";
 import EditFoodScreen from "../screens/EditFoodScreen";
 import LeaderboardScreen from "../screens/LeaderboardScreen";
+import ScoreScreen from "../screens/ScoreScreen";
 
 const plateNav = createStackNavigator({
   HomeScreen: {
@@ -17,6 +18,9 @@ const plateNav = createStackNavigator({
   },
   EditFoodScreen: {
     screen: EditFoodScreen
+  },
+  ScoreScreen: {
+	screen: ScoreScreen
   }
 });
 

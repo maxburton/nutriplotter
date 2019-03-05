@@ -15,6 +15,7 @@ import firebase from "./components/Firebase.js";
 var Datastore = require('react-native-local-mongodb'), 
 db = new Datastore({ filename: 'foods', autoload: true });
 platedb = new Datastore({ filename: 'plate', autoload: true });
+savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
 
 export default class App extends React.Component {
   state = {
@@ -69,8 +70,6 @@ export default class App extends React.Component {
         const value = await AsyncStorage.getItem("isFirstLaunch");
         if (value !== null) {
           isFirstLaunch = value;
-          console.log(value);
-          console.log(isFirstLaunch);
         }
       } catch (error) {
         console.log("error fetching data");
@@ -80,9 +79,78 @@ export default class App extends React.Component {
 
 	var p = new popArray();
 	var q = new popList();
+	global.tweaks = 0;
 	global.plate = [];
+	global.savedPlates = new Array();
+	global.maximum = 360;
+	savedPlatesdb.find({}, function (err, newDocs) {
+		global.savedPlates = newDocs;
+	});
 	platedb.find({}, function (err, newDocs) {
 		global.plate = newDocs;
+		let foodDocs = global.plate;
+		var totals = {
+      calories: 0,
+      carbs: 0,
+      fats: 0,
+      protein: 0,
+      sugar: 0,
+      satfat: 0,
+      fibre: 0,
+      omega3: 0,
+      calcium: 0,
+      vitA: 0,
+      vitB1: 0,
+      vitB9: 0,
+      vitC: 0
+    };
+    if (foodDocs.length > 0) {
+        for (let i = 0; i < foodDocs.length; i++) {
+		  global.maximum -= foodDocs[i].amount;
+          totals["calories"] += Math.round(
+            (foodDocs[i].data.calories * (foodDocs[i].amount * 0.01) * 100) /
+              100
+          );
+          totals["carbs"] += Math.round(
+            (foodDocs[i].data.carbs * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["fats"] += Math.round(
+            (foodDocs[i].data.fats * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["protein"] += Math.round(
+            (foodDocs[i].data.protein * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["sugar"] += Math.round(
+            (foodDocs[i].data.sugar * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["satfat"] += Math.round(
+            (foodDocs[i].data.satfat * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["fibre"] += Math.round(
+            (foodDocs[i].data.fibre * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["omega3"] += Math.round(
+            (foodDocs[i].data.omega3 * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["calcium"] += Math.round(
+            (foodDocs[i].data.calcium * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["vitA"] += Math.round(
+            (foodDocs[i].data.vitA * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["vitB1"] += Math.round(
+            (foodDocs[i].data.vitB1 * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["vitB9"] += Math.round(
+            (foodDocs[i].data.vitB9 * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+          totals["vitC"] += Math.round(
+            (foodDocs[i].data.vitC * (foodDocs[i].amount * 0.01) * 100) / 100
+          );
+        }
+		console.log(global.maximum)
+		global.totals = totals;
+	}
 	});
 	
 	
