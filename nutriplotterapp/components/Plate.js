@@ -13,14 +13,14 @@ import {
 } from 'react-native'
 
 
-import { WebBrowser, SQLite } from 'expo';
+import { WebBrowser } from 'expo';
 import Pie from 'react-native-pie';
 
 import Food from './Food';
 import styles from '../themes/plateStyle';
 
-const db = SQLite.openDatabase('db.db');
-
+var Datastore = require("react-native-local-mongodb"),
+  platedb = new Datastore({ filename: "plate", autoload: true });
 
 export default class Plate extends Component {
    state = {
@@ -28,7 +28,25 @@ export default class Plate extends Component {
 	  pieSeries: [],
 	  pieColours: [],
 	  empty: true,
-	  refresh: 0,
+	  isLoaded: false,
+   }
+   
+   constructor(props) {
+		super(props)
+		this.state = {
+			refresh: 0,
+		}
+		updateState = updateState.bind(this)
+	}
+   
+   componentDidMount(){
+	    platedb.find({}, function (err, docs) {
+			this.setState();
+			console.log("loaded");
+		});
+		setState = () =>{
+			this.setState({isLoaded: true});
+		}
    }
    
    drawPie = () =>{
@@ -47,62 +65,15 @@ export default class Plate extends Component {
 	   }
 	   let drawPieSeries = [];
 	   for(let pieGroup in drawPieKeys){
-		   console.log(pieGroup);
 		   drawPieSeries.push(drawPieKeys[pieGroup]);
 	   }
 	   console.log("PieChart Series: " + drawPieSeries + " -- Colours: " + drawPieColours);
 	   return {series: drawPieSeries, colours: drawPieColours};
    }
    
-   onPlateClick = () => {
-	   console.log("Plate Clicked");
-	    var dbQuery = 'select name, amount from plate;';
-		//alert(item.name);
-		// Promises are for error handling operations, particularly asynchronous I/O operations:
-		// 	- we promise to return a valid answer or deal with it.
-		var promise = new Promise(function (resolve, reject) {
-			db.transaction(function (transaction) {
-				transaction.executeSql(dbQuery, [], function (transaction, result) {
-					resolve(JSON.stringify(result)); // here the returned Promise is resolved
-				}, nullHandler, errorHandler);
-			});
-		});
-		
-		function nullHandler(result){
-			console.log("Database promise evoked nullHandler on account of a null error!");
-			console.log("Null Log : " + JSON.stringify(result));
-		}
-
-		function errorHandler(error){
-			console.log("Database promise evoked errorHandler on account of an error occurring!");
-			console.log("Error Log : " + error);
-		}
-		
-		function capitalizeFirstLetter(string) {
-			return string.charAt(0).toUpperCase() + string.slice(1);
-		}
-	  
-		// Nothing went wrong so we proceed with the result.
-		promise.then((results) => {
-			var dbOut = JSON.parse(results);
-			var length = dbOut.rows.length;
-			var allFoods = "";
-			for (i = 0; i < length; i++) { 
-			  allFoods = allFoods + (i+1) + ". " + capitalizeFirstLetter(dbOut.rows._array[i].name) + "\n";
-			} 
-			if(length == 0){
-				//alert("Your plate is empty! Add some by searching below.");
-			}else{
-				//alert(allFoods);
-			}
-		});
-   };
-
-
-
-
    render() {
 	  let pieData = this.drawPie();
+	  if(!this.state.isLoaded){return null};
       return (
 	  <View style={styles.viewContainer}>
 	    <View style={styles.plate} onLayout={(event) => {

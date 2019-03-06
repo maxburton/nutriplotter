@@ -145,9 +145,8 @@ class FlatListItem extends Component{
 	sliderChange = (newVal) =>{
 		global.maximum -= (newVal - this.state.grams);
 		this.setState({grams: newVal, maximum: global.maximum});
-		console.log("Degrees of plate left: " + this.state.maximum);
-		this.props.flatListParent.plate.render();
-		this.props.flatListParent.plate.setState({refresh: Math.random()});
+		console.log("Percentage of plate left: " + this.state.maximum);
+		this.props.flatListParent.updateChild(1);
 	}
 	
 	deleteItem = (foodName) =>{
@@ -178,11 +177,24 @@ class FlatListItem extends Component{
 	
 }
 
+updateState = (text) =>{
+	console.log("HERE");
+    this.setState({text})
+}
+
 export default class EditFoodScreen extends Component {
   static navigationOptions = ({navigation}) => ({
     title: 'Edit Food',
 	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home')}} />,
   });
+  
+    constructor(props) {
+        super(props)
+    }
+    updateChild = (text) => {
+		console.log("HERE");
+        updateState(text)
+    }
   
     state = { 
 		empty:'Your plate is empty! Add some by searching on the plate screen.',
@@ -260,7 +272,6 @@ export default class EditFoodScreen extends Component {
 	}	
   
   render() {
-	this.plate = new Plate();
 	const {navigation}  = this.props;
 	
 		if(!this.state.promiseIsResolved){
@@ -277,7 +288,7 @@ export default class EditFoodScreen extends Component {
 					this.props.navigation.navigate("Home")
 				}
 			  >
-				{this.plate.render()}
+				<Plate/>
 			  </TouchableOpacity>
 			</View>
 			<View style = {styles.scrollContainer}>

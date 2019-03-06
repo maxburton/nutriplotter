@@ -55,8 +55,7 @@ export default class HomeScreen extends React.Component {
     // When creating the homescreen, create a reference to the plate to be rendered
     // so that we may be able to call methods on the plate and manipulate its state from other components
     // on the screen.
-    this.plate = new Plate({ styles: getStyleSheet(this.state.darkTheme) });
-  }
+ }
 
   updateScore = async (score) => {
     //get scores as dict
@@ -269,7 +268,7 @@ export default class HomeScreen extends React.Component {
                 this.props.navigation.navigate("EditFoodScreen")
             }
           >
-            {this.plate.render()}
+            <Plate/>
           </TouchableOpacity>
         </View>
 
