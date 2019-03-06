@@ -47,7 +47,6 @@ export default class Plate extends Component {
    }
    
    drawPie = () =>{
-	   console.log("DRAWING PIE CHART");
 	   let drawPieKeys = {};
 	   let drawPieColours = [];
 	   let plate = global.plate;
@@ -63,8 +62,8 @@ export default class Plate extends Component {
 	   let drawPieSeries = [];
 	   for(let pieGroup in drawPieKeys){
 		   drawPieSeries.push(drawPieKeys[pieGroup]);
+		   //global.pieSeries.push()
 	   }
-	   console.log("PieChart Series: " + drawPieSeries + " -- Colours: " + drawPieColours);
 	   return {series: drawPieSeries, colours: drawPieColours};
    }
    

@@ -39,7 +39,6 @@ class FlatListItem extends Component{
 		}
 		platedb.update({ _id: this.props.item.name[0].toLowerCase() }, { $set: { amount: val }}, {}, function (err, numReplaced) {
 			platedb.find({}, function (err, docs) {
-				//console.log(docs);
 			});
 		});
 	}
@@ -49,10 +48,7 @@ class FlatListItem extends Component{
 		if(!(newWeight > (global.maximum + oldWeight))){
 			this.sliderChange(newWeight);
 			this.updatePlate(newWeight);
-		}else{
-			console.log("Degrees of plate left: " + global.maximum);
 		}
-		
 	}
 	
 	minusButtonPressed = () => {
@@ -152,6 +148,11 @@ class FlatListItem extends Component{
 		global.maximum -= (newVal - this.state.grams);
 		this.setState({grams: newVal, maximum: global.maximum});
 		console.log("Percentage of plate left: " + this.state.maximum);
+		for(let i = 0; i < global.plate.length; i++){
+			if(global.plate[i]._id.toLowerCase() == this.props.item.name[0].toLowerCase()){
+				global.plate[i].amount = newVal;
+			}
+		}
 		this.rerenderPie(Math.random());
 		this.props.flatListParent.setState({refresh: Math.random()});
 	}
@@ -189,9 +190,8 @@ class FlatListItem extends Component{
 	
 }
 
-updateState = (text) =>{
-    this.setState({text})
-	console.log("UPDATED")
+updateState = (rand) =>{
+    this.setState({rand})
 }
 
 export default class EditFoodScreen extends Component {
@@ -203,8 +203,8 @@ export default class EditFoodScreen extends Component {
     constructor(props) {
         super(props)
     }
-    updateChild = (text) => {
-        updateState(text)
+    updateChild = (rand) => {
+        updateState(rand)
     }
   
     state = { 
