@@ -30,6 +30,7 @@ class FlatListItem extends Component{
 	}
 	
 	updatePlate = (val) =>{
+		this.props.flatListParent.updateChild(val);
 		for(let i = 0; i < global.plate.length; i++){
 			if(global.plate[i]._id.toLowerCase() == this.props.item.name[0].toLowerCase()){
 				global.plate[i].amount = val;
@@ -146,7 +147,11 @@ class FlatListItem extends Component{
 		global.maximum -= (newVal - this.state.grams);
 		this.setState({grams: newVal, maximum: global.maximum});
 		console.log("Percentage of plate left: " + this.state.maximum);
-		this.props.flatListParent.updateChild(1);
+		this.rerenderPie(newVal);
+	}
+	
+	rerenderPie = (newVal) =>{
+		this.props.flatListParent.updateChild(newVal);
 	}
 	
 	deleteItem = (foodName) =>{
@@ -178,7 +183,6 @@ class FlatListItem extends Component{
 }
 
 updateState = (text) =>{
-	console.log("HERE");
     this.setState({text})
 }
 
@@ -192,7 +196,6 @@ export default class EditFoodScreen extends Component {
         super(props)
     }
     updateChild = (text) => {
-		console.log("HERE");
         updateState(text)
     }
   
