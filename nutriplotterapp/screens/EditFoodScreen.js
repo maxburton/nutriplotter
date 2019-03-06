@@ -31,6 +31,7 @@ class FlatListItem extends Component{
 	
 	updatePlate = (val) =>{
 		this.props.flatListParent.updateChild(val);
+		this.props.flatListParent.setState({refresh: 1});
 		for(let i = 0; i < global.plate.length; i++){
 			if(global.plate[i]._id.toLowerCase() == this.props.item.name[0].toLowerCase()){
 				global.plate[i].amount = val;
@@ -45,11 +46,11 @@ class FlatListItem extends Component{
 	plusButtonPressed = () => {
 		var oldWeight = this.state.grams;
 		var newWeight = oldWeight + 1;
-		if(!(newWeight > (this.state.maximum + oldWeight))){
+		if(!(newWeight > (global.maximum + oldWeight))){
 			this.sliderChange(newWeight);
 			this.updatePlate(newWeight);
 		}else{
-			console.log("Degrees of plate left: " + this.state.maximum);
+			console.log("Degrees of plate left: " + global.maximum);
 		}
 		
 	}
@@ -61,6 +62,10 @@ class FlatListItem extends Component{
 			this.sliderChange(newWeight);
 			this.updatePlate(newWeight);
 		}
+	}
+	
+	componentDidMount(){
+		this.recalculateMaximum();
 	}
 	
 	render(){
@@ -129,7 +134,7 @@ class FlatListItem extends Component{
 					style={styles.slider}
 					step={1}
 					minimumValue={0}
-					maximumValue={this.state.grams + this.state.maximum}
+					maximumValue={this.state.grams + global.maximum}
 					value={this.state.grams}
 					onValueChange={val => this.sliderChange(val) }
 					onSlidingComplete={val => this.updatePlate(val)}
@@ -147,7 +152,8 @@ class FlatListItem extends Component{
 		global.maximum -= (newVal - this.state.grams);
 		this.setState({grams: newVal, maximum: global.maximum});
 		console.log("Percentage of plate left: " + this.state.maximum);
-		this.rerenderPie(newVal);
+		this.rerenderPie(Math.random());
+		this.props.flatListParent.setState({refresh: Math.random()});
 	}
 	
 	rerenderPie = (newVal) =>{
@@ -177,6 +183,7 @@ class FlatListItem extends Component{
 		for(let i = 0; i < global.plate.length; i++){
 			global.maximum -= global.plate[i].amount;
 		}
+		this.setState({maximum: global.maximum});
 	}
 	
 	
@@ -184,6 +191,7 @@ class FlatListItem extends Component{
 
 updateState = (text) =>{
     this.setState({text})
+	console.log("UPDATED")
 }
 
 export default class EditFoodScreen extends Component {
@@ -203,6 +211,7 @@ export default class EditFoodScreen extends Component {
 		empty:'Your plate is empty! Add some by searching on the plate screen.',
 		promiseIsResolved:false,
 		foods:[],
+		refresh: 0,
 	}
 
 	recalculateMaximum = () =>{

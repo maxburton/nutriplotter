@@ -29,13 +29,10 @@ export default class Plate extends Component {
 	  pieColours: [],
 	  empty: true,
 	  isLoaded: false,
+	  refresh: 0,
    }
-   
    constructor(props) {
 		super(props)
-		this.state = {
-			refresh: 0,
-		}
 		updateState = updateState.bind(this)
 	}
    
