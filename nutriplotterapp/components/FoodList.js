@@ -17,7 +17,7 @@ class FlatListItem extends Component{
 				isSelected = true;
 			}
 		}
-		var randomImages = {
+		var foodImages = {
 			savouries:require('../assets/images/savouries.png'),
 			misc:require('../assets/images/misc.png'),
 			sauce:require('../assets/images/sauce.png'),
@@ -63,7 +63,7 @@ class FlatListItem extends Component{
 		<TouchableOpacity onPress = {() => this.alertItemName(this.props.item)}>
 			<View style={isSelected ? styles.itemStyleSelected : styles.itemStyle}>
 				<Image
-					source={randomImages[group]}
+					source={foodImages[group]}
 					style={styles.image}
 				/>
 				<View style={styles.buttonView}>

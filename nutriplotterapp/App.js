@@ -19,7 +19,8 @@ savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
 
 export default class App extends React.Component {
   state = {
-    isLoadingComplete: false
+    isLoadingComplete: false,
+	isLoaded: false,
   };
 
   submitToDB = async (
@@ -61,6 +62,13 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
+	let loadingCount = 0;
+	loadingCheck = () =>{
+		loadingCount++;
+		if(loadingCount >= 2){
+			this.setState({isLoaded: true});
+		}
+	}
     //Disables warning messages: TRUE FOR DEMOS
     console.disableYellowBox = true;
     global.isLoggedIn = false;
@@ -86,6 +94,7 @@ export default class App extends React.Component {
 	global.maximum = 100;
 	savedPlatesdb.find({}, function (err, newDocs) {
 		global.savedPlates = newDocs;
+		loadingCheck();
 	});
 	
 	global.colours = {
@@ -172,6 +181,7 @@ export default class App extends React.Component {
 			}
         }
 	}
+	loadingCheck();
 	});
 	
 	
@@ -195,7 +205,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen || !this.state.isLoaded) {
       return (
         <AppLoading
           startAsync={this._loadResourcesAsync}
