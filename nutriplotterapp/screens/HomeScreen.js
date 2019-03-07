@@ -1,6 +1,7 @@
 import React from "react";
 import List from "../components/FoodList.js";
 import Plate from "../components/Plate.js";
+import SideItem from "../components/SideItem.js";
 import firebase from "../components/Firebase.js";
 import "./LoginScreen";
 
@@ -19,6 +20,7 @@ import {
   Dimensions,
   measure,
   Alert,
+  ImageBackground,
 } from "react-native";
 import Modal from "react-native-modal";
 import { WebBrowser, SQLite } from "expo";
@@ -261,15 +263,15 @@ export default class HomeScreen extends React.Component {
         contentContainerStyle={styles.container}
       >
         <View style={styles.list}>
-          <TouchableOpacity
-            style={styles.list}
-            onPress={
-              () =>
-                this.props.navigation.navigate("EditFoodScreen")
-            }
-          >
-            <Plate/>
-          </TouchableOpacity>
+		<ImageBackground
+			alignContent={'center'}
+			style={StyleSheet.create({zIndex: 0})}>
+		  <SideItem style={styles.UL}/>
+		  <View style={styles.plateView}>
+				<Plate/>
+			 </View>
+		  <SideItem style={styles.DR}/>
+		 </ImageBackground> 
         </View>
 
         <Text style={styles.title}>Enter a food:</Text>
@@ -286,8 +288,8 @@ export default class HomeScreen extends React.Component {
         {/**view start**/}
         <Modal
           backdropOpacity={0.5}
-          swipeDirection="up"
-          onSwipe={this.closeModal}
+          swipeDirection="down"
+          onSwipe={()=>this.tweakPlate()}
           isVisible={this.state.isModalVisible}
         >
           <View
@@ -411,6 +413,10 @@ const styles = StyleSheet.create({
   list: {
     flex: 1
   },
+    plateView: {
+	  flex: 1,
+	  marginTop: "10%",
+  },
   title: {
     marginTop: offset,
     marginLeft: offset,
@@ -452,5 +458,15 @@ const styles = StyleSheet.create({
   outerView: {
     flex: 1,
     backgroundColor: "#00000080"
-  }
+  },
+  UL: {
+	  flex: 1,
+	  justifyContent: "flex-start",
+	  alignItems: "flex-start",
+  },
+  UL: {
+	  flex: 1,
+	  justifyContent: "flex-end",
+	  alignItems: "flex-end",
+  },
 });

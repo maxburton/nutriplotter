@@ -209,7 +209,6 @@ export default class EditFoodScreen extends Component {
   
     state = { 
 		empty:'Your plate is empty! Add some by searching on the plate screen.',
-		promiseIsResolved:false,
 		foods:[],
 		refresh: 0,
 	}
@@ -222,13 +221,9 @@ export default class EditFoodScreen extends Component {
 	}	
   
 	componentDidMount() {
-		this.recalculateMaximum();
-		setPromiseToResolved = () => {
-			this.setState({promiseIsResolved: true})
-		}		
+		this.recalculateMaximum();	
 		console.log("Current items on Plate: ");
 		console.log(global.plate);
-		setPromiseToResolved();
 		var length = global.plate.length;
 		var allFoods = [];
 		var maximumGrams = 100;
@@ -285,10 +280,6 @@ export default class EditFoodScreen extends Component {
   
   render() {
 	const {navigation}  = this.props;
-	
-		if(!this.state.promiseIsResolved){
-			return null
-		}
   
 		return (
 		  <View style={styles.bigContainer}>

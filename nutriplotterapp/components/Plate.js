@@ -14,6 +14,7 @@ import {
 
 
 import { WebBrowser } from 'expo';
+import Modal from "react-native-modal";
 import Pie from 'react-native-pie';
 
 import Food from './Food';
@@ -30,6 +31,7 @@ export default class Plate extends Component {
 	  empty: true,
 	  isLoaded: false,
 	  refresh: 0,
+	  isModalVisible: false,
    }
    constructor(props) {
 		super(props)
@@ -67,11 +69,20 @@ export default class Plate extends Component {
 	   return {series: drawPieSeries, colours: drawPieColours};
    }
    
+   platePressed = () =>{
+	   this.setState({isModalVisible: true});
+   }
+   
+   closeModal = () =>{
+	   this.setState({isModalVisible: false});
+   }
+   
    render() {
 	  let pieData = this.drawPie();
 	  if(!this.state.isLoaded){return null};
       return (
 	  <View style={styles.viewContainer}>
+	  
 	    <View style={styles.plate} onLayout={(event) => {
 			var dimension = event.nativeEvent.layout;  
 			this.state.dimensions = {
@@ -86,23 +97,41 @@ export default class Plate extends Component {
 			  radius: Math.floor(dimension.width / 2)
 			}
 		}}>
-		<ImageBackground 
-			alignContent={'center'}
-			style={StyleSheet.create({zIndex: 0})} 
-			source={require('../assets/images/plate.png')}>
-			<Pie
-		 	 // Make the pie chart a ring around the plate which fills up based on the foods present
-			  radius={105} innerRadius={81} on
-			  left={25}
-          	series={pieData["series"]}
-         	 //values to show and color sequentially
-		  	colors={pieData["colours"]}
-			
-			style={StyleSheet.create({zIndex: 1})}/>
-		</ImageBackground>
-		
+		<TouchableOpacity onPress={() => this.platePressed()}>
+			<ImageBackground 
+				alignContent={'center'}
+				style={StyleSheet.create({zIndex: 2})} 
+				source={require('../assets/images/plate.png')}>
+				<Pie
+				 // Make the pie chart a ring around the plate which fills up based on the foods present
+				  radius={105} innerRadius={81} on
+				  left={25}
+				series={pieData["series"]}
+				 //values to show and color sequentially
+				colors={pieData["colours"]}
+				
+				style={StyleSheet.create({zIndex: 3})}/>
+			</ImageBackground>
+		</TouchableOpacity>
 		</View>
-		
+		<Modal
+          backdropOpacity={0}
+          swipeDirection="down"
+          onSwipe={() => this.closeModal()}
+          isVisible={this.state.isModalVisible}
+        >
+			<View
+            style={{
+				flex: 1,
+				backgroundColor: "#fff",
+				borderRadius: 4,
+				borderColor: "#000",
+				borderWidth: 2,
+				marginTop: "90%",
+            }}>
+				
+			</View>
+		</Modal>
 	  </View>
       )
    }

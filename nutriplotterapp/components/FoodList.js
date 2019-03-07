@@ -451,10 +451,8 @@ const styles = StyleSheet.create ({
    },
   nameInput: {
      height: '15%',
-     marginRight: '5%',
-	 marginLeft: '5%',
-	 marginTop: 5,
-	 marginBottom: 5,
+     marginHorizontal: '6%',
+	 marginVertical: 5,
      paddingHorizontal: '5%',
      borderColor: '#111111',
      borderWidth: 1,
