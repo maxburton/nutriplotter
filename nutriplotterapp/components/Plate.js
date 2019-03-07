@@ -7,6 +7,7 @@ import {
 	View, 
 	TextInput, 
 	ImageBackground, 
+	Image,
 	Alert,
 	UIManager,
 	findNodeHandle,
@@ -80,8 +81,82 @@ export default class Plate extends Component {
    }
    
    render() {
+	  var foodImages = {
+			savouries:require('../assets/images/savouries.png'),
+			misc:require('../assets/images/misc.png'),
+			sauce:require('../assets/images/sauce.png'),
+			soup:require('../assets/images/soup.png'),
+			chocolate:require('../assets/images/chocolate.png'),
+			snacks:require('../assets/images/snacks.png'),
+			sweets:require('../assets/images/sweets.png'),
+			drinks:require('../assets/images/drinks.png'),
+			booze:require('../assets/images/booze.png'),
+			oil:require('../assets/images/oil.png'),
+			burger:require('../assets/images/burger.png'),
+			game:require('../assets/images/game.png'),
+			chicken:require('../assets/images/chicken.png'),
+			beef:require('../assets/images/beef.png'),
+			bacon:require('../assets/images/bacon.png'),
+			fish:require('../assets/images/fish.png'),
+			herbs:require('../assets/images/herbs.png'),
+			nuts:require('../assets/images/nuts.png'),
+			juice:require('../assets/images/juice.png'),
+			fruit:require('../assets/images/fruit.png'),
+			vegdish:require('../assets/images/vegdish.png'),
+			veg:require('../assets/images/veg.png'),
+			beans:require('../assets/images/beans.png'),
+			potato:require('../assets/images/potato.png'),
+			egg:require('../assets/images/egg.png'),
+			cream:require('../assets/images/cream.png'),
+			icecream:require('../assets/images/icecream.png'),
+			milk:require('../assets/images/milk.png'),
+			pudding:require('../assets/images/pudding.png'),
+			cakes:require('../assets/images/cakes.png'),
+			biscuits:require('../assets/images/biscuits.png'),
+			cereals:require('../assets/images/cereals.png'),
+			pastries:require('../assets/images/pastries.png'),
+			bread:require('../assets/images/bread.png'),
+			pizza:require('../assets/images/pizza.png'),
+			pasta:require('../assets/images/pasta.png'),
+			rice:require('../assets/images/rice.png'),
+			sandwich:require('../assets/images/sandwich.png'),
+			grains:require('../assets/images/grains.png'),
+		};
 	  let pieData = this.drawPie();
 	  if(!this.state.isLoaded){return null};
+	  
+	  let renderFoods = [];
+	  let plate = global.plate;
+	  let percentageSoFar = 0;
+	  for(let i = 0; i < plate.length; i++){
+		let amount = plate[i].amount;
+		let oldPercentage = percentageSoFar;
+		percentageSoFar += amount;
+		let midPoint = Math.floor((percentageSoFar + oldPercentage)/2)
+		let top = 10;
+		let left = 50;
+		if(midPoint < 50){
+			top = 10 + Math.floor(50 * (midPoint * 0.02));
+		}else{
+			top = 60 + Math.floor(50 * (1 - (midPoint * 0.02)));
+		}
+		if(midPoint < 25){
+			left = 50 + Math.floor(10 * (midPoint * 0.04));
+		}else if(midPoint < 75){
+			left = 60 + Math.floor(30 * (1 - (midPoint * 0.04)));
+		}else{
+			left = 0 + Math.floor(30 * ((midPoint * 0.04) - 3));
+		}
+		let topString = top + "%";
+		let leftString = left + "%";
+		let group = plate[i].group;
+		renderFoods.push(
+			<View style={{zIndex: 20, position: "absolute", top: topString, left: leftString}}>
+				<Image source={foodImages[group]} />
+			</View>
+		)
+	  }
+	
       return (
 	  <View style={styles.viewContainer}>
 	  
@@ -101,6 +176,7 @@ export default class Plate extends Component {
 		}}>
 
 		<TouchableOpacity onPress={() => this.platePressed()}>
+		<View>
 			<ImageBackground 
 				alignContent={'center'}
 				style={StyleSheet.create({zIndex: 2})} 
@@ -112,9 +188,10 @@ export default class Plate extends Component {
 				series={pieData["series"]}
 				 //values to show and color sequentially
 				colors={pieData["colours"]}
-				
 				style={StyleSheet.create({zIndex: 3})}/>
 			</ImageBackground>
+			{renderFoods}
+		</View>
 		</TouchableOpacity>
 		</View>
 		<Modal
