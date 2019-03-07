@@ -262,16 +262,26 @@ export default class HomeScreen extends React.Component {
         behavior="position"
         contentContainerStyle={styles.container}
       >
-        <View style={styles.list}>
-		<ImageBackground
-			alignContent={'center'}
-			style={StyleSheet.create({zIndex: 0})}>
-		  <SideItem style={styles.UL}/>
+        <View style={styles.wholePlateView}>
+		  <View style={styles.leftPlateView}>
+		  <View style={styles.UL}>
+			<SideItem type={"fruit"} isDown={false}/>
+		  </View>
+		  <View style={styles.DL}>
+		    <SideItem type={"dairy"} isDown={true}/>
+		  </View>
+		  </View>
 		  <View style={styles.plateView}>
 				<Plate/>
-			 </View>
-		  <SideItem style={styles.DR}/>
-		 </ImageBackground> 
+		  </View>
+		  <View style={styles.rightPlateView}>
+		  <View style={styles.UR}>
+		    <SideItem type={"bread"} isDown={false}/>
+		  </View>
+		  <View style={styles.DR}>
+		    <SideItem type={"drink"} isDown={true}/>
+		  </View>
+		  </View>
         </View>
 
         <Text style={styles.title}>Enter a food:</Text>
@@ -417,6 +427,18 @@ const styles = StyleSheet.create({
 	  flex: 1,
 	  marginTop: "10%",
   },
+    wholePlateView: {
+	  flex: 1,
+	  flexDirection: "row",
+  },
+	leftPlateView: {
+	  flex: 1,
+	  flexDirection: "column",
+	},
+	rightPlateView: {
+	  flex: 1,
+	  flexDirection: "column",
+	},
   title: {
     marginTop: offset,
     marginLeft: offset,
@@ -464,9 +486,24 @@ const styles = StyleSheet.create({
 	  justifyContent: "flex-start",
 	  alignItems: "flex-start",
   },
-  UL: {
+  DL: {
+	  flex: 1,
+	  justifyContent: "flex-end",
+	  alignItems: "flex-start",
+  },
+  UR: {
+	  flex: 1,
+	  justifyContent: "flex-start",
+	  alignItems: "flex-end",
+  },
+  DR: {
 	  flex: 1,
 	  justifyContent: "flex-end",
 	  alignItems: "flex-end",
   },
+  SP: {
+	  flex: 1,
+	  justifyContent: "center",
+	  alignItems: "center",
+  }
 });

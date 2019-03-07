@@ -18,6 +18,7 @@ import Modal from "react-native-modal";
 import Pie from 'react-native-pie';
 
 import Food from './Food';
+import SideItem from './SideItem';
 import styles from '../themes/plateStyle';
 
 var Datastore = require("react-native-local-mongodb"),
@@ -97,6 +98,7 @@ export default class Plate extends Component {
 			  radius: Math.floor(dimension.width / 2)
 			}
 		}}>
+
 		<TouchableOpacity onPress={() => this.platePressed()}>
 			<ImageBackground 
 				alignContent={'center'}

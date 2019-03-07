@@ -1,29 +1,39 @@
 import React from 'react';
-import { Text, ImageBackground, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 export default class SideItem extends React.Component {
 
 state = {
-	x: 0,
-	y: 0,
+	isDown: false,
 }
 constructor(props){
 	super(props);
 }
 
 componentDidMount(){
-	this.setState({x: this.props.x, y: this.props.y})
+	this.setState({isDown: this.props.isDown})
 }
 render() {
+	var sideImages = {
+		fruit:require('../assets/images/appleSide.png'),
+		dairy:require('../assets/images/yoghurtSide.png'),
+		bread:require('../assets/images/breadSide.png'),
+		drink:require('../assets/images/drinkSide.png')
+	}
     return(
+	
 		<TouchableOpacity>
+		<View style={this.state.isDown ? styles.bottom : styles.top}>
 			<ImageBackground
-				alignContent={'center'}
 				style={styles.image}
-				source={require('../assets/images/apple.png')}>
-				<Text style={styles.text}>+</Text>
+				source={sideImages[this.props.type]}>
+				<View style={styles.textView}>
+					<Text style={styles.text}>+</Text>
+				</View>
 			</ImageBackground>
+		</View>
 		</TouchableOpacity>
+		
 	)
   }
 }
@@ -35,13 +45,28 @@ const styles = StyleSheet.create ({
 		height: 64,
 		margin: 5,
 		zIndex: 10,
+		textAlign: "center",
+		justifyContent: "center",
+		alignItems: "center",
   },
-	text: {
+	textView: {
 		flex: 1,
 		textAlign: "center",
 		justifyContent: "center",
 		alignItems: "center",
 		zIndex: 11,
+	},
+	text: {
+		fontSize: 24,
+	},
+	bottom: {
+		flex: 1,
+		justifyContent: "flex-end",
+		alignItems: "flex-end",
+		flexDirection: "column",
+	},
+	top: {
+		flex: 1
 	},
 	modal: {
 		flex: 1,
