@@ -41,6 +41,11 @@ const styles = StyleSheet.create({
      height: null,
      resizeMode: 'contain'
    },
+   backButton: {
+	 fontSize: 20,
+	 textAlign: "center",
+	 marginVertical: 10,
+   }
 });
 
 export default styles;

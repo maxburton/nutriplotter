@@ -9,7 +9,7 @@ import {
 	ImageBackground, 
 	Alert,
 	UIManager,
-	findNodeHandle
+	findNodeHandle,
 } from 'react-native'
 
 
@@ -19,6 +19,7 @@ import Pie from 'react-native-pie';
 
 import Food from './Food';
 import SideItem from './SideItem';
+import EditFood from "./EditFood";
 import styles from '../themes/plateStyle';
 
 var Datastore = require("react-native-local-mongodb"),
@@ -118,11 +119,9 @@ export default class Plate extends Component {
 		</View>
 		<Modal
           backdropOpacity={0}
-          swipeDirection="down"
-          onSwipe={() => this.closeModal()}
           isVisible={this.state.isModalVisible}
         >
-			<View
+			<ScrollView
             style={{
 				flex: 1,
 				backgroundColor: "#fff",
@@ -131,8 +130,11 @@ export default class Plate extends Component {
 				borderWidth: 2,
 				marginTop: "90%",
             }}>
-				
-			</View>
+				<TouchableOpacity onPress={() => this.setState({isModalVisible: false}) }>
+					<Text style={styles.backButton}>Back to Plate</Text>
+				</TouchableOpacity>
+				<EditFood/>
+			</ScrollView>
 		</Modal>
 	  </View>
       )
