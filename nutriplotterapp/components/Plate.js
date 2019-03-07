@@ -143,9 +143,9 @@ export default class Plate extends Component {
 		if(midPoint < 25){
 			left = 50 + Math.floor(10 * (midPoint * 0.04));
 		}else if(midPoint < 75){
-			left = 60 + Math.floor(30 * (1 - (midPoint * 0.04)));
+			left = 60 + Math.floor(25 * (1 - (midPoint * 0.04)));
 		}else{
-			left = 0 + Math.floor(30 * ((midPoint * 0.04) - 3));
+			left = 10 + Math.floor(20 * ((midPoint * 0.04) - 3));
 		}
 		let topString = top + "%";
 		let leftString = left + "%";
