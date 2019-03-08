@@ -77,6 +77,7 @@ class FlatListItem extends Component{
 	}
 	
 	alertItemName = (item) => {
+		this.props.listParent.setState({refresh: Math.random()});
 		var isPlateIn = false;
 		var newFoodId = item.name.toLowerCase()
 		let index = 0;
@@ -139,7 +140,7 @@ class List extends Component {
 				data={this.state.names}
 				renderItem={({item, index})=>{
 					return(
-						<FlatListItem item={item} index={index}>
+						<FlatListItem listParent={this.props.listParent} item={item} index={index}>
 						</FlatListItem>
 					);
 				}}

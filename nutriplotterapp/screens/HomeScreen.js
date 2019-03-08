@@ -50,6 +50,7 @@ export default class HomeScreen extends React.Component {
     this.state = {
       isModalVisible: false,
       darkTheme: false,
+	  refresh: 0,
     };
 	this.resetGlobalTotals();
     this.toggleTheme = this.toggleTheme.bind(this);
@@ -286,7 +287,7 @@ export default class HomeScreen extends React.Component {
 
         <Text style={styles.title}>Enter a food:</Text>
         <View style={styles.list}>
-          <List style={styles.list} />
+          <List listParent={this} style={styles.list} />
         </View>
 
         <View>

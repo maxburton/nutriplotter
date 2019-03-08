@@ -130,6 +130,7 @@ export default class Plate extends Component {
 	  let percentageSoFar = 0;
 	  for(let i = 0; i < plate.length; i++){
 		let amount = plate[i].amount;
+		let imageScale = amount + 15;
 		let oldPercentage = percentageSoFar;
 		percentageSoFar += amount;
 		let midPoint = Math.floor((percentageSoFar + oldPercentage)/2)
@@ -147,12 +148,16 @@ export default class Plate extends Component {
 		}else{
 			left = 10 + Math.floor(20 * ((midPoint * 0.04) - 3));
 		}
+		if(amount == 0){
+			top = 45;
+			left = 45;
+		}
 		let topString = top + "%";
 		let leftString = left + "%";
 		let group = plate[i].group;
 		renderFoods.push(
 			<View style={{zIndex: 20, position: "absolute", top: topString, left: leftString}}>
-				<Image source={foodImages[group]} />
+				<Image style={{height: imageScale, width: imageScale}} source={foodImages[group]} />
 			</View>
 		)
 	  }
