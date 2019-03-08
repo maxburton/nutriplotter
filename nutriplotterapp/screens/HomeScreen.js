@@ -127,10 +127,10 @@ export default class HomeScreen extends React.Component {
   
   calculateScore(){
 	  let idealNutrients = {
-		calories: new Array("-", 600, 800),
-        carbs: new Array("-", 17, 51),
-        fats: new Array("-", 15, 26),
-        protein: new Array("-", 15, 33),
+		calories: new Array("-", 700, 600, 800),
+        carbs: new Array("-", 30, 17, 51),
+        fats: new Array("-", 21, 15, 26),
+        protein: new Array("-", 24, 15, 33),
         sugar: new Array("<", 10),
         satfat: new Array("<", 8),
         fibre: new Array(">", 10),
@@ -138,7 +138,7 @@ export default class HomeScreen extends React.Component {
         calcium: new Array(">", 333),
         vitA: new Array(">", 275),
         vitB1: new Array(">", 275),
-        vitB9: new Array("-", 160, 333),
+        vitB9: new Array("-", 250, 160, 333),
         vitC: new Array(">", 25),
 	  }
 	  let score = 13000;
@@ -149,8 +149,8 @@ export default class HomeScreen extends React.Component {
 		  let operator = idealNutrients[key][0];
 		  let weight = 1000/idealNutrients[key][1];
 		  if(operator == "-"){
-			  let min = idealNutrients[key][1];
-			  let max = idealNutrients[key][2];
+			  let min = idealNutrients[key][2];
+			  let max = idealNutrients[key][3];
 			  if(nutrientTotal < min){
 				  let pointLoss =  Math.round((min - nutrientTotal) * weight);
 				  score -= pointLoss;
@@ -185,6 +185,27 @@ export default class HomeScreen extends React.Component {
 		  score: score,
 		  warnings: warnings
 	  };
+  }
+  
+  calculatePercentage(nutrient, amount){
+	  let idealNutrients = {
+		calories: new Array("-", 700, 600, 800),
+        carbs: new Array("-", 30, 17, 51),
+        fats: new Array("-", 21, 15, 26),
+        protein: new Array("-", 24, 15, 33),
+        sugar: new Array("<", 10),
+        satfat: new Array("<", 8),
+        fibre: new Array(">", 10),
+        omega3: new Array(">", 150),
+        calcium: new Array(">", 333),
+        vitA: new Array(">", 275),
+        vitB1: new Array(">", 275),
+        vitB9: new Array("-", 250, 160, 333),
+        vitC: new Array(">", 25),
+	  }
+	  let idealAmount = idealNutrients[nutrient][1];
+	  let percentage = Math.floor((amount / idealAmount) * 100);
+	  return percentage;
   }
   
   submitPlate = () => {
@@ -310,7 +331,7 @@ export default class HomeScreen extends React.Component {
               borderRadius: 8,
               borderColor: "#000",
               borderWidth: 2,
-              marginHorizontal: 30,
+              marginHorizontal: 10,
               marginVertical: 60,
               padding: 8
             }}
@@ -362,19 +383,19 @@ export default class HomeScreen extends React.Component {
                 }}
               >
                 {[
-                  "\n\n" + global.totals["calories"] + " kcal\n",
-                  global.totals["carbs"] + "g\n",
-                  global.totals["fats"] + "g\n",
-                  global.totals["protein"] + "g\n",
-                  global.totals["sugar"] + "g\n",
-                  global.totals["satfat"] + "g\n",
-                  global.totals["fibre"] + "g\n",
-                  global.totals["omega3"] + "mg\n",
-                  global.totals["calcium"] + "mg\n",
-                  global.totals["vitA"] + "mg\n",
-                  global.totals["vitB1"] + "μg\n",
-                  global.totals["vitB9"] + "μg\n",
-                  global.totals["vitC"] + "mg\n"
+                  "\n\n" + global.totals["calories"] + "kcal  (" + this.calculatePercentage("calories", global.totals["calories"]) + "%)\n",
+                  global.totals["carbs"] + "g  (" + this.calculatePercentage("carbs", global.totals["carbs"]) + "%)\n",
+                  global.totals["fats"] + "g  (" + this.calculatePercentage("fats", global.totals["fats"]) + "%)\n",
+                  global.totals["protein"] + "g  (" + this.calculatePercentage("protein", global.totals["protein"]) + "%)\n",
+                  global.totals["sugar"] + "g  (" + this.calculatePercentage("sugar", global.totals["sugar"]) + "%)\n",
+                  global.totals["satfat"] + "g  (" + this.calculatePercentage("satfat", global.totals["satfat"]) + "%)\n",
+                  global.totals["fibre"] + "g  (" + this.calculatePercentage("fibre", global.totals["fibre"]) + "%)\n",
+                  global.totals["omega3"] + "mg  (" + this.calculatePercentage("omega3", global.totals["omega3"]) + "%)\n",
+                  global.totals["calcium"] + "mg  (" + this.calculatePercentage("calcium", global.totals["calcium"]) + "%)\n",
+                  global.totals["vitA"] + "mg  (" + this.calculatePercentage("vitA", global.totals["vitA"]) + "%)\n",
+                  global.totals["vitB1"] + "μg  (" + this.calculatePercentage("vitB1", global.totals["vitB1"]) + "%)\n",
+                  global.totals["vitB9"] + "μg  (" + this.calculatePercentage("vitB9", global.totals["vitB9"]) + "%)\n",
+                  global.totals["vitC"] + "mg  (" + this.calculatePercentage("vitC", global.totals["vitC"]) + "%)\n"
                 ]}
               </Text>
             </View>

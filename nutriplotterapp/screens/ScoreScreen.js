@@ -82,7 +82,7 @@ export default class ScoreScreen extends React.Component {
 	}
     return (
       <ScrollView style={styles.container}>
-	    <Text style={styles.score}>You Scored: {score} points!{newline}</Text> 
+	    <Text style={styles.score}>You Scored: {score}/13000 points!{newline}</Text> 
 		<Text style={styles.text}>You made {tweaks} adjustment(s) to your plate</Text>
 		{renderWarnings}
 		<TouchableOpacity style={styles.container} onPress={() => this.savePlate(plate, score, tweaks, warnings)}>
