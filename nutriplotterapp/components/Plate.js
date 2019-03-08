@@ -158,6 +158,7 @@ export default class Plate extends Component {
 		renderFoods.push(
 			<View style={{zIndex: 20, position: "absolute", top: topString, left: leftString}}>
 				<Image style={{height: imageScale, width: imageScale}} source={foodImages[group]} />
+				<Text style={{textAlign: "center"}}>{amount}%</Text>
 			</View>
 		)
 	  }
