@@ -28,7 +28,7 @@ render() {
 				style={styles.image}
 				source={sideImages[this.props.type]}>
 				<View style={styles.textView}>
-					<Text style={styles.text}>+</Text>
+					<Text style={styles.text}></Text>
 				</View>
 			</ImageBackground>
 		</View>

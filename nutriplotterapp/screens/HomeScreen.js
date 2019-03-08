@@ -35,7 +35,7 @@ import Food from "../components/Food";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: "Play with Your Food"
+    title: "Build a Plate"
   };
 
   constructor(props) {

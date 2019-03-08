@@ -128,8 +128,24 @@ export default class Plate extends Component {
 	  let renderFoods = [];
 	  let plate = global.plate;
 	  let percentageSoFar = 0;
+	  let groupsIn = [];
+	  let amounts = [];
 	  for(let i = 0; i < plate.length; i++){
-		let amount = plate[i].amount;
+		  let group = plate[i].group;
+		  if(!(groupsIn.includes(group))){
+			  groupsIn.push(group);
+			  amounts.push({group:group, amount:plate[i].amount});
+		  }else{
+			  for(let j = 0; j < amounts.length; j++){
+				if(group == amounts[j].group){
+					amounts[j]["amount"] = (plate[i].amount + amounts[j].amount);
+					console.log(amounts);
+				}
+			  }
+		  }
+	  }
+	  for(let i = 0; i < amounts.length; i++){
+		let amount = amounts[i].amount;
 		let imageScale = amount + 15;
 		let oldPercentage = percentageSoFar;
 		percentageSoFar += amount;
@@ -154,7 +170,8 @@ export default class Plate extends Component {
 		}
 		let topString = top + "%";
 		let leftString = left + "%";
-		let group = plate[i].group;
+		let group = amounts[i].group;
+		
 		renderFoods.push(
 			<View style={{zIndex: 20, position: "absolute", top: topString, left: leftString}}>
 				<Image style={{height: imageScale, width: imageScale}} source={foodImages[group]} />

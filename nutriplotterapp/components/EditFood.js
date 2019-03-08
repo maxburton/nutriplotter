@@ -296,7 +296,7 @@ export default class EditFoodScreen extends Component {
 		>
 		</FlatList>
 		</View>
-		<TouchableOpacity onPress={() => this.onClearClick }>
+		<TouchableOpacity onPress={() => this.onClearClick() }>
 			<Text style={styles.clearButton}>Clear Plate</Text>
 		</TouchableOpacity>
 	  </View>
