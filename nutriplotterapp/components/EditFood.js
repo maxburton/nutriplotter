@@ -178,6 +178,8 @@ class FlatListItem extends Component{
 		}
 		this.rerenderPie(Math.random());
 		this.props.flatListParent.refreshFlatList();
+		this.recalculateMaximum();
+		this.setState({grams: this.props.item.name[1]});
 	}
 	
 	recalculateMaximum = () =>{

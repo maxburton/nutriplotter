@@ -16,6 +16,7 @@ var Datastore = require('react-native-local-mongodb'),
 db = new Datastore({ filename: 'foods', autoload: true });
 platedb = new Datastore({ filename: 'plate', autoload: true });
 savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
+sideItemsdb = new Datastore({ filename: 'sideItems', autoload: true });
 
 export default class App extends React.Component {
   state = {
@@ -65,7 +66,7 @@ export default class App extends React.Component {
 	let loadingCount = 0;
 	loadingCheck = () =>{
 		loadingCount++;
-		if(loadingCount >= 2){
+		if(loadingCount >= 3){
 			this.setState({isLoaded: true});
 		}
 	}
@@ -95,6 +96,17 @@ export default class App extends React.Component {
 	savedPlatesdb.find({}, function (err, newDocs) {
 		global.savedPlates = newDocs;
 		loadingCheck();
+	});
+	global.sideItems = [{type: "fruit", isIn: false, nutrition: []}, {type: "dairy", isIn: false, nutrition: []}, {type: "bread", isIn: false, nutrition: []}, {type: "drink", isIn: false, nutrition: []}];
+	sideItemsdb.find({}, function (err, newDocs) {
+		if(newDocs.length > 3){
+			global.sideItems = newDocs;
+			loadingCheck();
+		}else{
+			sideItemsdb.insert([{type: "fruit", isIn: false, nutrition: []}, {type: "dairy", isIn: false, nutrition: []}, {type: "bread", isIn: false, nutrition: []}, {type: "drink", isIn: false, nutrition: []}], function (err, newDocs) {
+				loadingCheck();
+			});
+		}
 	});
 	
 	global.colours = {
