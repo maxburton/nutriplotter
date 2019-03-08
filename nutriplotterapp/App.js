@@ -17,6 +17,7 @@ db = new Datastore({ filename: 'foods', autoload: true });
 platedb = new Datastore({ filename: 'plate', autoload: true });
 savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
 sideItemsdb = new Datastore({ filename: 'sideItems', autoload: true });
+favdb = new Datastore({ filename: 'favourites', autoload: true });
 
 export default class App extends React.Component {
   state = {
@@ -66,7 +67,7 @@ export default class App extends React.Component {
 	let loadingCount = 0;
 	loadingCheck = () =>{
 		loadingCount++;
-		if(loadingCount >= 3){
+		if(loadingCount >= 4){
 			this.setState({isLoaded: true});
 		}
 	}
@@ -107,6 +108,11 @@ export default class App extends React.Component {
 				loadingCheck();
 			});
 		}
+	});
+	global.favourites = [];
+	favdb.find({}, function (err, newDocs) {
+		global.favourites = newDocs;
+		loadingCheck();
 	});
 	
 	global.colours = {
