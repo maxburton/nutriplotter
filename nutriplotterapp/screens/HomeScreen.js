@@ -4,7 +4,7 @@ import Plate from "../components/Plate.js";
 import SideItem from "../components/SideItem.js";
 import firebase from "../components/Firebase.js";
 import "./LoginScreen";
-
+import { Card, Button } from "react-native-elements";
 //Initliase firebase database
 import {
   Image,
@@ -16,11 +16,10 @@ import {
   View,
   TextInput,
   KeyboardAvoidingView,
-  Button,
   Dimensions,
   measure,
   Alert,
-  ImageBackground,
+  ImageBackground
 } from "react-native";
 import Modal from "react-native-modal";
 import { WebBrowser, SQLite } from "expo";
@@ -50,19 +49,19 @@ export default class HomeScreen extends React.Component {
     this.state = {
       isModalVisible: false,
       darkTheme: false,
-	  refresh: 0,
+      refresh: 0
     };
-	this.resetGlobalTotals();
+    this.resetGlobalTotals();
     this.toggleTheme = this.toggleTheme.bind(this);
 
     // When creating the homescreen, create a reference to the plate to be rendered
     // so that we may be able to call methods on the plate and manipulate its state from other components
     // on the screen.
- }
+  }
 
-  updateScore = async (score) => {
+  updateScore = async score => {
     //get scores as dict
-	name = global.isLoggedIn;
+    name = global.isLoggedIn;
     firebase
       .database()
       .ref("scores/")
@@ -86,11 +85,11 @@ export default class HomeScreen extends React.Component {
     //get currentscore and add this score
     if (orgDict[name]) {
       currentscore = orgDict[name];
-	  if(score > currentscore){
-		  newscore = score;
-	  }else{
-		  newscore = currentscore;
-	  }
+      if (score > currentscore) {
+        newscore = score;
+      } else {
+        newscore = currentscore;
+      }
     } else {
       newscore = score;
     }
@@ -118,161 +117,179 @@ export default class HomeScreen extends React.Component {
 
   _resultsClick() {
     //check plate size
-    if(global.plate.length > 0){
-		this._toggleModal();
-    }else {
-		Alert.alert("Your plate is empty!");
+    if (global.plate.length > 0) {
+      this._toggleModal();
+    } else {
+      Alert.alert("Your plate is empty!");
     }
   }
-  
-  calculateScore(){
-	  let idealNutrients = {
-		calories: new Array("-", 700, 600, 800),
-        carbs: new Array("-", 30, 17, 51),
-        fats: new Array("-", 21, 15, 26),
-        protein: new Array("-", 24, 15, 33),
-        sugar: new Array("<", 10),
-        satfat: new Array("<", 8),
-        fibre: new Array(">", 10),
-        omega3: new Array(">", 150),
-        calcium: new Array(">", 333),
-        vitA: new Array(">", 275),
-        vitB1: new Array(">", 275),
-        vitB9: new Array("-", 250, 160, 333),
-        vitC: new Array(">", 25),
-	  }
-	  let score = 13000;
-	  let dangerLevel = 500;
-	  let warnings = new Array();
-	  for (var key in global.totals) {
-		  let nutrientTotal = global.totals[key];
-		  let operator = idealNutrients[key][0];
-		  let weight = 1000/idealNutrients[key][1];
-		  if(operator == "-"){
-			  let min = idealNutrients[key][2];
-			  let max = idealNutrients[key][3];
-			  if(nutrientTotal < min){
-				  let pointLoss =  Math.round((min - nutrientTotal) * weight);
-				  score -= pointLoss;
-				  if(pointLoss > dangerLevel){warnings.push([key, "-"])};
-			  }else if(nutrientTotal > max){
-				  let pointLoss =  Math.round((nutrientTotal - max) * weight);
-				  score -= pointLoss;
-				  if(pointLoss > dangerLevel){warnings.push([key, "+"])};
-			  }
-		  }else if(operator == "<"){
-			  let max = idealNutrients[key][1];
-			  if(nutrientTotal > max){
-				  let pointLoss =  Math.round((nutrientTotal - max) * weight);
-				  score -= pointLoss
-				  if(pointLoss > dangerLevel){warnings.push([key, "+"])};
-			  }
-		  }else if(operator == ">"){
-			  let min = idealNutrients[key][1];
-			  if(nutrientTotal < min){
-				  let pointLoss =  Math.round((min - nutrientTotal) * weight);
-				  score -= pointLoss
-				  if(pointLoss > dangerLevel){warnings.push([key, "-"])};
-			  }
-		  }
-	  }
-	  score -= global.tweaks * 500;
-	  if(score < 0){
-		  score = 0;
-	  }
-	  console.log("Score: " + score);
-	  return {
-		  score: score,
-		  warnings: warnings
-	  };
-  }
-  
-  calculatePercentage(nutrient, amount){
-	  let idealNutrients = {
-		calories: new Array("-", 700, 600, 800),
-        carbs: new Array("-", 30, 17, 51),
-        fats: new Array("-", 21, 15, 26),
-        protein: new Array("-", 24, 15, 33),
-        sugar: new Array("<", 10),
-        satfat: new Array("<", 8),
-        fibre: new Array(">", 10),
-        omega3: new Array(">", 150),
-        calcium: new Array(">", 333),
-        vitA: new Array(">", 275),
-        vitB1: new Array(">", 275),
-        vitB9: new Array("-", 250, 160, 333),
-        vitC: new Array(">", 25),
-	  }
-	  let idealAmount = idealNutrients[nutrient][1];
-	  let percentage = Math.floor((amount / idealAmount) * 100);
-	  return percentage;
-  }
-  
-  submitPlate = () => {
-	  this.setState({ isModalVisible: false });
-	  let scoreArray = this.calculateScore();
-	  let warnings = scoreArray["warnings"];
-	  let score = scoreArray["score"];
-	  this.updateScore(score);
-	  console.log("Score: " + score);
-	  this.props.navigation.navigate("ScoreScreen", {
-		plate: global.plate,
-		tweaks: global.tweaks,
-		score: score,
-		warnings: warnings,
-	  })
-  }
-  
-  tweakPlate = () => {
-	  this.setState({ isModalVisible: false });
-	  global.tweaks++;
-  }
-  
-  
-	resetGlobalTotals = () => {
-	  global.totals = {
-        calories: 0,
-        carbs: 0,
-        fats: 0,
-        protein: 0,
-        sugar: 0,
-        satfat: 0,
-        fibre: 0,
-        omega3: 0,
-        calcium: 0,
-        vitA: 0,
-        vitB1: 0,
-        vitB9: 0,
-        vitC: 0
-      };
+
+  calculateScore() {
+    let idealNutrients = {
+      calories: new Array("-", 700, 600, 800),
+      carbs: new Array("-", 30, 17, 51),
+      fats: new Array("-", 21, 15, 26),
+      protein: new Array("-", 24, 15, 33),
+      sugar: new Array("<", 10),
+      satfat: new Array("<", 8),
+      fibre: new Array(">", 10),
+      omega3: new Array(">", 150),
+      calcium: new Array(">", 333),
+      vitA: new Array(">", 275),
+      vitB1: new Array(">", 275),
+      vitB9: new Array("-", 250, 160, 333),
+      vitC: new Array(">", 25)
     };
+    let score = 13000;
+    let dangerLevel = 500;
+    let warnings = new Array();
+    for (var key in global.totals) {
+      let nutrientTotal = global.totals[key];
+      let operator = idealNutrients[key][0];
+      let weight = 1000 / idealNutrients[key][1];
+      if (operator == "-") {
+        let min = idealNutrients[key][2];
+        let max = idealNutrients[key][3];
+        if (nutrientTotal < min) {
+          let pointLoss = Math.round((min - nutrientTotal) * weight);
+          score -= pointLoss;
+          if (pointLoss > dangerLevel) {
+            warnings.push([key, "-"]);
+          }
+        } else if (nutrientTotal > max) {
+          let pointLoss = Math.round((nutrientTotal - max) * weight);
+          score -= pointLoss;
+          if (pointLoss > dangerLevel) {
+            warnings.push([key, "+"]);
+          }
+        }
+      } else if (operator == "<") {
+        let max = idealNutrients[key][1];
+        if (nutrientTotal > max) {
+          let pointLoss = Math.round((nutrientTotal - max) * weight);
+          score -= pointLoss;
+          if (pointLoss > dangerLevel) {
+            warnings.push([key, "+"]);
+          }
+        }
+      } else if (operator == ">") {
+        let min = idealNutrients[key][1];
+        if (nutrientTotal < min) {
+          let pointLoss = Math.round((min - nutrientTotal) * weight);
+          score -= pointLoss;
+          if (pointLoss > dangerLevel) {
+            warnings.push([key, "-"]);
+          }
+        }
+      }
+    }
+    score -= global.tweaks * 500;
+    if (score < 0) {
+      score = 0;
+    }
+    console.log("Score: " + score);
+    return {
+      score: score,
+      warnings: warnings
+    };
+  }
+
+  calculatePercentage(nutrient, amount) {
+    let idealNutrients = {
+      calories: new Array("-", 700, 600, 800),
+      carbs: new Array("-", 30, 17, 51),
+      fats: new Array("-", 21, 15, 26),
+      protein: new Array("-", 24, 15, 33),
+      sugar: new Array("<", 10),
+      satfat: new Array("<", 8),
+      fibre: new Array(">", 10),
+      omega3: new Array(">", 150),
+      calcium: new Array(">", 333),
+      vitA: new Array(">", 275),
+      vitB1: new Array(">", 275),
+      vitB9: new Array("-", 250, 160, 333),
+      vitC: new Array(">", 25)
+    };
+    let idealAmount = idealNutrients[nutrient][1];
+    let percentage = Math.floor((amount / idealAmount) * 100);
+    return percentage;
+  }
+
+  submitPlate = () => {
+    this.setState({ isModalVisible: false });
+    let scoreArray = this.calculateScore();
+    let warnings = scoreArray["warnings"];
+    let score = scoreArray["score"];
+    this.updateScore(score);
+    console.log("Score: " + score);
+    this.props.navigation.navigate("ScoreScreen", {
+      plate: global.plate,
+      tweaks: global.tweaks,
+      score: score,
+      warnings: warnings
+    });
+  };
+
+  tweakPlate = () => {
+    this.setState({ isModalVisible: false });
+    global.tweaks++;
+  };
+
+  resetGlobalTotals = () => {
+    global.totals = {
+      calories: 0,
+      carbs: 0,
+      fats: 0,
+      protein: 0,
+      sugar: 0,
+      satfat: 0,
+      fibre: 0,
+      omega3: 0,
+      calcium: 0,
+      vitA: 0,
+      vitB1: 0,
+      vitB9: 0,
+      vitC: 0
+    };
+  };
 
   render() {
-	
-	var foodDocs = global.plate;
+    var foodDocs = global.plate;
     if (foodDocs.length > 0) {
-		this.resetGlobalTotals();
-		let multiplier = 0.05; // 0.01 to get nutrients per gram, then x5 to have a total plate weight of 500g
-        for (let i = 0; i < foodDocs.length; i++) {
-			
-			global.totals["calories"] += foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);
-			global.totals["carbs"] += foodDocs[i].data.carbs * (foodDocs[i].amount * multiplier);
-			global.totals["fats"] += foodDocs[i].data.fats * (foodDocs[i].amount * multiplier);
-			global.totals["protein"] += foodDocs[i].data.protein * (foodDocs[i].amount * multiplier);
-			global.totals["sugar"] += foodDocs[i].data.sugar * (foodDocs[i].amount * multiplier);
-			global.totals["satfat"] += foodDocs[i].data.satfat * (foodDocs[i].amount * multiplier);
-			global.totals["fibre"] += foodDocs[i].data.fibre * (foodDocs[i].amount * multiplier);
-			global.totals["omega3"] += foodDocs[i].data.omega3 * (foodDocs[i].amount * multiplier * 1000); //multiplied by 1000 because data is in grams but should be in mg
-			global.totals["calcium"] += foodDocs[i].data.calcium * (foodDocs[i].amount * multiplier);
-			global.totals["vitA"] += foodDocs[i].data.vitA * (foodDocs[i].amount * multiplier);
-			global.totals["vitB1"] += foodDocs[i].data.vitB1 * (foodDocs[i].amount * multiplier / 1000); //divided by 1000 because data is in mg but should be in micrograms
-			global.totals["vitB9"] += foodDocs[i].data.vitB9 * (foodDocs[i].amount * multiplier);
-			global.totals["vitC"] += foodDocs[i].data.vitC * (foodDocs[i].amount * multiplier);
-			
-			for(var key in global.totals){
-				global.totals[key] = Math.round(global.totals[key] * 10) / 10;
-			}
+      this.resetGlobalTotals();
+      let multiplier = 0.05; // 0.01 to get nutrients per gram, then x5 to have a total plate weight of 500g
+      for (let i = 0; i < foodDocs.length; i++) {
+        global.totals["calories"] +=
+          foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);
+        global.totals["carbs"] +=
+          foodDocs[i].data.carbs * (foodDocs[i].amount * multiplier);
+        global.totals["fats"] +=
+          foodDocs[i].data.fats * (foodDocs[i].amount * multiplier);
+        global.totals["protein"] +=
+          foodDocs[i].data.protein * (foodDocs[i].amount * multiplier);
+        global.totals["sugar"] +=
+          foodDocs[i].data.sugar * (foodDocs[i].amount * multiplier);
+        global.totals["satfat"] +=
+          foodDocs[i].data.satfat * (foodDocs[i].amount * multiplier);
+        global.totals["fibre"] +=
+          foodDocs[i].data.fibre * (foodDocs[i].amount * multiplier);
+        global.totals["omega3"] +=
+          foodDocs[i].data.omega3 * (foodDocs[i].amount * multiplier * 1000); //multiplied by 1000 because data is in grams but should be in mg
+        global.totals["calcium"] +=
+          foodDocs[i].data.calcium * (foodDocs[i].amount * multiplier);
+        global.totals["vitA"] +=
+          foodDocs[i].data.vitA * (foodDocs[i].amount * multiplier);
+        global.totals["vitB1"] +=
+          foodDocs[i].data.vitB1 * ((foodDocs[i].amount * multiplier) / 1000); //divided by 1000 because data is in mg but should be in micrograms
+        global.totals["vitB9"] +=
+          foodDocs[i].data.vitB9 * (foodDocs[i].amount * multiplier);
+        global.totals["vitC"] +=
+          foodDocs[i].data.vitC * (foodDocs[i].amount * multiplier);
+
+        for (var key in global.totals) {
+          global.totals[key] = Math.round(global.totals[key] * 10) / 10;
         }
+      }
     }
     //const styles = getStyleSheet(this.state.darkTheme);
 
@@ -285,43 +302,44 @@ export default class HomeScreen extends React.Component {
         contentContainerStyle={styles.container}
       >
         <View style={styles.wholePlateView}>
-		  <View style={styles.leftPlateView}>
-		  <View style={styles.UL}>
-			<SideItem type={"fruit"} isDown={false}/>
-		  </View>
-		  <View style={styles.DL}>
-		    <SideItem type={"dairy"} isDown={true}/>
-		  </View>
-		  </View>
-		  <View style={styles.plateView}>
-				<Plate/>
-		  </View>
-		  <View style={styles.rightPlateView}>
-		  <View style={styles.UR}>
-		    <SideItem type={"bread"} isDown={false}/>
-		  </View>
-		  <View style={styles.DR}>
-		    <SideItem type={"drink"} isDown={true}/>
-		  </View>
-		  </View>
+          <View style={styles.leftPlateView}>
+            <View style={styles.UL}>
+              <SideItem type={"fruit"} isDown={false} />
+            </View>
+            <View style={styles.DL}>
+              <SideItem type={"dairy"} isDown={true} />
+            </View>
+          </View>
+          <View style={styles.plateView}>
+            <Plate />
+          </View>
+          <View style={styles.rightPlateView}>
+            <View style={styles.UR}>
+              <SideItem type={"bread"} isDown={false} />
+            </View>
+            <View style={styles.DR}>
+              <SideItem type={"drink"} isDown={true} />
+            </View>
+          </View>
         </View>
 
-        <Text style={styles.title}>Enter a food:</Text>
-        <View style={styles.list}>
+        <View style={[styles.list, { marginTop: "5%" }]}>
           <List listParent={this} style={styles.list} />
         </View>
 
         <View>
-          <TouchableOpacity style={styles.submitPlate} onPress={() => this._resultsClick()}>
-            <Text style={styles.submitPlate}>Submit Plate</Text>
-          </TouchableOpacity>
+          <Button
+            style={styles.submitPlate}
+            title={"Submit Plate"}
+            onPress={() => this._resultsClick()}
+          />
         </View>
 
         {/**view start**/}
         <Modal
           backdropOpacity={0.5}
           swipeDirection="down"
-          onSwipe={()=>this.tweakPlate()}
+          onSwipe={() => this.tweakPlate()}
           isVisible={this.state.isModalVisible}
         >
           <View
@@ -329,8 +347,8 @@ export default class HomeScreen extends React.Component {
               flex: 1,
               backgroundColor: "#fff",
               borderRadius: 8,
-              borderColor: "#000",
-              borderWidth: 2,
+              borderColor: "#eee",
+              borderWidth: 1,
               marginHorizontal: 10,
               marginVertical: 60,
               padding: 8
@@ -383,19 +401,74 @@ export default class HomeScreen extends React.Component {
                 }}
               >
                 {[
-                  "\n\n" + global.totals["calories"] + "kcal  (" + this.calculatePercentage("calories", global.totals["calories"]) + "%)\n",
-                  global.totals["carbs"] + "g  (" + this.calculatePercentage("carbs", global.totals["carbs"]) + "%)\n",
-                  global.totals["fats"] + "g  (" + this.calculatePercentage("fats", global.totals["fats"]) + "%)\n",
-                  global.totals["protein"] + "g  (" + this.calculatePercentage("protein", global.totals["protein"]) + "%)\n",
-                  global.totals["sugar"] + "g  (" + this.calculatePercentage("sugar", global.totals["sugar"]) + "%)\n",
-                  global.totals["satfat"] + "g  (" + this.calculatePercentage("satfat", global.totals["satfat"]) + "%)\n",
-                  global.totals["fibre"] + "g  (" + this.calculatePercentage("fibre", global.totals["fibre"]) + "%)\n",
-                  global.totals["omega3"] + "mg  (" + this.calculatePercentage("omega3", global.totals["omega3"]) + "%)\n",
-                  global.totals["calcium"] + "mg  (" + this.calculatePercentage("calcium", global.totals["calcium"]) + "%)\n",
-                  global.totals["vitA"] + "mg  (" + this.calculatePercentage("vitA", global.totals["vitA"]) + "%)\n",
-                  global.totals["vitB1"] + "μg  (" + this.calculatePercentage("vitB1", global.totals["vitB1"]) + "%)\n",
-                  global.totals["vitB9"] + "μg  (" + this.calculatePercentage("vitB9", global.totals["vitB9"]) + "%)\n",
-                  global.totals["vitC"] + "mg  (" + this.calculatePercentage("vitC", global.totals["vitC"]) + "%)\n"
+                  "\n\n" +
+                    global.totals["calories"] +
+                    "kcal  (" +
+                    this.calculatePercentage(
+                      "calories",
+                      global.totals["calories"]
+                    ) +
+                    "%)\n",
+                  global.totals["carbs"] +
+                    "g  (" +
+                    this.calculatePercentage("carbs", global.totals["carbs"]) +
+                    "%)\n",
+                  global.totals["fats"] +
+                    "g  (" +
+                    this.calculatePercentage("fats", global.totals["fats"]) +
+                    "%)\n",
+                  global.totals["protein"] +
+                    "g  (" +
+                    this.calculatePercentage(
+                      "protein",
+                      global.totals["protein"]
+                    ) +
+                    "%)\n",
+                  global.totals["sugar"] +
+                    "g  (" +
+                    this.calculatePercentage("sugar", global.totals["sugar"]) +
+                    "%)\n",
+                  global.totals["satfat"] +
+                    "g  (" +
+                    this.calculatePercentage(
+                      "satfat",
+                      global.totals["satfat"]
+                    ) +
+                    "%)\n",
+                  global.totals["fibre"] +
+                    "g  (" +
+                    this.calculatePercentage("fibre", global.totals["fibre"]) +
+                    "%)\n",
+                  global.totals["omega3"] +
+                    "mg  (" +
+                    this.calculatePercentage(
+                      "omega3",
+                      global.totals["omega3"]
+                    ) +
+                    "%)\n",
+                  global.totals["calcium"] +
+                    "mg  (" +
+                    this.calculatePercentage(
+                      "calcium",
+                      global.totals["calcium"]
+                    ) +
+                    "%)\n",
+                  global.totals["vitA"] +
+                    "mg  (" +
+                    this.calculatePercentage("vitA", global.totals["vitA"]) +
+                    "%)\n",
+                  global.totals["vitB1"] +
+                    "μg  (" +
+                    this.calculatePercentage("vitB1", global.totals["vitB1"]) +
+                    "%)\n",
+                  global.totals["vitB9"] +
+                    "μg  (" +
+                    this.calculatePercentage("vitB9", global.totals["vitB9"]) +
+                    "%)\n",
+                  global.totals["vitC"] +
+                    "mg  (" +
+                    this.calculatePercentage("vitC", global.totals["vitC"]) +
+                    "%)\n"
                 ]}
               </Text>
             </View>
@@ -411,7 +484,7 @@ export default class HomeScreen extends React.Component {
                     color: "blue"
                   }}
                 >
-                  Tweak Your Plate (-500 points)
+                  Continue Tweaking (-500 points)
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -425,7 +498,7 @@ export default class HomeScreen extends React.Component {
                     color: "blue"
                   }}
                 >
-                  Submit Your Plate
+                  Submit
                 </Text>
               </TouchableOpacity>
             </View>
@@ -445,22 +518,22 @@ const styles = StyleSheet.create({
   list: {
     flex: 1
   },
-    plateView: {
-	  flex: 1,
-	  marginTop: "10%",
+  plateView: {
+    flex: 1,
+    marginTop: "10%"
   },
-    wholePlateView: {
-	  flex: 1,
-	  flexDirection: "row",
+  wholePlateView: {
+    flex: 1,
+    flexDirection: "row"
   },
-	leftPlateView: {
-	  flex: 1,
-	  flexDirection: "column",
-	},
-	rightPlateView: {
-	  flex: 1,
-	  flexDirection: "column",
-	},
+  leftPlateView: {
+    flex: 1,
+    flexDirection: "column"
+  },
+  rightPlateView: {
+    flex: 1,
+    flexDirection: "column"
+  },
   title: {
     marginTop: offset,
     marginLeft: offset,
@@ -468,9 +541,9 @@ const styles = StyleSheet.create({
   },
   submitPlate: {
     alignItems: "center",
-	marginBottom: 2,
-	marginTop: 3,
-    fontSize: offset,
+    marginBottom: 2,
+    marginTop: 3,
+    fontSize: offset
   },
   buttonText: {
     marginLeft: offset,
@@ -504,28 +577,28 @@ const styles = StyleSheet.create({
     backgroundColor: "#00000080"
   },
   UL: {
-	  flex: 1,
-	  justifyContent: "flex-start",
-	  alignItems: "flex-start",
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-start"
   },
   DL: {
-	  flex: 1,
-	  justifyContent: "flex-end",
-	  alignItems: "flex-start",
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "flex-start"
   },
   UR: {
-	  flex: 1,
-	  justifyContent: "flex-start",
-	  alignItems: "flex-end",
+    flex: 1,
+    justifyContent: "flex-start",
+    alignItems: "flex-end"
   },
   DR: {
-	  flex: 1,
-	  justifyContent: "flex-end",
-	  alignItems: "flex-end",
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "flex-end"
   },
   SP: {
-	  flex: 1,
-	  justifyContent: "center",
-	  alignItems: "center",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });

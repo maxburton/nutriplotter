@@ -3,6 +3,7 @@ import { Text, Image, TouchableOpacity, StyleSheet, View, TextInput, FlatList, A
 import { WebBrowser } from 'expo';
 import { ListItem } from 'react-native-elements';
 import firebase from "./Firebase.js";
+import {SearchBar} from 'react-native-elements';
 
 var Datastore = require('react-native-local-mongodb'), 
 db = new Datastore({ filename: 'foods', autoload: true });
@@ -147,11 +148,13 @@ class List extends Component {
    render() {
       return (
 	    <View>
-		 <TextInput
+		 <SearchBar
 			  onChangeText={this.onChangeText}
 			  style={styles.nameInput}
-			  placeHolder="Enter a food"
-			  value={this.state.name}
+			  placeholder="Enter a food"
+				value={this.state.name}
+				platform="default"
+				lightTheme={true}
 		 />
          <View style = {styles.scrollStyle}>
 			<Text style={styles.checkDB}>{this.state.test}</Text>
@@ -197,59 +200,6 @@ class List extends Component {
 			input = input.toLowerCase();
 			var group = "";
 			switch(input) {
-				case "a":
-				case "aa":
-					group = "grains";
-					break;
-				case "ab":
-					group = "sandwich";
-					break;
-				case "ac":
-					group = "rice";
-					break;
-				case "ad":
-					group = "pasta";
-					break;
-				case "ae":
-					group = "pizza";
-					break;
-				case "af":
-				case "ag":
-					group = "bread";
-					break;
-				case "ak":
-				case "ai":
-					group = "cereals";
-					break;
-				case "am":
-					group = "biscuits";
-					break;
-				case "an":
-					group = "cakes";
-					break;
-				case "ao":
-				case "ap":
-					group = "pastries";
-					break;
-				case "as":
-				case "br":
-					group = "pudding";
-					break;
-				case "at":
-				case "bv":
-					group = "savouries";
-					break;
-				case "b":
-				case "ba":
-				case "bab":
-				case "bae":
-				case "bah":
-				case "bak":
-				case "ban":
-				case "bar":
-				case "bc":
-				case "bf":
-				case "bfd":
 				case "bfg":
 				case "bfj":
 				case "bfp":
