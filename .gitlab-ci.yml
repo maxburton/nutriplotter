@@ -17,7 +17,7 @@ build_builder:
   image: docker
   stage: build
   script:
-    - docker build -t nutriplotterapp/builder:latest ./
+    - docker build -t nutriplotterapp/builder:latest ./nutriplotterapp
     - docker login -u ${dockerLogin} -p ${dockerPassword}
     - docker push ${dockerLogin}/builder:latest
 
