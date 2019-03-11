@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:ubuntu
 
 ARG APP_DIR=/home/node/app
 ENV APP_DIR=${APP_DIR}
