@@ -31,7 +31,7 @@ build_android:
     - export EXPO_PASSWORD=${CIpass}
     - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
     - export EXPO_ANDROID_KEY_PASSWORD=${androidKey}
-    - npm install expo-cli
+    - npm install -g expo-cli
     - npm install -g gulp-cli --unsafe-perm --allow-root
     - npm install -g turtle-cli --unsafe-perm --allow-root
     - expo login -u "${CIuser}" -p "${CIpass}"
