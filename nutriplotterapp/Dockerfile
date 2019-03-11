@@ -9,12 +9,11 @@ RUN apt-get update && \
 		curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
 		curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
 		apt-get install -y nodejs && \
-		apt-get install -y git openjdk-8-jdk bash python make g++ && \
-		npm install -g --unsafe-perm expo-cli gulp-cli turtle-cli
+		apt-get install -y git openjdk-8-jdk bash python make g++
 
-RUN mkdir -p ${APP_DIR}/node_modules && chown -R node:node ${APP_DIR}
+RUN mkdir -p ${APP_DIR}/node_modules && chown -R ubuntu ${APP_DIR}
 
-USER node
+USER ubuntu
 
 WORKDIR ${APP_DIR}
 COPY package.json .
