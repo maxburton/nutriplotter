@@ -8,7 +8,7 @@ RUN apt-get update && \
 		apt-get -y install curl && \
 		curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
 		curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
-		install -y nodejs && \
+		apt-get install -y nodejs && \
 		apt-get install git openjdk8 bash python make g++ --no-cache && \
 		npm install -g --unsafe-perm expo-cli gulp-cli turtle-cli
 
