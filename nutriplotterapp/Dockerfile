@@ -4,7 +4,7 @@ ARG APP_DIR=/home/node/app
 ENV APP_DIR=${APP_DIR}
 
 RUN apt-get update && \
-		apt-get install gnupg && \
+		apt-get -y install gnupg && \
 		apt-get -y install curl && \
 		curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
 		curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
