@@ -11,9 +11,7 @@ RUN apt-get update && \
 		apt-get install -y nodejs && \
 		apt-get install -y git openjdk-8-jdk bash python make g++
 
-RUN mkdir -p ${APP_DIR}/node_modules && chown -R ubuntu ${APP_DIR}
 
-USER ubuntu
 
 WORKDIR ${APP_DIR}
 COPY package.json .
