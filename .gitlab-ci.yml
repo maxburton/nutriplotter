@@ -1,40 +1,158 @@
-image: docker
+version: 2.1
 
-stages:
-    - build
-    - tests
-    
-build_dissertation:
-  image: blang/latex
-  stage: build
-  script:
-    - latexmk -pdf -cd docs/dissertation/dissertation.tex
-  artifacts:
-    paths:
-      - "*.pdf"
+executors:
+  js:
+    docker:
+      - image: circleci/node:8.12
+    working_directory: ~/expo-project
+    environment:
+      YARN_CACHE_FOLDER: ~/yarn_cache
 
-build_builder:
-  image: docker
-  stage: build
-  script:
-    - docker build -t nutriplotterapp/builder:latest ./nutriplotterapp
-    - docker login -u ${dockerLogin} -p ${dockerPassword}
-    - docker push ${dockerLogin}/builder:latest
+  android:
+    # WARNING: medium (default) seems not to be enough for Turtle
+    resource_class: xlarge
+    docker:
+      # https://github.com/expo/expo-turtle-android
+      - image: dsokal/expo-turtle-android
+    working_directory: ~/expo-project
+    environment:
+      TURTLE_VERSION: 0.5.12
+      PLATFORM: android
+      YARN_CACHE_FOLDER: ~/yarn_cache
 
-build_android:
-  image: ${dockerLogin}/builder:latest
-  stage: build
-  
-  script:
-    - cd ./nutriplotterapp
-    - npm install bash
-    - export EXPO_USERNAME=${CIuser}
-    - export EXPO_PASSWORD=${CIpass}
-    - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
-    - export EXPO_ANDROID_KEY_PASSWORD=${androidKey}
-    - npm install -g expo-cli
-    - npm install -g gulp-cli --unsafe-perm --allow-root
-    - npm install -g turtle-cli --unsafe-perm --allow-root
-    - expo login -u "${CIuser}" -p "${CIpass}"
-    - expo fetch:android:keystore
-    - turtle build:android --keystore-path /builds/tp3-2018-cs25/dissertation/nutriplotterapp/nutriplotterapp.jks --keystore-alias QG51dHJpcGxhdHRlci9udXRyaXBsb3R0ZXJhcHA=
+  ios:
+    macos:
+      xcode: 10.1.0
+    working_directory: ~/expo-project
+    environment:
+      TURTLE_VERSION: 0.5.12
+      PLATFORM: ios
+      YARN_CACHE_FOLDER: /Users/distiller/yarn_cache
+      HOMEBREW_NO_AUTO_UPDATE: 1
+
+commands:
+  install_macos_deps:
+    steps:
+      - run:
+          name: Installing jq
+          command: brew install jq
+
+  determine_expo_sdk_version:
+    steps:
+      - run:
+          name: Determine Expo SDK version for this project
+          command: cat app.json | jq '.expo.sdkVersion' -r > /tmp/expo-sdk-version
+
+  add_yarn_binaries_to_path:
+    steps:
+      - run:
+          name: Add yarn binaries path to $PATH
+          command: echo 'export PATH=~/.yarn/bin:$PATH' >> $BASH_ENV
+
+  determine_turtle_cache_key_component:
+    steps:
+      - run:
+          name: Determine Turtle cache key component
+          command: echo $TURTLE_VERSION $PLATFORM > /tmp/turtle-version-platform
+
+  restore_turtle_cache:
+    steps:
+      - restore_cache:
+          keys:
+          - cache-turtle-cli-{{ checksum "/tmp/turtle-version-platform" }}
+
+  save_turtle_cache:
+    steps:
+      - save_cache:
+          paths:
+            - ~/.turtle
+            - ~/yarn_cache
+          key: cache-turtle-cli-{{ checksum "/tmp/turtle-version-platform" }}
+
+  install_turtle_ios:
+    steps:
+      - run:
+          name: Installing turtle-cli
+          command: |
+            yarn config set prefix ~/.yarn
+            yarn global add turtle-cli@$TURTLE_VERSION
+
+  setup_turtle:
+    steps:
+      - run:
+          name: Setting up environment for Turtle
+          command: turtle setup:$PLATFORM --sdk-version `cat /tmp/expo-sdk-version`
+
+  restore_yarn_cache:
+    steps:
+      - restore_cache:
+          keys:
+          - cache-yarn-{{ checksum "package.json" }}
+
+  save_yarn_cache:
+    steps:
+      - save_cache:
+          paths:
+            - ~/yarn_cache
+          key: cache-yarn-{{ checksum "package.json" }}
+
+workflows:
+  version: 2
+  builds:
+    jobs:
+      - publish_app:
+          filters:
+            branches:
+              only: master
+      - build_ios_simulator:
+          requires:
+            - publish_app
+      - build_ios_archive:
+          requires:
+            - publish_app
+      - build_android:
+          requires:
+            - publish_app
+
+jobs:
+  publish_app:
+    executor: js
+    steps:
+      - checkout
+      - add_yarn_binaries_to_path
+      - restore_yarn_cache
+      - run:
+          name: Installing expo-cli
+          command: yarn global add expo-cli
+      - run:
+          name: Publishing Expo app
+          command: |
+            expo login -u "${CIuser}" -p "${CIpass}" --non-interactive
+            yarn
+            expo publish
+      - save_yarn_cache
+
+  build_android:
+    executor: android
+    steps:
+      - checkout
+      - determine_expo_sdk_version
+      - add_yarn_binaries_to_path
+      - determine_turtle_cache_key_component
+      - restore_turtle_cache
+      - run:
+          name: Installing gulp-cli & turtle-cli
+          command: yarn global add gulp-cli turtle-cli@$TURTLE_VERSION
+      - setup_turtle
+      - save_turtle_cache
+      - run:
+          name: Building Expo standalone app
+          command: |
+            echo "${androidKeystore}" > expo-project.jks.base64
+            base64 --decode expo-project.jks.base64 > expo-project.jks
+            turtle build:android \
+              --keystore-path ./expo-project.jks \
+              --keystore-alias "${androidKeystoreAlias}" \
+              -o ~/expo-project.apk
+      - store_artifacts:
+          path: ~/expo-project.apk
