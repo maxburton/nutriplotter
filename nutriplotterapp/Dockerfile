@@ -9,7 +9,7 @@ RUN apt-get update && \
 		curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
 		curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
 		apt-get install -y nodejs && \
-		apt-get install git openjdk8 bash python make g++ --no-cache && \
+		apt-get install git openjdk8 bash python make g++ && \
 		npm install -g --unsafe-perm expo-cli gulp-cli turtle-cli
 
 RUN mkdir -p ${APP_DIR}/node_modules && chown -R node:node ${APP_DIR}
