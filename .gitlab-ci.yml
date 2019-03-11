@@ -27,7 +27,12 @@ build_android:
   
   script:
     - cd ./nutriplotterapp
-    - bash
+    - echo $PATH
+    - ls -a
+    - cd ..
+    - ls -a
+    - cd ./nutriplotterapp
+    - PATH=$PATH:./usr/bin/
     - export EXPO_USERNAME=${CIuser}
     - export EXPO_PASSWORD=${CIpass}
     - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
