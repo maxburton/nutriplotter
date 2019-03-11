@@ -3,7 +3,8 @@ FROM ubuntu:18.04
 ARG APP_DIR=/home/node/app
 ENV APP_DIR=${APP_DIR}
 
-RUN apk add git openjdk8 bash python make g++ --no-cache && \
+RUN apt install nodejs && \
+		apt-get install git openjdk8 bash python make g++ --no-cache && \
 		npm install -g --unsafe-perm expo-cli gulp-cli turtle-cli
 
 RUN mkdir -p ${APP_DIR}/node_modules && chown -R node:node ${APP_DIR}
