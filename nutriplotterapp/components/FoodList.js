@@ -133,7 +133,7 @@ class List extends Component {
         <TextInput
           onChangeText={this.onChangeText}
           style={styles.nameInput}
-          placeHolder="Garble Fantooble"
+          placeHolder=""
           value={this.state.name}
         />
         <View style={styles.scrollStyle}>

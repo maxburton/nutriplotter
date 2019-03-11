@@ -117,7 +117,6 @@ export default class Plate extends Component {
             height: 200,
             backgroundColor: "red",
             marginHorizontal: "10%",
-            padding: "10%",
             zIndex: -1
           }
         ]}

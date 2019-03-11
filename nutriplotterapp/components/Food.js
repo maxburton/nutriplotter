@@ -119,7 +119,8 @@ export default class Food extends Component {
         style={[animatedStyle, styles, {
           position: 'absolute',
           left: this.state.previous.x-this._value.x,
-          top: this.state.previous.y-this._value.y
+          top: this.state.previous.y-this._value.y,
+          zIndex: 100
         }]}
         {...this.panResponder.panHandlers}
       >

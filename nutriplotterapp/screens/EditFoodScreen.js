@@ -118,6 +118,8 @@ export default class EditFoodScreen extends Component {
             platedb.remove({}, { multi: true }, function(err, numRemoved) {
               deletePlate();
             });
+            this.setState({foods: [], score: defaultScore})
+            console.log(this.state.foods);
           }
         }
       ],
@@ -362,8 +364,11 @@ class FlatListItem extends Component {
       }
     }
     // Remove the item to be deleted from the list of foods on the plate
-    this.item.plate.state.foods = foods.slice()
+    console.log()
+    console.log(this.item.plate.state.foods);
+    this.item.plate.state.foods = this.item.plate.state.foods.slice()
                         .filter(food => food.state.name !== food.state.name); 
+    console.log(this.item.plate.state.foods);
 
     platedb.remove({ _id: foodName.toLowerCase() }, function(
       err,
@@ -371,6 +376,7 @@ class FlatListItem extends Component {
     ) {});
     this.props.flatListParent.refreshFlatList();
     console.log("Food removed from plate");
+    super.setState({'foods': this.item.plate.state.foods});
   };
 }
 

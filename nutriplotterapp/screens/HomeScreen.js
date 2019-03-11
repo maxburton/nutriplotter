@@ -1,4 +1,5 @@
 import React from "react";
+import {Icon} from 'react-native-elements';
 import List from "../components/FoodList.js";
 import Plate from "../components/Plate.js";
 import firebase from "../components/Firebase.js";
@@ -57,12 +58,6 @@ export default class HomeScreen extends React.Component {
   };
 
   constructor(props) {
-    // Window is the draw space available for the app (does not include Android notification bar)
-    //this.state.window = {
-    //  height: Dimensions.get('window').height,
-    //  width: Dimensions.get('window').width
-    //};
-
     super(props);
 
     this.state = {
@@ -82,7 +77,8 @@ export default class HomeScreen extends React.Component {
         vitB1: 0,
         vitB9: 0,
         vitC: 0
-      }
+      },
+      allowSubmitPlate: false
     };
     this.toggleTheme = this.toggleTheme.bind(this);
 
@@ -145,9 +141,6 @@ export default class HomeScreen extends React.Component {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
-  toggleTheme() {
-    this.setState({ darkTheme: !this.state.darkTheme });
-  }
 
   _resultsClick() {
     /**check plate size**/
@@ -228,6 +221,7 @@ export default class HomeScreen extends React.Component {
       })
     );
 
+
     var apple = new Food({
       name: "apples",
       score: {
@@ -247,12 +241,6 @@ export default class HomeScreen extends React.Component {
       },
       plate: this.plate
     });
-    var food = new Food({ name: "Foo", plate: this.plate });
-    var food2 = new Food({ name: "Foo2", plate: this.plate });
-    var food3 = new Food({ name: "Foo3", plate: this.plate });
-
-    //const styles = getStyleSheet(this.state.darkTheme);
-    //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
 
     return (
       <KeyboardAvoidingView
@@ -260,28 +248,36 @@ export default class HomeScreen extends React.Component {
           styles.container,
           {
             flexDirection: "column",
-            justifyContent: "center",
-           // alignItems: "stretch"
+            justifyContent: "center"
           }
         ]}
         behavior="position"
         contentContainerStyle={styles.container}
       >
-        <TouchableOpacity
+        <View style={{flex: 0, flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Icon
+          style={{width: "50%"}}
+          raised
+          name='ios-menu'
+          type='ionicon'
           onPress={() =>
             this.props.navigation.navigate("EditFoodScreen", {
-              plate: this.plate,
-              foods: this.plate.state.foods,
-              score: this.plate.state.score
-            })
+            plate: this.plate,
+            foods: this.plate.state.foods,
+            score: this.plate.state.score
+          })
           }
-          style={{
-            backgroundColor: "skyblue",
-            zIndex: 10
-          }}
-        >
-          <Text style={{ fontSize: 24 }}>Edit</Text>
-        </TouchableOpacity>
+        />
+        <Icon 
+          style = {{width: "50%", paddingRight: "10%", zIndex: -11}}
+          raised
+          name="ios-cog"
+          type="ionicon"
+          onPress={()=>alert("Touched!")}
+        />
+        </View>
+
+        
 
         {apple.render()}
         {/* Central block */}
@@ -290,17 +286,20 @@ export default class HomeScreen extends React.Component {
 
         {/* Bottommost content*/}
 
-        <View style={{zIndex: -1}}>
-          <Button title={'Submit'} 
-            onPress={() => this._resultsClick()}>
-          </Button>
+        <View style={{ zIndex: -11, width: '25%', alignSelf: 'center', paddingTop: "5%" }}>
+          <Button title={"Submit"} onPress={() => this._resultsClick()}  />
         </View>
 
-          <View style={[styles.list, {
-            zIndex: -1
-          }]}>
-            <List style={styles.list} />
-          </View>
+        <View
+          style={[
+            styles.list,
+            {
+              zIndex: -1
+            }
+          ]}
+        >
+          <List style={styles.list} />
+        </View>
 
         {/**view start**/}
         <Modal
