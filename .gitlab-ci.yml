@@ -27,7 +27,6 @@ build_android:
   
   script:
     - cd ./nutriplotterapp
-    - echo 'export PATH=~/.yarn/bin:$PATH' >> $BASH_ENV
     - npm install bash
     - export EXPO_USERNAME=${CIuser}
     - export EXPO_PASSWORD=${CIpass}
