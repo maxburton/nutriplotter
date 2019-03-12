@@ -28,11 +28,11 @@ build_android:
   script:
     - cd ./nutriplotterapp
     - apk add bash
-    - wget http://download.java.net/java/jdk9-alpine/archive/181/binaries/jdk-9-ea+181_linux-x64-musl_bin.tar.gz
+    - wget https://download.java.net/java/GA/jdk12/33/GPL/openjdk-12_linux-x64_bin.tar.gz
     - tar -xzvf *.tar.gz
-    - chmod +x jdk-9
-    - mv jdk-9 /usr/local/share
-    - export JAVA_HOME=/usr/local/share/jdk-9
+    - chmod +x jdk-12
+    - mv jdk-12 /usr/local/share
+    - export JAVA_HOME=/usr/local/share/jdk-12
     - PATH="$JAVA_HOME/bin:${PATH}"
     - rm -rf *.tar.gz
     - export EXPO_USERNAME=${CIuser}
