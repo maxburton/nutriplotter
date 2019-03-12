@@ -26,6 +26,9 @@ build_android:
   stage: build
   
   script:
+    - cat /proc/version
+    - cat /etc/issue
+    - cat /etc/os-release
     - cd ./nutriplotterapp
     - apk add bash
     - wget https://download.java.net/java/GA/jdk12/33/GPL/openjdk-12_linux-x64_bin.tar.gz
@@ -34,6 +37,7 @@ build_android:
     - mv jdk-12 /usr/local/share
     - export JAVA_HOME=/usr/local/share/jdk-12
     - PATH="$JAVA_HOME/bin:${PATH}"
+    - echo $PATH
     - rm -rf *.tar.gz
     - export EXPO_USERNAME=${CIuser}
     - export EXPO_PASSWORD=${CIpass}
