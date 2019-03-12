@@ -1,5 +1,3 @@
-image: docker
-
 stages:
     - build
     - tests
@@ -13,40 +11,14 @@ build_dissertation:
     paths:
       - "*.pdf"
 
-build_builder:
-  image: docker
-  stage: build
-  script:
-    - docker build -t nutriplotterapp/builder:latest ./nutriplotterapp
-    - docker login -u ${dockerLogin} -p ${dockerPassword}
-    - docker push ${dockerLogin}/builder:latest
-
 build_android:
-  image: ${dockerLogin}/builder:latest
   stage: build
   
   script:
-    - cat /proc/version
-    - cat /etc/issue
-    - cat /etc/os-release
-    - cd ./nutriplotterapp
-    - apk add bash
-    - wget https://download.java.net/java/GA/jdk12/33/GPL/openjdk-12_linux-x64_bin.tar.gz
-    - tar -xzvf *.tar.gz
-    - chmod +x jdk-12
-    - mv jdk-12 /usr/local/share
-    - export JAVA_HOME=/usr/local/share/jdk-12
-    - PATH="$JAVA_HOME/bin:${PATH}"
-    - echo $PATH
-    - rm -rf *.tar.gz
     - export EXPO_USERNAME=${CIuser}
     - export EXPO_PASSWORD=${CIpass}
     - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
     - export EXPO_ANDROID_KEY_PASSWORD=${androidKey}
     - npm install
-    - npm install -g expo-cli
-    - npm install -g gulp-cli --unsafe-perm --allow-root
-    - npm install -g turtle-cli --unsafe-perm --allow-root
     - expo login -u "${CIuser}" -p "${CIpass}"
-    - expo fetch:android:keystore
     - turtle build:android --keystore-path /builds/tp3-2018-cs25/dissertation/nutriplotterapp/nutriplotterapp.jks --keystore-alias QG51dHJpcGxhdHRlci9udXRyaXBsb3R0ZXJhcHA=
