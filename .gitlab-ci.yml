@@ -26,4 +26,5 @@ build_android:
     - npm install
     - npm install -g turtle-cli
     - expo login -u "${CIuser}" -p "${CIpass}"
-    - turtle build:android --keystore-path /builds/tp3-2018-cs25/dissertation/nutriplotterapp/nutriplotterapp.jks --keystore-alias QG51dHJpcGxhdHRlci9udXRyaXBsb3R0ZXJhcHA=
+    - expo fetch:android:keystore
+    - turtle build:android --keystore-path ./nutriplotterapp.jks --keystore-alias QG51dHJpcGxhdHRlci9udXRyaXBsb3R0ZXJhcHA=
