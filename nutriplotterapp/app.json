@@ -20,12 +20,12 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+		"android": {
+		"package": "com.nutriplotter"
+	},
     "ios": {
       "supportsTablet": true,
 	  "bundleIdentifier": "com.nutriplotter"
-    },
-	"android": {
-		"package": "com.nutriplotter"
-	}
+    }
   }
 }
