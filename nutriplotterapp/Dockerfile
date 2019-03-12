@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM node:alpine
 
 ARG APP_DIR=/home/node/app
 ENV APP_DIR=${APP_DIR}
@@ -14,6 +14,3 @@ RUN apt-get update && \
 
 WORKDIR ${APP_DIR}
 COPY package.json .
-
-RUN npm install &&\
-		npm install --only=dev
