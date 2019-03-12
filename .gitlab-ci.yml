@@ -28,7 +28,9 @@ build_android:
   script:
     - cd ./nutriplotterapp
     - apk add bash
-    - apk add openjdk8-jre
+    - apk update
+    - apk fetch openjdk8
+    - apk add openjdk8
     - export EXPO_USERNAME=${CIuser}
     - export EXPO_PASSWORD=${CIpass}
     - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
