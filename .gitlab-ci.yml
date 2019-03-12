@@ -28,9 +28,13 @@ build_android:
   script:
     - cd ./nutriplotterapp
     - apk add bash
-    - apk update
-    - apk fetch openjdk8
-    - apk add openjdk8
+    - wget http://download.java.net/java/jdk9-alpine/archive/181/binaries/jdk-9-ea+181_linux-x64-musl_bin.tar.gz
+    - tar -xzvf *.tar.gz
+    - chmod +x jdk-9
+    - mv jdk-9 /usr/local/share
+    - export JAVA_HOME=/usr/local/share/jdk-9
+    - PATH="$JAVA_HOME/bin:${PATH}"
+    - rm -rf *.tar.gz
     - export EXPO_USERNAME=${CIuser}
     - export EXPO_PASSWORD=${CIpass}
     - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
