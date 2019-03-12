@@ -20,7 +20,6 @@ build_android:
     - export EXPO_PASSWORD=${CIpass}
     - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
     - export EXPO_ANDROID_KEY_PASSWORD=${androidKey}
-    - mkdir ~/.npm-global
     - npm config set prefix '~/.npm-global'
     - export PATH=~/.npm-global/bin:$PATH
     - source ~/.profile
