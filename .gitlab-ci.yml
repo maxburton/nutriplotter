@@ -15,7 +15,7 @@ build_android:
   stage: build
   
   script:
-    - ls -a
+    - cd nutriplotterapp
     - export EXPO_USERNAME=${CIuser}
     - export EXPO_PASSWORD=${CIpass}
     - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
