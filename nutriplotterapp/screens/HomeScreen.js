@@ -347,8 +347,8 @@ export default class HomeScreen extends React.Component {
               flex: 1,
               backgroundColor: "#fff",
               borderRadius: 8,
-              borderColor: "#eee",
-              borderWidth: 1,
+              borderColor: "#000",
+              borderWidth: 3,
               marginHorizontal: 10,
               marginVertical: 60,
               padding: 8
@@ -541,7 +541,6 @@ const styles = StyleSheet.create({
   },
   submitPlate: {
     alignItems: "center",
-    marginBottom: 2,
     marginTop: 3,
     fontSize: offset
   },

@@ -155,6 +155,7 @@ class List extends Component {
 				value={this.state.name}
 				platform="default"
 				lightTheme={true}
+				containerStyle={styles.searchcontainer}
 		 />
          <View style = {styles.scrollStyle}>
 			<Text style={styles.checkDB}>{this.state.test}</Text>
@@ -173,30 +174,7 @@ class List extends Component {
       )
    }
    
-   showFavourites = () => {
-		function capitalizeFirstLetter(string) {
-			return string.charAt(0).toUpperCase() + string.slice(1);
-		}
-
-		var foods = [];
-		var count = 0;
-		
-		for(let i = 0; i < global.favourites.length; i++) {
-			let entry = global.favourites[i]._id.toLowerCase();
-			var data = global.foods[entry];
-			var formattedString = entry.replace(/['"]+/g, '');
-			formattedString = capitalizeFirstLetter(formattedString);
-			var group = determineGroup(data.group.toLowerCase());
-			foods.unshift({"id":count,"name":formattedString,"group":group,"data":data});
-			count++;
-		}
-		this.setState({
-			test: 'Recently Searched:',
-			names: foods,
-		})
-
-
-		function determineGroup(input){
+   determineGroup = (input) => {
 			input = input.toLowerCase();
 			var group = "";
 
@@ -431,6 +409,28 @@ class List extends Component {
 			}
 			return group;
 		}
+   
+   showFavourites = () => {
+		function capitalizeFirstLetter(string) {
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		}
+
+		var foods = [];
+		var count = 0;
+		
+		for(let i = 0; i < global.favourites.length; i++) {
+			let entry = global.favourites[i]._id.toLowerCase();
+			var data = global.foods[entry];
+			var formattedString = entry.replace(/['"]+/g, '');
+			formattedString = capitalizeFirstLetter(formattedString);
+			var group = this.determineGroup(data.group.toLowerCase());
+			foods.unshift({"id":count,"name":formattedString,"group":group,"data":data});
+			count++;
+		}
+		this.setState({
+			test: 'Recently Searched:',
+			names: foods,
+		})
    }
    
     search = searchString => {
@@ -455,7 +455,7 @@ class List extends Component {
 					var data = global.foods[entry];
 					var formattedString = entry.replace(/['"]+/g, '');
 					formattedString = capitalizeFirstLetter(formattedString);
-					var group = determineGroup(data.group.toLowerCase());
+					var group = this.determineGroup(data.group.toLowerCase());
 					foods.push({"id":count,"name":formattedString,"group":group,"data":data});
 					count++;
 				}
@@ -476,240 +476,6 @@ class List extends Component {
 				test: '',
 				names: [],
 			})
-		}
-		function determineGroup(input){
-			input = input.toLowerCase();
-			var group = "";
-			switch(input) {
-				case "a":
-				case "aa":
-					group = "grains";
-					break;
-				case "ab":
-					group = "sandwich";
-					break;
-				case "ac":
-					group = "rice";
-					break;
-				case "ad":
-					group = "pasta";
-					break;
-				case "ae":
-					group = "pizza";
-					break;
-				case "af":
-				case "ag":
-					group = "bread";
-					break;
-				case "ak":
-				case "ai":
-					group = "cereals";
-					break;
-				case "am":
-					group = "biscuits";
-					break;
-				case "an":
-					group = "cakes";
-					break;
-				case "ao":
-				case "ap":
-					group = "pastries";
-					break;
-				case "as":
-				case "br":
-					group = "pudding";
-					break;
-				case "at":
-				case "bv":
-					group = "savouries";
-					break;
-				case "b":
-				case "ba":
-				case "bab":
-				case "bae":
-				case "bah":
-				case "bak":
-				case "ban":
-				case "bar":
-				case "bc":
-				case "bf":
-				case "bfd":
-				case "bfg":
-				case "bfj":
-				case "bfp":
-				case "bh":
-				case "if":
-				case "ifb":
-				case "ifc":
-					group = "milk";
-					break;
-				case "bj":
-				case "bjc":
-				case "bjf":
-				case "bjl":
-				case "bjp":
-				case "bjs":
-					group = "cream";
-					break;
-				case "bl":
-					group = "cheese";
-					break;
-				case "bn":
-				case "bne":
-				case "bnh":
-				case "bns":
-					group = "cream";
-					break;
-				case "bp":
-					group = "icecream";
-					break;
-				case "c":
-				case "ca":
-				case "cd":
-				case "cde":
-				case "cdh":
-					group = "egg";
-					break;
-				case "da":
-				case "dae":
-				case "dam":
-				case "dap":
-				case "dar":
-					group = "potato";
-					break;
-				case "df":
-				case "db":
-					group = "beans";
-					break;
-				case "d":
-				case "dg":
-				case "di":
-					group = "veg";
-					break;
-				case "dr":
-					group = "vegdish";
-					break;
-				case "f":
-				case "fa":
-					group = "fruit";
-					break;
-				case "fc":
-				case "pe":
-					group = "juice";
-					break;
-				case "ga":
-				case "g":
-					group = "nuts";
-					break;
-				case "h":
-					group = "herbs";
-					break;
-				case "j":
-				case "ja":
-				case "jc":
-				case "jk":
-				case "jm":
-				case "jr":
-					group = "fish";
-					break;
-				case "maa":
-				case "mag":
-					group = "bacon";
-					break;
-				case "m":
-				case "ma":
-				case "mac":
-				case "mai":
-				case "mae":
-				case "mig":
-				case "mr":
-				case "mi":
-					group = "beef";
-					break;
-				case "mc":
-				case "mca":
-				case "mcc":
-				case "mce":
-				case "mcg":
-				case "mci":
-				case "mck":
-				case "mcm":
-				case "mco":
-					group = "chicken";
-					break;
-				case "me":
-				case "mea":
-				case "mec":
-				case "mee":
-				case "meg":
-					group = "game";
-					break;
-				case "mbg":
-					group = "burger";
-					break;
-				case "o":
-				case "oa":
-				case "ob":
-				case "oc":
-				case "oe":
-				case "of":
-					group = "oil";
-					break;
-				case "p":
-				case "pa":
-				case "paa":
-				case "pac":
-				case "pc":
-				case "pca":
-				case "pcc":
-					group = "drinks";
-					break;
-				case "q":
-				case "qa":
-				case "qc":
-				case "qe":
-				case "qf":
-				case "qg":
-				case "qi":
-				case "qk":
-					group = "booze";
-					break;
-				case "s":
-				case "sc":
-				case "se":
-				case "sec":
-					group = "sweets";
-					break;
-				case "sea":
-					group = "chocolate";
-					break;
-				case "sn":
-				case "sna":
-				case "snb":
-				case "snc":
-					group = "snacks";
-					break;
-				case "wa":
-				case "waa":
-				case "wac":
-				case "wae":
-					group = "soup";
-					break;
-				case "wc":
-				case "wcd":
-				case "wcg":
-				case "wcn":
-					group = "sauce";
-					break;
-				case "wcg":
-				case "we":
-					group = "misc";
-					break;
-				default:
-					group = "misc";
-					break;
-			}
-			return group;
 		}
   }
 
@@ -737,8 +503,13 @@ const styles = StyleSheet.create ({
      marginHorizontal: '6%',
 	 marginVertical: 5,
      paddingHorizontal: '5%',
-     borderColor: '#111111',
+     borderColor: '#000',
      borderWidth: 1,
+  },
+	 searchcontainer: {
+	 backgroundColor: 'transparent',
+	 borderBottomColor: 'transparent',
+	 borderTopColor: 'transparent'
   },
   imageView: {
 	  flex: 1
