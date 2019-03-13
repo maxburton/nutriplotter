@@ -124,7 +124,7 @@ class FlatListItem extends Component{
 			}
 		}
 		if(!inDB){
-			global.favourites.push({"_id": item.name, "amount": 0, "group": item.group, "data": item.data});
+			global.favourites.unshift({"_id": item.name, "amount": 0, "group": item.group, "data": item.data});
 		}
 		favdb.update({ _id: newFoodId}, { $set: { amount: 0, group: item.group, data: item.data } }, { upsert: true }, function (err, numReplaced, upsert) {
 		});
@@ -430,7 +430,7 @@ class List extends Component {
 			var formattedString = entry.replace(/['"]+/g, '');
 			formattedString = capitalizeFirstLetter(formattedString);
 			var group = this.determineGroup(data.group.toLowerCase());
-			foods.unshift({"id":count,"name":formattedString,"group":group,"data":data});
+			foods.push({"id":count,"name":formattedString,"group":group,"data":data});
 			count++;
 		}
 		this.setState({
