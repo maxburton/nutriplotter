@@ -164,7 +164,7 @@ export default class PopulateSavedPlates extends React.Component {
   },
   {
     "_id": "Parsley, fresh",
-    "amount": 0,
+    "amount": 5,
     "data": {
       "calcium": 0,
       "calories": 34,

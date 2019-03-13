@@ -38,8 +38,8 @@ export default class ScoreScreen extends React.Component {
 	  this.setState({isDialogVisible: false});
 	  if(!this.state.plateSaved){
 		  this.setState({plateSaved: true});
-		  global.savedPlates.push({plateName: plateName, plate: plate, score: score, sideItems: global.sideItems});
-		  savedPlatesdb.insert({plateName: plateName, plate: plate, score: score, sideItems: global.sideItems}, function (err, newDoc) {
+		  global.savedPlates.push({plateName: plateName, plate: plate, score: score});
+		  savedPlatesdb.insert({plateName: plateName, plate: plate, score: score}, function (err, newDoc) {
 			  Alert.alert("Plate Saved");
 			  console.log("Saved Plates: " + global.savedPlates[0]["plate"]);
 		  });

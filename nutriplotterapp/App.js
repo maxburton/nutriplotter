@@ -95,7 +95,7 @@ export default class App extends React.Component {
     _retrieveData();
 	
 	
-
+	
 	var p = new popArray();
 	var q = new popList();
 	var r = new popSideItems();

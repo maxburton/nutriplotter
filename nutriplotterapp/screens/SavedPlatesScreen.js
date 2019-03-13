@@ -105,11 +105,6 @@ class FlatListItem extends React.Component{
 		global.maximum = 100;
 		global.totals = {};
 		global.plate = item.plate;
-		global.sideItems = item.sideItems;
-		sideItemsdb.remove({}, { multi: true }, function (err, numRemoved) {
-			sideItemsdb.insert(global.sideItems, function (err, newDocs) {
-			});
-		});		
 		platedb.remove({}, { multi: true }, function (err, numRemoved) {
 			platedb.insert(global.plate, function (err, newDocs) {
 			});
