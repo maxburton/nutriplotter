@@ -15,6 +15,7 @@ import { AppLoading, Asset, Font, Icon } from "expo";
 import AppNavigator from "./navigation/AppNavigator";
 import popArray from "./populateArray";
 import popList from "./populateNameList";
+import popSideItems from "./populateSideItems";
 import firebase from "./components/Firebase.js";
 
 var Datastore = require('react-native-local-mongodb'), 
@@ -91,9 +92,12 @@ export default class App extends React.Component {
       }
     };
     _retrieveData();
+	
+
 
 	var p = new popArray();
 	var q = new popList();
+	var r = new popSideItems();
 	global.tweaks = 0;
 	global.plate = [];
 	global.totals = {};
@@ -103,13 +107,14 @@ export default class App extends React.Component {
 		global.savedPlates = newDocs;
 		loadingCheck();
 	});
-	global.sideItems = [{type: "fruit", isIn: false, nutrition: []}, {type: "dairy", isIn: false, nutrition: []}, {type: "bread", isIn: false, nutrition: []}, {type: "drink", isIn: false, nutrition: []}];
 	sideItemsdb.find({}, function (err, newDocs) {
-		if(newDocs.length > 3){
+		if(newDocs.length > 0){
+			console.log("NO INSERT: " + newDocs.length);
 			global.sideItems = newDocs;
 			loadingCheck();
 		}else{
-			sideItemsdb.insert([{type: "fruit", isIn: false, nutrition: []}, {type: "dairy", isIn: false, nutrition: []}, {type: "bread", isIn: false, nutrition: []}, {type: "drink", isIn: false, nutrition: []}], function (err, newDocs) {
+			sideItemsdb.insert(global.sideItems, function (err, newDocs) {
+				console.log("INSERT: " + newDocs.length)
 				loadingCheck();
 			});
 		}

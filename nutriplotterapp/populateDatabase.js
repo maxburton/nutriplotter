@@ -1,3 +1,7 @@
+/*
+	Populates a mongodb database with all foods and their nutritional info
+*/
+
 import React from 'react';
 import { Platform} from 'react-native';
 

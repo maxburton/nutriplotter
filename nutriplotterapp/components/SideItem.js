@@ -36,7 +36,7 @@ sideItemPressed(){
 			console.log(global.sideItems);
 		}
 	}
-	sideItemsdb.update({ type: this.state.type }, { $set: { isIn: !this.state.isPressed } }, { multi: true }, function (err, numReplaced) {
+	sideItemsdb.update({ type: this.state.type }, { $set: { isIn: !this.state.isPressed } }, function (err, numReplaced) {
 		console.log(numReplaced);
 	});
 	let newBool = !this.state.isPressed;

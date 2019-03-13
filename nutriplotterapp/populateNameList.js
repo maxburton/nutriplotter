@@ -1,3 +1,7 @@
+/*
+	Populates a local JSON array with every food's name.
+*/
+
 import React from 'react';
 import { Platform} from 'react-native';
 
