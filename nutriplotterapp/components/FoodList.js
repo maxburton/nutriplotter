@@ -124,7 +124,7 @@ class FlatListItem extends Component{
 			}
 		}
 		if(!inDB){
-			global.favourites.push({"_id": item.name, "amount": 0, "group": item.group, "data": item.data});
+			global.favourites.unshift({"_id": item.name, "amount": 0, "group": item.group, "data": item.data});
 		}
 		favdb.update({ _id: newFoodId}, { $set: { amount: 0, group: item.group, data: item.data } }, { upsert: true }, function (err, numReplaced, upsert) {
 		});
@@ -132,10 +132,15 @@ class FlatListItem extends Component{
 }
    
 class List extends Component {
+	constructor(props){
+		super(props);
+		updateStateHome = updateStateHome.bind(this);
+	}
     state = {
 	    name: '',
 	    test: '',
 	    names: [],
+		refresh: 0,
    }
    
    componentDidMount(){
@@ -165,6 +170,7 @@ class List extends Component {
          <View style = {styles.scrollStyle}>
 			<Text style={styles.checkDB}>{this.state.test}</Text>
 			<FlatList
+				keyboardShouldPersistTaps={'handled'}
 				data={this.state.names}
 				renderItem={({item, index})=>{
 					return(
@@ -429,7 +435,7 @@ class List extends Component {
 			var formattedString = entry.replace(/['"]+/g, '');
 			formattedString = capitalizeFirstLetter(formattedString);
 			var group = this.determineGroup(data.group.toLowerCase());
-			foods.unshift({"id":count,"name":formattedString,"group":group,"data":data});
+			foods.push({"id":count,"name":formattedString,"group":group,"data":data});
 			count++;
 		}
 		this.setState({
@@ -472,7 +478,7 @@ class List extends Component {
 				})
 			}else{
 				this.setState({
-					test: "No foods found matching that criteria, please try again",
+					test: "No foods found matching that criteria, please try again using single word queries (e.g. bread) and scrolling through the list",
 					names: foods,
 				})
 			}

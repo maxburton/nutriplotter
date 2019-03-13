@@ -14,8 +14,10 @@ import {
   TextInput,
   Button,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { WebBrowser } from 'expo';
+import DialogInput from 'react-native-dialog-input';
 
 import { MonoText } from '../components/StyledText';
 var Datastore = require('react-native-local-mongodb');
@@ -28,13 +30,18 @@ export default class ScoreScreen extends React.Component {
 	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
   });
   
-  savePlate = (plate, score, tweaks, warnings) => {
+  displayDialog(){
+	  this.setState({isDialogVisible: true});
+  }
+  
+  savePlate = (plateName, plate, score) => {
+	  this.setState({isDialogVisible: false});
 	  if(!this.state.plateSaved){
 		  this.setState({plateSaved: true});
-		  savedPlatesdb.insert({plate: plate, score: score, tweaks: tweaks, warnings: warnings}, function (err, newDoc) {
-			  global.savedPlates.push({plate: plate, score: score, tweaks: tweaks, warnings: warnings});
+		  global.savedPlates.push({plateName: plateName, plate: plate, score: score});
+		  savedPlatesdb.insert({plateName: plateName, plate: plate, score: score}, function (err, newDoc) {
 			  Alert.alert("Plate Saved");
-			  console.log("Saved Plates: " + global.savedPlates);
+			  console.log("Saved Plates: " + global.savedPlates[0]["plate"]);
 		  });
 	  }else{
 		  Alert.alert("You've already saved this plate!");
@@ -61,9 +68,14 @@ export default class ScoreScreen extends React.Component {
 	  this.setState({plateSaved: false});
   }
   
-  state = {plateSaved: false}
+  state = {plateSaved: false, isDialogVisible: false}
   
   render() {
+	
+	function capitalizeFirstLetter(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}	
+	
 	const {navigation} = this.props;
 	const plate = navigation.getParam('plate', new Array());
 	const tweaks = navigation.getParam('tweaks', 0);
@@ -73,23 +85,37 @@ export default class ScoreScreen extends React.Component {
 	let newline = "\n\n";
 	for(let i = 0; i < warnings.length; i++){
 		let nutrient = warnings[i][0];
+		nutrient = capitalizeFirstLetter(nutrient);
 		let operator = warnings[i][1];
 		let advice = "";
-		if(operator == "-"){
-			advice = "levels are too low! Try increasing it for a higher score";
+		if(operator == "perfect"){
+			renderWarnings.unshift(
+				<Text style={styles.textGreen}>Your {nutrient} levels are perfect! Well done!</Text>
+			)
 		}else{
-			advice = "levels are too high! Try decreasing it for a higher score";
+			if(operator == "-"){
+				advice = "levels are dangerously low! Try increasing it for a higher score";
+			}else{
+				advice = "levels are dangerously high! Try decreasing it for a higher score";
+			}
+			renderWarnings.push(
+				<Text style={styles.textRed}>Your {nutrient} {advice}</Text>
+			)
 		}
-		renderWarnings.push(
-			<Text style={styles.text}>Your {nutrient} {advice}</Text>
-		)
 	}
     return (
-      <ScrollView style={styles.container}>
-	    <Text style={styles.score}>You Scored: {score}/13000 points!{newline}</Text> 
+	<View style={styles.container}>
+      <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
+	  <DialogInput isDialogVisible={this.state.isDialogVisible}
+            title={"Name Your Plate"}
+            hintInput ={"Plate name"}
+            submitInput={ (inputText) => {this.savePlate(inputText, plate, score)} }
+            closeDialog={ () => {this.setState({isDialogVisible: false})}}>
+	  </DialogInput>
+	    <Text style={score < 4333 ? styles.scoreRed : score < 8666 ? styles.scoreAmber : styles.scoreGreen}>You Scored: {score}/13000 points!{newline}</Text> 
 		<Text style={styles.text}>You made {tweaks} adjustment(s) to your plate</Text>
 		{renderWarnings}
-		<TouchableOpacity style={styles.container} onPress={() => this.savePlate(plate, score, tweaks, warnings)}>
+		<TouchableOpacity style={styles.container} onPress={() => this.displayDialog()}>
           <Text style={styles.buttonText}>{newline}Save Plate</Text>
         </TouchableOpacity>
 		<TouchableOpacity style={styles.container} onPress={() => this.tweakPlate()}>
@@ -99,6 +125,7 @@ export default class ScoreScreen extends React.Component {
           <Text style={styles.buttonText}>Make A New Plate</Text>
         </TouchableOpacity>
       </ScrollView>
+	 </View>
 	  );
   };
   
@@ -110,11 +137,26 @@ const styles = StyleSheet.create({
   container: {
 	flex: 1,
   },
-  score: {
+  scoreRed: {
 	marginTop: offset,
 	flex: 1,
 	fontSize: 24,
 	textAlign: "center",
+	color: "red"
+  },
+    scoreAmber: {
+	marginTop: offset,
+	flex: 1,
+	fontSize: 24,
+	textAlign: "center",
+	color: "#f4b342",
+  },
+    scoreGreen: {
+	marginTop: offset,
+	flex: 1,
+	fontSize: 24,
+	textAlign: "center",
+	color: "green",
   },
   text: {
 	flex: 1,
@@ -123,6 +165,24 @@ const styles = StyleSheet.create({
 	textAlign: "center",
 	marginLeft: offset,
 	marginRight: offset,
+  },
+  textGreen: {
+	flex: 1,
+    marginTop: offset,
+    fontSize: offset,
+	textAlign: "center",
+	marginLeft: offset,
+	marginRight: offset,
+	color: "green",
+  },
+  textRed: {
+	flex: 1,
+    marginTop: offset,
+    fontSize: offset,
+	textAlign: "center",
+	marginLeft: offset,
+	marginRight: offset,
+	color: "red",
   },
   buttonText: {
 	flex: 1,

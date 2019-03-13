@@ -1,5 +1,5 @@
 /*
-	Populates a local JSON array with every food and their nutritional info
+	Populates a local JSON array with every side item and their nutritional info
 */
 
 import React from 'react';
@@ -23,7 +23,7 @@ export default class PopulateSideItems extends React.Component {
 		"sugar": 19,
 		"satfat": 0.1,
 		"fibre": 4.4,
-		"omega3": 0.02,
+		"omega3": 20,
 		"calcium": 0,
 		"vitA": 0.03,
 		"vitB1": 0.03,
@@ -42,7 +42,7 @@ export default class PopulateSideItems extends React.Component {
 		"sugar": 7.8,
 		"satfat": 1.91,
 		"fibre": 0.00,
-		"omega3": 0.10,
+		"omega3": 10,
 		"calcium": 28,
 		"vitA": 49.00,
 		"vitB1": 0.06,
@@ -61,7 +61,7 @@ export default class PopulateSideItems extends React.Component {
 		"sugar": 2.8,
 		"satfat": 0.46,
 		"fibre": 12.00,
-		"omega3": 0.82,
+		"omega3": 820,
 		"calcium": 0,
 		"vitA": 0.00,
 		"vitB1": 0.25,

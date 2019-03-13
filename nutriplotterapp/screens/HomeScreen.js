@@ -18,7 +18,6 @@ import { Card, Button } from "react-native-elements";
 import {
   Image,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -39,6 +38,9 @@ import getStyleSheet from "../themes/style";
 var Datastore = require("react-native-local-mongodb"),
   platedb = new Datastore({ filename: "plate", autoload: true });
 
+updateStateHome = rand => {
+  this.setState({ refresh: rand });
+};
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -46,7 +48,6 @@ export default class HomeScreen extends React.Component {
   };
 
   constructor(props) {
-
     super(props);
 
     this.state = {
@@ -56,15 +57,26 @@ export default class HomeScreen extends React.Component {
     };
     this.resetGlobalTotals();
     this.toggleTheme = this.toggleTheme.bind(this);
-
   }
+
+  updateChild = rand => {
+    updateStateHome(rand);
+  };
+
+  componentDidMount() {
+    this.load();
+    this.props.navigation.addListener("willFocus", this.load);
+  }
+  load = () => {
+    this.updateChild(Math.random());
+  };
+
   // Retrieve the current scores for the user from the database
   updateScore = async score => {
-    
     // The username of the account the user is currently signed in as.
     name = global.isLoggedIn;
 
-    // Collect the score values from the firebase scores/ table and collect as 
+    // Collect the score values from the firebase scores/ table and collect as
     // an object of attribute -> score key/value pairs.
     firebase
       .database()
@@ -165,6 +177,12 @@ export default class HomeScreen extends React.Component {
           if (pointLoss > dangerLevel) {
             warnings.push([key, "+"]);
           }
+          if (pointLoss == 0) {
+            warnings.push([key, "perfect"]);
+          }
+        } else {
+          console.log("PERFECT ADDED");
+          warnings.push([key, "perfect"]);
         }
       } else if (operator == "<") {
         let max = idealNutrients[key][1];
@@ -174,6 +192,8 @@ export default class HomeScreen extends React.Component {
           if (pointLoss > dangerLevel) {
             warnings.push([key, "+"]);
           }
+        } else {
+          warnings.push([key, "perfect"]);
         }
       } else if (operator == ">") {
         let min = idealNutrients[key][1];
@@ -183,13 +203,15 @@ export default class HomeScreen extends React.Component {
           if (pointLoss > dangerLevel) {
             warnings.push([key, "-"]);
           }
+        } else {
+          warnings.push([key, "perfect"]);
         }
       }
     }
 
     // For every time the user decides to go back from `Submit Plate` and continue working on their meal,
     // penalise them 500 points.
-    score -= global.tweaks * 500;
+    score -= global.tweaks * 250;
     if (score < 0) {
       score = 0;
     }
@@ -213,7 +235,7 @@ export default class HomeScreen extends React.Component {
       omega3: new Array(">", 150),
       calcium: new Array(">", 333),
       vitA: new Array(">", 275),
-      vitB1: new Array(">", 275),
+      vitB1: new Array(">", 0.275),
       vitB9: new Array("-", 250, 160, 333),
       vitC: new Array(">", 25)
     };
@@ -262,7 +284,31 @@ export default class HomeScreen extends React.Component {
     };
   };
 
+  calculateTotals = (foodDocs, i, multiplier) => {
+    // For each food item on the plate, summate their scores into the total scores
+    for (let i = 0; i < foodDocs.length; i++) {
+      for (var property in global.totals) {
+        if (property === "omega3") {
+          // Convert units from grams (as is given in the database) into milligrams.
+          global.totals[property] +=
+            foodDocs[i].data[property] * foodDocs[i].amount * multiplier * 1000;
+        } else if (property === "vitB1") {
+          // Convert units from milligrams into micrograms.
+          global.totals[property] +=
+            (foodDocs[i].data[property] * (foodDocs[i].amount * multiplier)) /
+            1000;
+        } else {
+          global.totals[property] +=
+            foodDocs[i].data[property] * (foodDocs[i].amount * multiplier);
+        }
+      }
+    }
+  };
+
   render() {
+    console.log("RENDERED");
+
+    //Calculates the total nutrients of all foods added together
     var foodDocs = global.plate;
 
     // Only summate total scores if there is food on the plate
@@ -271,29 +317,21 @@ export default class HomeScreen extends React.Component {
       // 0.01 for nutrients per gram, as the plate contains 500g of food, we take 5 servings of nutrients
       let multiplier = 0.05;
 
-      // For each food item on the plate, summate their scores into the total scores
       for (let i = 0; i < foodDocs.length; i++) {
-        for (var property in global.totals) {
-          if (property === "omega3") {
-            
-            // Convert units from grams (as is given in the database) into milligrams.
-            global.totals[property] += foodDocs[i].data[property] * foodDocs[i].amount * multiplier * 1000;
-
-          } else if (property === "vitB1") {
-            
-            // Convert units from milligrams into micrograms.
-            global.totals[property] += foodDocs[i].data[property] * (foodDocs[i].amount * multiplier) / 1000;
-
-          } else {
-            global.totals[property] +=
-              foodDocs[i].data[property] * (foodDocs[i].amount * multiplier);
-          }
+        this.calculateTotals(foodDocs, i, multiplier);
+      }
+    }
+    for (let i = 0; i < global.sideItems.length; i++) {
+      if (global.sideItems[i].isIn) {
+        for (var nutrient in global.sideItems[i].nutrition) {
+          global.totals[nutrient] += global.sideItems[i]["nutrition"][nutrient];
         }
       }
-      // Round scores to eliminate trailing significant figures.
-      for (var key in global.totals) {
-        global.totals[key] = Math.round(global.totals[key] * 10) / 10;
-      }
+    }
+
+    // Round scores to eliminate trailing significant figures.
+    for (var key in global.totals) {
+      global.totals[key] = Math.round(global.totals[key] * 10) / 10;
     }
 
     return (
@@ -312,9 +350,8 @@ export default class HomeScreen extends React.Component {
             </View>
           </View>
           <View style={styles.plateView}>
-            
             {/* Render the plate here. */}
-            <Plate /> 
+            <Plate />
           </View>
           <View style={styles.rightPlateView}>
             <View style={styles.UR}>
@@ -420,7 +457,7 @@ export default class HomeScreen extends React.Component {
                     color: "blue"
                   }}
                 >
-                  Continue Tweaking (-500 points)
+                  Continue Tweaking (-250 points)
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -444,8 +481,8 @@ export default class HomeScreen extends React.Component {
     );
   }
 
-  private 
-  getSummary(){
+  private;
+  getSummary() {
     var units = {
       calories: "kcal",
       omega3: "mg",
@@ -455,16 +492,20 @@ export default class HomeScreen extends React.Component {
       vitB9: "μg",
       vitC: "mg"
       // The other attributes are in grams and so wont appear here (undefined gives `g`)
-    }
+    };
 
     var summary = "\n\n";
     for (var key in global.totals) {
-      summary += global.totals[key] + (units[key] || "g") + " (" + this.calculatePercentage(key, global.totals[key]) + "%)\n";
+      summary +=
+        global.totals[key] +
+        (units[key] || "g") +
+        " (" +
+        this.calculatePercentage(key, global.totals[key]) +
+        "%)\n";
     }
-    
-    return summary;                
+
+    return summary;
   }
-  
 }
 
 const offset = 24;
