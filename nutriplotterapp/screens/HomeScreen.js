@@ -70,9 +70,13 @@ export default class HomeScreen extends React.Component {
       updateStateHome(rand)
   }
   
-  componentDidMount = () =>{
-	  this.updateChild(Math.random());
-  }
+  componentDidMount(){
+        this.load()
+        this.props.navigation.addListener('willFocus', this.load)
+    }
+    load = () => {
+        this.updateChild(Math.random());
+    }
 
   updateScore = async score => {
     //get scores as dict
@@ -279,6 +283,7 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
+	console.log("RENDERED");
 	calculateTotals = (foodDocs, i, multiplier) =>{
 		global.totals["calories"] +=
           foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);

@@ -13,6 +13,7 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 
 var Datastore = require("react-native-local-mongodb"),
@@ -113,6 +114,7 @@ class FlatListItem extends React.Component{
 			platedb.insert(global.plate, function (err, newDocs) {
 			});
 		});	
+		Alert.alert("Plate Loaded");
 	};	
 }
 
