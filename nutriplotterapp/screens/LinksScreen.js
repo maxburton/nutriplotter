@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Constants, WebBrowser } from 'expo';
-import {Linking, Text, View, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
+import {Linking, Text, View, StyleSheet, Button, ScrollView} from 'react-native';
 import { MonoText } from '../components/StyledText';
 
 
@@ -22,6 +22,20 @@ export default class HelpScreen extends React.Component {
   toggleTheme() {
     this.setState({darkTheme: !this.state.darkTheme})
   };
+
+  _handleOpenWithWebBrowser = () => {
+    WebBrowser.openBrowserAsync('https://www.choosemyplate.gov/ten-tips-build-healthy-meal');
+  }
+
+  _prevPage = () => {
+      if(this.state.pageNum != 0)
+        this.setState({pageNum: this.state.pageNum-1})
+  }
+  _nextPage = () => {
+      if(this.state.pageNum != 2)
+        this.setState({pageNum: this.state.pageNum+1})
+  }
+
 
   render(){
 
@@ -53,42 +67,21 @@ export default class HelpScreen extends React.Component {
     }
 
     return(
-      <ScrollView>
+
+      <View>
 
         <HelpText text={i[0]} />
         <HelpText text={i[1]} />
         <HelpText text={i[2]} />
 
-        <TouchableOpacity onPress={this._nextPage}>
-          <Text style={styles.buttonText}>Next </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={this._prevPage}>
-          <Text style={styles.buttonText}>Previous </Text>
-        </TouchableOpacity>
-
-		    <TouchableOpacity onPress={this._handleOpenWithWebBrowser}>
-          <Text style={styles.buttonText}>Tips for Balanced Meals</Text>
-        </TouchableOpacity>
+        <Button style={{padding:15}} onPress={this._nextPage} title={"Next"}/ >
+        <Button onPress={this._prevPage} title={"Previous"}/>
+		    <Button onPress={this._handleOpenWithWebBrowser} title={"Tips for Balanced Meals"}/>
 
 
-      </ScrollView>
+      </View>
     );
   }
-
-  _handleOpenWithWebBrowser = () => {
-    WebBrowser.openBrowserAsync('https://www.choosemyplate.gov/ten-tips-build-healthy-meal');
-  }
-
-  _prevPage = () => {
-      if(this.state.pageNum != 0)
-        this.setState({pageNum: this.state.pageNum-1})
-  }
-  _nextPage = () => {
-      if(this.state.pageNum != 2)
-        this.setState({pageNum: this.state.pageNum+1})
-  }
-
 }
 
 class HelpText extends React.Component {
@@ -103,13 +96,8 @@ class HelpText extends React.Component {
 
 const styles = StyleSheet.create({
   defaultText: {
-    fontSize: 20,
+    fontSize: 24,
     padding: 15,
-    //backgroundColor: "#00BFFF",
 	  textAlign: 'center',
-  },
-  buttonText: {
-	   fontSize: 28,
-	   textAlign: 'center',
   },
 });
