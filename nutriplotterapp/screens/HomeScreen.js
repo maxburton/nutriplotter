@@ -1,3 +1,7 @@
+/*
+	The main screen of this app - this is what the user first sees when the app is launched and loaded
+*/
+
 import React from "react";
 import List from "../components/FoodList.js";
 import Plate from "../components/Plate.js";

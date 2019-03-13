@@ -1,3 +1,7 @@
+/*
+	Displays all logged in user's score rankings.
+*/
+
 import * as React from "react";
 import firebase from "../components/Firebase.js";
 import Leaderboard from "react-native-leaderboard";

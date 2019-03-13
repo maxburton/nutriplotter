@@ -1,3 +1,8 @@
+/*
+	Contains a search bar that matches the search string with all items in the food database, and returns all matching foods in a flatlist.
+	Includes a recently added or "favourites" list when no search query is entered
+*/
+
 import React, { Component } from 'react'
 import { Text, Image, TouchableOpacity, StyleSheet, View, TextInput, FlatList, Alert } from 'react-native'
 import { WebBrowser } from 'expo';

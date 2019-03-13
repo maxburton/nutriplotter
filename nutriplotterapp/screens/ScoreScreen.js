@@ -1,3 +1,7 @@
+/*
+	Displays the user's final score, along with hints on how to improve next time. Also provides buttons to save their plate, edit their plate or make a brand new plate
+*/
+
 import React from 'react';
 import {
   Image,

@@ -1,3 +1,8 @@
+/*
+	Renders a side item that displays around the plate in Homescreen. These are toggleable buttons that add specific food items to the outside of your plate.
+	Current items: Apple, yoghurt, slide of bread, soda
+	Room for growth: Implement modals on press and provide a checklist of items to be added to the side of plate.
+*/
 import React from 'react';
 import { Text, ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native';
 

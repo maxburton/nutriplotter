@@ -1,3 +1,9 @@
+/*
+	The plate that renders on the homescreen - Includes a piechart that renders the percentage of food groups on a plate (in unique colours) and renders food icons onto the plate.
+	These food icons scale in size based on their percentage and rotate around the plate depending on their position in the piechart.
+	Tapping on the plate opens the EditFood modal
+*/
+
 import React, { Component } from "react";
 import {
   Text,

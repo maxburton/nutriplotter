@@ -1,3 +1,7 @@
+/*
+	Tells the user how to play the game, as well as providing a link to choosemyplate.gov
+*/
+
 import * as React from 'react';
 import { Constants, WebBrowser } from 'expo';
 import {Linking, Text, View, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';

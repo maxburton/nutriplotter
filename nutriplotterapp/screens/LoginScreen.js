@@ -1,3 +1,7 @@
+/*
+	Prompts the user to login via FaceBook, then takes them to their user page. From here they can navigate to the leaderboard screen or logout
+*/
+
 import { ExpoConfigView } from "@expo/samples";
 import React, { Component } from "react";
 import { TouchableOpacity } from "react-native";
@@ -120,9 +124,6 @@ export default class LoginScreen extends Component {
             <Text style={styles.name}>{userinfo["name"]}</Text>
             <Text style={styles.info}>Glasgow, Scotland</Text>
             <View style={styles.bodyContent}>
-              <TouchableOpacity style={styles.buttonContainer}>
-                <Text>My Stats</Text>
-              </TouchableOpacity>
               <TouchableOpacity
                 style={styles.buttonContainer}
                 onPress={() => navigate("LeaderboardScreen")}

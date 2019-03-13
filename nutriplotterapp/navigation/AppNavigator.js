@@ -1,3 +1,7 @@
+/*
+	Determines which screens can navigate to which other screens
+*/
+
 import React from "react";
 import { createSwitchNavigator, createStackNavigator } from "react-navigation";
 
@@ -6,18 +10,13 @@ import MainTabNavigator from "./MainTabNavigator";
 import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
 import LinksScreen from "../screens/LinksScreen";
-import SettingsScreen from "../screens/SettingsScreen";
 import LoginScreen from "../screens/LoginScreen";
-import EditFoodScreen from "../screens/EditFoodScreen";
 import LeaderboardScreen from "../screens/LeaderboardScreen";
 import ScoreScreen from "../screens/ScoreScreen";
 
 const plateNav = createStackNavigator({
   HomeScreen: {
     screen: HomeScreen
-  },
-  EditFoodScreen: {
-    screen: EditFoodScreen
   },
   ScoreScreen: {
 	screen: ScoreScreen

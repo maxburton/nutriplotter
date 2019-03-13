@@ -1,3 +1,8 @@
+/*
+	Runs on launch - initialises local databases, gets all relevant information from mongodb, a persistent storage solution and waits for all aspects to be loaded before
+	redirecting the user to HomeScreen
+*/
+
 import React from "react";
 import {
   Platform,

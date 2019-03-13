@@ -1,3 +1,7 @@
+/*
+	A draggable food component. Unused in the final app, but could be useful if the project is expanded upon to increase gamification and fun factor.
+*/
+
 import React, {Component} from 'react';
 import {
     Image, 

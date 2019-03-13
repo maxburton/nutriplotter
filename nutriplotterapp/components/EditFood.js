@@ -1,3 +1,8 @@
+/*
+	A modal that pops up on the homescreen, that allows users to use sliders and buttons to change the percentage of the food on the plate, or delete an item.
+	Also provides a button to clear the plate of all foods.
+*/
+
 import React, { Component } from 'react'
 import {
   Switch,

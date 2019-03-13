@@ -1,3 +1,7 @@
+/*
+	Shows the user's saved plates (as well as a few default plates). These plates can be loaded into the homescreen.
+*/
+
 import React from 'react';
 import { ExpoConfigView } from '@expo/samples';
 import {

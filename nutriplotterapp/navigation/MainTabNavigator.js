@@ -1,3 +1,7 @@
+/*
+	Determines which screens the bottom tab navigator can navigate to
+*/
+
 import React from "react";
 import { Platform } from "react-native";
 import {
@@ -10,8 +14,7 @@ import TabBarIcon from "../components/TabBarIcon";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import LinksScreen from "../screens/LinksScreen";
-import SettingsScreen from "../screens/SettingsScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import SavedPlatesScreen from "../screens/SavedPlatesScreen";
 
 const HomeStack = createStackNavigator({
   Home: HomeScreen
@@ -45,16 +48,16 @@ LinksStack.navigationOptions = {
   )
 };
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen
+const SavedPlatesStack = createStackNavigator({
+  SavedPlates: SavedPlatesScreen
 });
 
-SettingsStack.navigationOptions = {
+SavedPlatesStack.navigationOptions = {
   tabBarLabel: "Saved Plates",
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === "ios" ? "ios-options" : "md-options"}
+      name={Platform.OS === "ios" ? "ios-pie" : "md-pie"}
     />
   )
 };
@@ -76,6 +79,6 @@ LoginStack.navigationOptions = {
 export default createBottomTabNavigator({
   HomeStack,
   LinksStack,
-  SettingsStack,
+  SavedPlatesStack,
   LoginStack
 });
