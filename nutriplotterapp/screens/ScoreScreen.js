@@ -112,7 +112,7 @@ export default class ScoreScreen extends React.Component {
             submitInput={ (inputText) => {this.savePlate(inputText, plate, score)} }
             closeDialog={ () => {this.setState({isDialogVisible: false})}}>
 	  </DialogInput>
-	    <Text style={styles.score}>You Scored: {score}/13000 points!{newline}</Text> 
+	    <Text style={score < 4333 ? styles.scoreRed : score < 8666 ? styles.scoreAmber : styles.scoreGreen}>You Scored: {score}/13000 points!{newline}</Text> 
 		<Text style={styles.text}>You made {tweaks} adjustment(s) to your plate</Text>
 		{renderWarnings}
 		<TouchableOpacity style={styles.container} onPress={() => this.displayDialog()}>
@@ -137,11 +137,26 @@ const styles = StyleSheet.create({
   container: {
 	flex: 1,
   },
-  score: {
+  scoreRed: {
 	marginTop: offset,
 	flex: 1,
 	fontSize: 24,
 	textAlign: "center",
+	color: "red"
+  },
+    scoreAmber: {
+	marginTop: offset,
+	flex: 1,
+	fontSize: 24,
+	textAlign: "center",
+	color: "#f4b342",
+  },
+    scoreGreen: {
+	marginTop: offset,
+	flex: 1,
+	fontSize: 24,
+	textAlign: "center",
+	color: "green",
   },
   text: {
 	flex: 1,
