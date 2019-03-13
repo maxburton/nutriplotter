@@ -104,7 +104,7 @@ class FlatListItem extends React.Component{
 		global.tweaks = 0;
 		global.maximum = 100;
 		global.totals = {};
-		global.plate = item.plate;
+		global.plate = JSON.parse(JSON.stringify(item.plate));
 		platedb.remove({}, { multi: true }, function (err, numRemoved) {
 			platedb.insert(global.plate, function (err, newDocs) {
 			});
