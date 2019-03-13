@@ -31,10 +31,10 @@ export default class ScoreScreen extends React.Component {
   savePlate = (plate, score, tweaks, warnings) => {
 	  if(!this.state.plateSaved){
 		  this.setState({plateSaved: true});
-		  savedPlatesdb.insert({plate: plate, score: score, tweaks: tweaks, warnings: warnings}, function (err, newDoc) {
-			  global.savedPlates.push({plate: plate, score: score, tweaks: tweaks, warnings: warnings});
+		  savedPlatesdb.insert({plate: plate, score: score, tweaks: tweaks, warnings: warnings, sideItems: global.sideItems}, function (err, newDoc) {
+			  global.savedPlates.push({plate: plate, score: score, tweaks: tweaks, warnings: warnings, sideItems: global.sideItems});
 			  Alert.alert("Plate Saved");
-			  console.log("Saved Plates: " + global.savedPlates);
+			  console.log("Saved Plates: " + global.savedPlates[0]["plate"]);
 		  });
 	  }else{
 		  Alert.alert("You've already saved this plate!");
