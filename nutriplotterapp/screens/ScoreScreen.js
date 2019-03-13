@@ -14,8 +14,10 @@ import {
   TextInput,
   Button,
   Alert,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { WebBrowser } from 'expo';
+import DialogInput from 'react-native-dialog-input';
 
 import { MonoText } from '../components/StyledText';
 var Datastore = require('react-native-local-mongodb');
@@ -28,11 +30,15 @@ export default class ScoreScreen extends React.Component {
 	headerLeft: <Button title='Back' onPress={() => {navigation.navigate('Home', {plate: this.plate})}} />,
   });
   
-  savePlate = (plate, score, tweaks, warnings) => {
+  displayDialog(){
+	  this.setState({isDialogVisible: true});
+  }
+  
+  savePlate = (plateName, plate, score) => {
 	  if(!this.state.plateSaved){
 		  this.setState({plateSaved: true});
-		  savedPlatesdb.insert({plate: plate, score: score, tweaks: tweaks, warnings: warnings, sideItems: global.sideItems}, function (err, newDoc) {
-			  global.savedPlates.push({plate: plate, score: score, tweaks: tweaks, warnings: warnings, sideItems: global.sideItems});
+		  global.savedPlates.push({plateName: plateName, plate: plate, score: score, sideItems: global.sideItems});
+		  savedPlatesdb.insert({plateName: plateName, plate: plate, score: score, sideItems: global.sideItems}, function (err, newDoc) {
 			  Alert.alert("Plate Saved");
 			  console.log("Saved Plates: " + global.savedPlates[0]["plate"]);
 		  });
@@ -61,7 +67,7 @@ export default class ScoreScreen extends React.Component {
 	  this.setState({plateSaved: false});
   }
   
-  state = {plateSaved: false}
+  state = {plateSaved: false, isDialogVisible: false}
   
   render() {
 	
@@ -97,11 +103,22 @@ export default class ScoreScreen extends React.Component {
 		}
 	}
     return (
+	<KeyboardAvoidingView
+	style={styles.container}
+        behavior="position"
+        contentContainerStyle={styles.container}
+    >
       <ScrollView style={styles.container}>
+	  <DialogInput isDialogVisible={this.state.isDialogVisible}
+            title={"Name Your Plate"}
+            hintInput ={"Plate name"}
+            submitInput={ (inputText) => {this.savePlate(inputText, plate, score)} }
+            closeDialog={ () => {this.setState({isDialogVisible: false})}}>
+	  </DialogInput>
 	    <Text style={styles.score}>You Scored: {score}/13000 points!{newline}</Text> 
 		<Text style={styles.text}>You made {tweaks} adjustment(s) to your plate</Text>
 		{renderWarnings}
-		<TouchableOpacity style={styles.container} onPress={() => this.savePlate(plate, score, tweaks, warnings)}>
+		<TouchableOpacity style={styles.container} onPress={() => this.displayDialog()}>
           <Text style={styles.buttonText}>{newline}Save Plate</Text>
         </TouchableOpacity>
 		<TouchableOpacity style={styles.container} onPress={() => this.tweakPlate()}>
@@ -111,6 +128,7 @@ export default class ScoreScreen extends React.Component {
           <Text style={styles.buttonText}>Make A New Plate</Text>
         </TouchableOpacity>
       </ScrollView>
+	 </KeyboardAvoidingView>
 	  );
   };
   

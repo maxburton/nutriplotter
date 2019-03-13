@@ -12,6 +12,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 
 var Datastore = require("react-native-local-mongodb"),
@@ -79,10 +80,13 @@ class FlatListItem extends React.Component{
 		return(
 		<TouchableOpacity onPress = {() => this.loadPlate(this.props.item)}>
 			<View style={styles.container}>
-				<Text>{this.props.item.name}</Text>
+				<Text style={styles.title}>{this.props.item.plateName}</Text>
 			</View>
 			<View style={styles.itemStyle}>
 				{renderImages}
+				<View style={styles.scoreTextView}>
+					<Text style={styles.scoreText}>{this.props.item.score}</Text>
+				</View>
 			</View>
 		</TouchableOpacity>
 		);
@@ -91,242 +95,6 @@ class FlatListItem extends React.Component{
 	alertItemName = (item) => {
 		
 	};	
-	
-   determineGroup = (input) => {
-		input = input.toLowerCase();
-		var group = "";
-
-		switch(input) {
-			case "a":
-			case "aa":
-				group = "grains";
-				break;
-			case "ab":
-				group = "sandwich";
-				break;
-			case "ac":
-				group = "rice";
-				break;
-			case "ad":
-				group = "pasta";
-				break;
-			case "ae":
-				group = "pizza";
-				break;
-			case "af":
-			case "ag":
-				group = "bread";
-				break;
-			case "ak":
-			case "ai":
-				group = "cereals";
-				break;
-			case "am":
-				group = "biscuits";
-				break;
-			case "an":
-				group = "cakes";
-				break;
-			case "ao":
-			case "ap":
-				group = "pastries";
-				break;
-			case "as":
-			case "br":
-				group = "pudding";
-				break;
-			case "at":
-			case "bv":
-				group = "savouries";
-				break;
-			case "b":
-			case "ba":
-			case "bab":
-			case "bae":
-			case "bah":
-			case "bak":
-			case "ban":
-			case "bar":
-			case "bc":
-			case "bf":
-			case "bfd":
-			case "bfg":
-			case "bfj":
-			case "bfp":
-			case "bh":
-			case "if":
-			case "ifb":
-			case "ifc":
-				group = "milk";
-				break;
-			case "bj":
-			case "bjc":
-			case "bjf":
-			case "bjl":
-			case "bjp":
-			case "bjs":
-				group = "cream";
-				break;
-			case "bl":
-				group = "cheese";
-				break;
-			case "bn":
-			case "bne":
-			case "bnh":
-			case "bns":
-				group = "cream";
-				break;
-			case "bp":
-				group = "icecream";
-				break;
-			case "c":
-			case "ca":
-			case "cd":
-			case "cde":
-			case "cdh":
-				group = "egg";
-				break;
-			case "da":
-			case "dae":
-			case "dam":
-			case "dap":
-			case "dar":
-				group = "potato";
-				break;
-			case "df":
-			case "db":
-				group = "beans";
-				break;
-			case "d":
-			case "dg":
-			case "di":
-				group = "veg";
-				break;
-			case "dr":
-				group = "vegdish";
-				break;
-			case "f":
-			case "fa":
-				group = "fruit";
-				break;
-			case "fc":
-			case "pe":
-				group = "juice";
-				break;
-			case "ga":
-			case "g":
-				group = "nuts";
-				break;
-			case "h":
-				group = "herbs";
-				break;
-			case "j":
-			case "ja":
-			case "jc":
-			case "jk":
-			case "jm":
-			case "jr":
-				group = "fish";
-				break;
-			case "maa":
-			case "mag":
-				group = "bacon";
-				break;
-			case "m":
-			case "ma":
-			case "mac":
-			case "mai":
-			case "mae":
-			case "mig":
-			case "mr":
-			case "mi":
-				group = "beef";
-				break;
-			case "mc":
-			case "mca":
-			case "mcc":
-			case "mce":
-			case "mcg":
-			case "mci":
-			case "mck":
-			case "mcm":
-			case "mco":
-				group = "chicken";
-				break;
-			case "me":
-			case "mea":
-			case "mec":
-			case "mee":
-			case "meg":
-				group = "game";
-				break;
-			case "mbg":
-				group = "burger";
-				break;
-			case "o":
-			case "oa":
-			case "ob":
-			case "oc":
-			case "oe":
-			case "of":
-				group = "oil";
-				break;
-			case "p":
-			case "pa":
-			case "paa":
-			case "pac":
-			case "pc":
-			case "pca":
-			case "pcc":
-				group = "drinks";
-				break;
-			case "q":
-			case "qa":
-			case "qc":
-			case "qe":
-			case "qf":
-			case "qg":
-			case "qi":
-			case "qk":
-				group = "booze";
-				break;
-			case "s":
-			case "sc":
-			case "se":
-			case "sec":
-				group = "sweets";
-				break;
-			case "sea":
-				group = "chocolate";
-				break;
-			case "sn":
-			case "sna":
-			case "snb":
-			case "snc":
-				group = "snacks";
-				break;
-			case "wa":
-			case "waa":
-			case "wac":
-			case "wae":
-				group = "soup";
-				break;
-			case "wc":
-			case "wcd":
-			case "wcg":
-			case "wcn":
-				group = "sauce";
-				break;
-			case "wcg":
-			case "we":
-				group = "misc";
-				break;
-			default:
-				group = "misc";
-				break;
-		}
-		return group;
-	}
 }
 
 export default class SavedPlatesScreen extends React.Component {
@@ -342,8 +110,8 @@ export default class SavedPlatesScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-			<View style = {styles.scrollStyle}>
+		<ScrollView style={styles.container}>
+			<View style={styles.container}>
 				<FlatList
 					data={global.savedPlates}
 					renderItem={({item, index})=>{
@@ -355,14 +123,15 @@ export default class SavedPlatesScreen extends React.Component {
 				>
 				</FlatList>
 			</View>
-      </View>
+		</ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
 container: {
-	flex: 1
+	marginTop: 10,
+	flex: 1,
 },
 image: {
 	width: 50,
@@ -374,9 +143,24 @@ itemStyle: {
 	flexDirection: 'row',
 	padding: 8,
 	marginTop: 3,
-	alignItems: 'flex-start',
 	backgroundColor: '#c1c1c1',
-	justifyContent: 'flex-start',
+},
+scoreTextView: {
+	flex: 1,
+	flexDirection: 'column',
+	justifyContent: "center",
+},
+scoreText: {
+	flex: 1,
+	fontSize: 24,
+	textAlign: "right",
+	marginRight: 10,
+},
+title: {
+	flex: 1,
+	fontSize: 24,
+	textAlign: "left",
+	fontWeight: "bold"
 },
   
 });

@@ -1,5 +1,5 @@
 /*
-	Populates a local JSON array with every food and their nutritional info
+	Populates a local JSON array with every side item and their nutritional info
 */
 
 import React from 'react';

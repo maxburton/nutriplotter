@@ -16,6 +16,7 @@ import AppNavigator from "./navigation/AppNavigator";
 import popArray from "./populateArray";
 import popList from "./populateNameList";
 import popSideItems from "./populateSideItems";
+import popSavedPlates from "./populateSavedPlates";
 import firebase from "./components/Firebase.js";
 
 var Datastore = require('react-native-local-mongodb'), 
@@ -93,6 +94,7 @@ export default class App extends React.Component {
     };
     _retrieveData();
 	
+	
 
 	var p = new popArray();
 	var q = new popList();
@@ -103,8 +105,15 @@ export default class App extends React.Component {
 	global.savedPlates = new Array();
 	global.maximum = 100;
 	savedPlatesdb.find({}, function (err, newDocs) {
-		global.savedPlates = newDocs;
-		loadingCheck();
+		if(newDocs.length > 0){
+			global.savedPlates = newDocs;
+			loadingCheck();
+		}else{
+			var s = new popSavedPlates(); //Load in default plates
+			savedPlatesdb.insert(global.savedPlates[0], function (err, newDoc) {
+				loadingCheck();
+			});
+		}
 	});
 	sideItemsdb.find({}, function (err, newDocs) {
 		if(newDocs.length > 0){

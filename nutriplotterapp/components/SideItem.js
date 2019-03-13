@@ -33,7 +33,7 @@ sideItemPressed(){
 	for(let i = 0; i < global.sideItems.length; i++){
 		if(global.sideItems[i].type == this.state.type){
 			global.sideItems[i]["isIn"] = !global.sideItems[i].isIn;
-			//console.log(global.sideItems);
+			console.log(global.sideItems);
 		}
 	}
 	sideItemsdb.update({ type: this.state.type }, { $set: { isIn: !this.state.isPressed } }, function (err, numReplaced) {
