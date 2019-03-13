@@ -109,12 +109,10 @@ export default class App extends React.Component {
 	});
 	sideItemsdb.find({}, function (err, newDocs) {
 		if(newDocs.length > 0){
-			console.log("NO INSERT: " + newDocs.length);
 			global.sideItems = newDocs;
 			loadingCheck();
 		}else{
 			sideItemsdb.insert(global.sideItems, function (err, newDocs) {
-				console.log("INSERT: " + newDocs.length)
 				loadingCheck();
 			});
 		}

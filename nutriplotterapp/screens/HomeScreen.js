@@ -258,12 +258,9 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
-    var foodDocs = global.plate;
-    if (foodDocs.length > 0) {
-      this.resetGlobalTotals();
-      let multiplier = 0.05; // 0.01 to get nutrients per gram, then x5 to have a total plate weight of 500g
-      for (let i = 0; i < foodDocs.length; i++) {
-        global.totals["calories"] +=
+	  
+	calculateTotals = (foodDocs, i, multiplier) =>{
+		global.totals["calories"] +=
           foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);
         global.totals["carbs"] +=
           foodDocs[i].data.carbs * (foodDocs[i].amount * multiplier);
@@ -289,11 +286,27 @@ export default class HomeScreen extends React.Component {
           foodDocs[i].data.vitB9 * (foodDocs[i].amount * multiplier);
         global.totals["vitC"] +=
           foodDocs[i].data.vitC * (foodDocs[i].amount * multiplier);
-
-        for (var key in global.totals) {
-          global.totals[key] = Math.round(global.totals[key] * 10) / 10;
-        }
+	}
+	  
+	//Calculates the total nutrients of all foods added together
+    var foodDocs = global.plate;
+    if (foodDocs.length > 0) {
+      this.resetGlobalTotals();
+      let multiplier = 0.05; // 0.01 to get nutrients per gram, then x5 to have a total plate weight of 500g
+      for (let i = 0; i < foodDocs.length; i++) {
+        calculateTotals(foodDocs, i, multiplier);
       }
+	  
+    }
+	for(let i = 0; i < global.sideItems.length; i++){
+		if(global.sideItems[i].isIn){
+			for (var nutrient in global.sideItems[i].nutrition){
+				global.totals[nutrient] += global.sideItems[i]["nutrition"][nutrient];
+			}
+		}
+	}
+	for (var key in global.totals) {
+        global.totals[key] = Math.round(global.totals[key] * 10) / 10;
     }
     //const styles = getStyleSheet(this.state.darkTheme);
 
