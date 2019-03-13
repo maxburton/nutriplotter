@@ -166,7 +166,13 @@ export default class HomeScreen extends React.Component {
           if (pointLoss > dangerLevel) {
             warnings.push([key, "+"]);
           }
-        }
+		  if (pointLoss == 0){
+			warnings.push([key, "perfect"]);
+		  }
+        } else{
+			console.log("PERFECT ADDED");
+			warnings.push([key, "perfect"]);
+		  }
       } else if (operator == "<") {
         let max = idealNutrients[key][1];
         if (nutrientTotal > max) {
@@ -175,7 +181,9 @@ export default class HomeScreen extends React.Component {
           if (pointLoss > dangerLevel) {
             warnings.push([key, "+"]);
           }
-        }
+        } else{
+			warnings.push([key, "perfect"]);
+		  }
       } else if (operator == ">") {
         let min = idealNutrients[key][1];
         if (nutrientTotal < min) {
@@ -184,7 +192,9 @@ export default class HomeScreen extends React.Component {
           if (pointLoss > dangerLevel) {
             warnings.push([key, "-"]);
           }
-        }
+        } else{
+			warnings.push([key, "perfect"]);
+		  }
       }
     }
     score -= global.tweaks * 500;

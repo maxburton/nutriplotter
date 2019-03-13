@@ -64,6 +64,11 @@ export default class ScoreScreen extends React.Component {
   state = {plateSaved: false}
   
   render() {
+	
+	function capitalizeFirstLetter(string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}	
+	
 	const {navigation} = this.props;
 	const plate = navigation.getParam('plate', new Array());
 	const tweaks = navigation.getParam('tweaks', 0);
@@ -73,16 +78,23 @@ export default class ScoreScreen extends React.Component {
 	let newline = "\n\n";
 	for(let i = 0; i < warnings.length; i++){
 		let nutrient = warnings[i][0];
+		nutrient = capitalizeFirstLetter(nutrient);
 		let operator = warnings[i][1];
 		let advice = "";
-		if(operator == "-"){
-			advice = "levels are too low! Try increasing it for a higher score";
+		if(operator == "perfect"){
+			renderWarnings.unshift(
+				<Text style={styles.textGreen}>Your {nutrient} levels are perfect! Well done!</Text>
+			)
 		}else{
-			advice = "levels are too high! Try decreasing it for a higher score";
+			if(operator == "-"){
+				advice = "levels are dangerously low! Try increasing it for a higher score";
+			}else{
+				advice = "levels are dangerously high! Try decreasing it for a higher score";
+			}
+			renderWarnings.push(
+				<Text style={styles.textRed}>Your {nutrient} {advice}</Text>
+			)
 		}
-		renderWarnings.push(
-			<Text style={styles.text}>Your {nutrient} {advice}</Text>
-		)
 	}
     return (
       <ScrollView style={styles.container}>
@@ -123,6 +135,24 @@ const styles = StyleSheet.create({
 	textAlign: "center",
 	marginLeft: offset,
 	marginRight: offset,
+  },
+  textGreen: {
+	flex: 1,
+    marginTop: offset,
+    fontSize: offset,
+	textAlign: "center",
+	marginLeft: offset,
+	marginRight: offset,
+	color: "green",
+  },
+  textRed: {
+	flex: 1,
+    marginTop: offset,
+    fontSize: offset,
+	textAlign: "center",
+	marginLeft: offset,
+	marginRight: offset,
+	color: "red",
   },
   buttonText: {
 	flex: 1,
