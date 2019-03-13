@@ -165,10 +165,11 @@ class List extends Component {
          <View style = {styles.scrollStyle}>
 			<Text style={styles.checkDB}>{this.state.test}</Text>
 			<FlatList
+				keyboardShouldPersistTaps={'handled'}
 				data={this.state.names}
 				renderItem={({item, index})=>{
 					return(
-						<FlatListItem keyboardShouldPersistTaps={'handled'} listParent={this.props.listParent} item={item} index={index}>
+						<FlatListItem listParent={this.props.listParent} item={item} index={index}>
 						</FlatListItem>
 					);
 				}}

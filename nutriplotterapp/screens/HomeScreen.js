@@ -323,7 +323,6 @@ export default class HomeScreen extends React.Component {
     //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
     return (
       <KeyboardAvoidingView
-	    keyboardShouldPersistTaps={'handled'}
         style={styles.container}
         behavior="position"
         contentContainerStyle={styles.container}
