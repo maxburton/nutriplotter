@@ -212,7 +212,7 @@ export default class HomeScreen extends React.Component {
 		  }
       }
     }
-    score -= global.tweaks * 500;
+    score -= global.tweaks * 250;
     if (score < 0) {
       score = 0;
     }
@@ -235,7 +235,7 @@ export default class HomeScreen extends React.Component {
       omega3: new Array(">", 150),
       calcium: new Array(">", 333),
       vitA: new Array(">", 275),
-      vitB1: new Array(">", 275),
+      vitB1: new Array(">", 0.275),
       vitB9: new Array("-", 250, 160, 333),
       vitC: new Array(">", 25)
     };
@@ -306,7 +306,7 @@ export default class HomeScreen extends React.Component {
         global.totals["vitA"] +=
           foodDocs[i].data.vitA * (foodDocs[i].amount * multiplier);
         global.totals["vitB1"] +=
-          foodDocs[i].data.vitB1 * ((foodDocs[i].amount * multiplier) / 1000); //divided by 1000 because data is in mg but should be in micrograms
+          foodDocs[i].data.vitB1 * ((foodDocs[i].amount * multiplier));
         global.totals["vitB9"] +=
           foodDocs[i].data.vitB9 * (foodDocs[i].amount * multiplier);
         global.totals["vitC"] +=
@@ -500,7 +500,7 @@ export default class HomeScreen extends React.Component {
                     this.calculatePercentage("vitA", global.totals["vitA"]) +
                     "%)\n",
                   global.totals["vitB1"] +
-                    "μg  (" +
+                    "mg  (" +
                     this.calculatePercentage("vitB1", global.totals["vitB1"]) +
                     "%)\n",
                   global.totals["vitB9"] +
@@ -526,7 +526,7 @@ export default class HomeScreen extends React.Component {
                     color: "blue"
                   }}
                 >
-                  Continue Tweaking (-500 points)
+                  Continue Tweaking (-250 points)
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
