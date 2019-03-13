@@ -168,7 +168,7 @@ class List extends Component {
 				data={this.state.names}
 				renderItem={({item, index})=>{
 					return(
-						<FlatListItem listParent={this.props.listParent} item={item} index={index}>
+						<FlatListItem keyboardShouldPersistTaps={'handled'} listParent={this.props.listParent} item={item} index={index}>
 						</FlatListItem>
 					);
 				}}

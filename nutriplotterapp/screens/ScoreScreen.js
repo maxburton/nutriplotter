@@ -35,6 +35,7 @@ export default class ScoreScreen extends React.Component {
   }
   
   savePlate = (plateName, plate, score) => {
+	  this.setState({isDialogVisible: false});
 	  if(!this.state.plateSaved){
 		  this.setState({plateSaved: true});
 		  global.savedPlates.push({plateName: plateName, plate: plate, score: score, sideItems: global.sideItems});
@@ -103,12 +104,8 @@ export default class ScoreScreen extends React.Component {
 		}
 	}
     return (
-	<KeyboardAvoidingView
-	style={styles.container}
-        behavior="position"
-        contentContainerStyle={styles.container}
-    >
-      <ScrollView style={styles.container}>
+	<View style={styles.container}>
+      <ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
 	  <DialogInput isDialogVisible={this.state.isDialogVisible}
             title={"Name Your Plate"}
             hintInput ={"Plate name"}
@@ -128,7 +125,7 @@ export default class ScoreScreen extends React.Component {
           <Text style={styles.buttonText}>Make A New Plate</Text>
         </TouchableOpacity>
       </ScrollView>
-	 </KeyboardAvoidingView>
+	 </View>
 	  );
   };
   

@@ -76,11 +76,16 @@ class FlatListItem extends React.Component{
 			/>
 			)
 		}
+		let plateName = this.props.item.plateName;
+		
+		if(!plateName){
+			plateName = "Untitled Plate"
+		}
 		
 		return(
 		<TouchableOpacity onPress = {() => this.loadPlate(this.props.item)}>
 			<View style={styles.container}>
-				<Text style={styles.title}>{this.props.item.plateName}</Text>
+				<Text style={styles.title}>{plateName}</Text>
 			</View>
 			<View style={styles.itemStyle}>
 				{renderImages}
