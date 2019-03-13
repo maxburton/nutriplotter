@@ -15,9 +15,11 @@ state = {
 	isDown: false,
 	isPressed: false,
 	type: this.props.type,
+	refresh: 0,
 }
 constructor(props){
 	super(props);
+	updateStateHome = updateStateHome.bind(this);
 }
 
 componentDidMount(){

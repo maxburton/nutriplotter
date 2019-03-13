@@ -35,6 +35,10 @@ var Datastore = require("react-native-local-mongodb"),
 
 import Food from "../components/Food";
 
+updateStateHome = (rand) =>{
+    this.setState({"refresh": rand})
+}
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title: "Build a Plate"
@@ -60,6 +64,14 @@ export default class HomeScreen extends React.Component {
     // When creating the homescreen, create a reference to the plate to be rendered
     // so that we may be able to call methods on the plate and manipulate its state from other components
     // on the screen.
+  }
+  
+  updateChild = (rand) => {
+      updateStateHome(rand)
+  }
+  
+  componentDidMount = () =>{
+	  this.updateChild(Math.random());
   }
 
   updateScore = async score => {
@@ -267,7 +279,6 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
-	  
 	calculateTotals = (foodDocs, i, multiplier) =>{
 		global.totals["calories"] +=
           foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);

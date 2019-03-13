@@ -45,6 +45,7 @@ export default class Plate extends Component {
   constructor(props) {
     super(props);
     updateState = updateState.bind(this);
+	updateStateHome = updateStateHome.bind(this);
   }
 
   componentDidMount() {

@@ -17,6 +17,8 @@ import {
 
 var Datastore = require("react-native-local-mongodb"),
   savedPlatesdb = new Datastore({ filename: "savedPlates", autoload: true });
+  sideItemsdb = new Datastore({ filename: 'sideItems', autoload: true });
+  platedb = new Datastore({ filename: 'plate', autoload: true });
 
 class FlatListItem extends React.Component{
 	render(){
@@ -97,8 +99,20 @@ class FlatListItem extends React.Component{
 		);
 	}
 	
-	alertItemName = (item) => {
-		
+	loadPlate = (item) => {
+		global.tweaks = 0;
+		global.maximum = 100;
+		global.totals = {};
+		global.plate = item.plate;
+		global.sideItems = item.sideItems;
+		sideItemsdb.remove({}, { multi: true }, function (err, numRemoved) {
+			sideItemsdb.insert(global.sideItems, function (err, newDocs) {
+			});
+		});		
+		platedb.remove({}, { multi: true }, function (err, numRemoved) {
+			platedb.insert(global.plate, function (err, newDocs) {
+			});
+		});	
 	};	
 }
 
@@ -115,7 +129,7 @@ export default class SavedPlatesScreen extends React.Component {
 
   render() {
     return (
-		<ScrollView style={styles.container}>
+		<ScrollView style={styles.bigContainer}>
 			<View style={styles.container}>
 				<FlatList
 					data={global.savedPlates}
@@ -134,6 +148,9 @@ export default class SavedPlatesScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+bigContainer: {
+	flex: 1
+},
 container: {
 	marginTop: 10,
 	flex: 1,
