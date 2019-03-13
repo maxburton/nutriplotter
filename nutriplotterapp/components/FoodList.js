@@ -132,10 +132,15 @@ class FlatListItem extends Component{
 }
    
 class List extends Component {
+	constructor(props){
+		super(props);
+		updateStateHome = updateStateHome.bind(this);
+	}
     state = {
 	    name: '',
 	    test: '',
 	    names: [],
+		refresh: 0,
    }
    
    componentDidMount(){
@@ -473,7 +478,7 @@ class List extends Component {
 				})
 			}else{
 				this.setState({
-					test: "No foods found matching that criteria, please try again",
+					test: "No foods found matching that criteria, please try again using single word queries (e.g. bread) and scrolling through the list",
 					names: foods,
 				})
 			}
