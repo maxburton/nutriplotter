@@ -1,0 +1,266 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App snapshot renders Leaderboard screen as expected 1`] = `
+<View>
+  <Text>
+    waiting on leaderboards..
+  </Text>
+</View>
+`;
+
+exports[`App snapshot renders SavedPlates screen as expected 1`] = `null`;
+
+exports[`App snapshot renders links screen as expected 1`] = `
+<View>
+  <View>
+    <Text
+      style={
+        Object {
+          "fontSize": 24,
+          "padding": 15,
+          "textAlign": "center",
+        }
+      }
+    >
+       
+      The aim of the game is to build a nutritionally balanced meal. Use the search bar to find the foods you want to add.
+    </Text>
+  </View>
+  <View>
+    <Text
+      style={
+        Object {
+          "fontSize": 24,
+          "padding": 15,
+          "textAlign": "center",
+        }
+      }
+    >
+       
+      A number of common foods are kept around the edge plate, these are: an apple, a slice of bread, an ice-cream and a can of soda.
+    </Text>
+  </View>
+  <View>
+    <Text
+      style={
+        Object {
+          "fontSize": 24,
+          "padding": 15,
+          "textAlign": "center",
+        }
+      }
+    >
+       
+      Foods on your plate will be yellow in the search bar or coloured on the screen.
+    </Text>
+  </View>
+  <View
+    accessibilityRole="button"
+    accessibilityStates={Array []}
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {},
+        ]
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#007AFF",
+              "fontSize": 18,
+              "padding": 8,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Next
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityRole="button"
+    accessibilityStates={Array []}
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {},
+        ]
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#007AFF",
+              "fontSize": 18,
+              "padding": 8,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Previous
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityRole="button"
+    accessibilityStates={Array []}
+    accessible={true}
+    isTVSelectable={true}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {},
+        ]
+      }
+    >
+      <Text
+        style={
+          Array [
+            Object {
+              "color": "#007AFF",
+              "fontSize": 18,
+              "padding": 8,
+              "textAlign": "center",
+            },
+          ]
+        }
+      >
+        Tips for Balanced Meals
+      </Text>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`App snapshot renders settings screen as expected 1`] = `
+<View
+  style={
+    Object {
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <View
+      accessible={true}
+      isTVSelectable={true}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+          "marginTop": 15,
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "red",
+            "fontSize": 24,
+            "textAlign": "center",
+          }
+        }
+      >
+        Delete Saved Plates
+      </Text>
+    </View>
+    <View
+      accessible={true}
+      isTVSelectable={true}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "alignItems": "center",
+          "flex": 1,
+          "justifyContent": "center",
+          "marginTop": 15,
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "red",
+            "fontSize": 24,
+            "textAlign": "center",
+          }
+        }
+      >
+        Delete Recently Searched Foods
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flex": 4,
+      }
+    }
+  />
+</View>
+`;
