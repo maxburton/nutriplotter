@@ -1,5 +1,15 @@
 /*
-	Determines which screens the bottom tab navigator can navigate to
+  Determines which screens the bottom tab navigator can navigate to.
+  Due to how navigation, tab menus and screens are managed in react native, each screen is individually held
+  within its own StackNavigator, each of which are held within the TabNavigator.
+
+                TabNavigator
+                      |
+       |-----------|------------|------------------|---------------|
+       HomeStack   LinksStack   SavedPlatesStack   SettingsStack   LoginStack
+
+  Where the user is routed to HomeStack on app startup.
+
 */
 
 import React from "react";
@@ -26,6 +36,7 @@ HomeStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
+      // Give the appropriate icon for the platform
       name={Platform.OS === "ios" ? "ios-disc" : "md-radio-button-on"}
     />
   )
@@ -58,7 +69,7 @@ SettingsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === "ios" ? "ios-settings" : "md-settings"}
+      name={Platform.OS === "ios" ? "ios-settings" : "md-settings"}  
     />
   )
 };

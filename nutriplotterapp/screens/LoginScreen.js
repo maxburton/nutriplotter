@@ -1,5 +1,6 @@
 /*
-	Prompts the user to login via FaceBook, then takes them to their user page. From here they can navigate to the leaderboard screen or logout
+  Prompts the user to login via Facebook, then takes them to their user page. From here they can navigate 
+  to the leaderboard screen or logout. 
 */
 
 import { ExpoConfigView } from "@expo/samples";
@@ -25,22 +26,12 @@ import {
 } from "react-native";
 import * as Expo from "expo";
 
-// Initialize Firebase
-/*const firebaseConfig = {
-  apiKey: "AIzaSyDDEJNntQAHQO4K09I2lBaCTVYlq1i6eDo",
-  authDomain: "nutriplotter.firebaseapp.com",
-  databaseURL: "https://nutriplotter.firebaseio.com",
-  projectId: "nutriplotter",
-  storageBucket: "nutriplotter.appspot.com"
-};
-
-firebase.initializeApp(firebaseConfig);
-*/
-
 const id = "2301384936810927";
 
 const FBSDK = require("react-native-fbsdk");
 const { LoginManager, AccessToken } = FBSDK;
+
+// isLoggedIn represents a string of the username (according to the Facebook SDK) of the logged in user.
 global.isLoggedIn = null;
 
 export default class LoginScreen extends Component {
@@ -48,10 +39,12 @@ export default class LoginScreen extends Component {
     title: "My Profile"
   });
 
-  constructor() {
-    super();
+  // Handle any Component props as they are defined in React
+  constructor(props) {
+    super(props);
   }
 
+  // Attempt a login to facebook using the app id, requesting permissions to read the user profile and email address.
   login = async () => {
     const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
       id,
@@ -61,30 +54,19 @@ export default class LoginScreen extends Component {
     );
 
     if (type == "success") {
-      //const response = firebase.auth.FacebookAuthProvider.credential(token);
-
+      // If we've managed to login successfully, grab the profile picture as part of the response for the ProfileScreen
       response = await fetch(
         `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large)`
       );
 
-      //storing respose as json
-
-      /*firebase
-        .auth()
-        .signInAndRetrieveDataWithCredential(response)
-        .catch(error => {
-          alert("error");
-        });*/
-
       global.userinfo = await response.json();
 
-      console.log("USER_INFO", userinfo);
-      //get userinfo
+      // Retrieve the requested user profile info from the AJAX response
       const id = userinfo["id"];
       const name = userinfo["name"];
       const userpic = userinfo["picture"]["data"]["url"];
 
-      //write user data to firebase users
+      // Update (or write if not present) the user profile information stored on the Firebase database.
       firebase
         .database()
         .ref("users/" + id)
@@ -93,20 +75,23 @@ export default class LoginScreen extends Component {
           profile_picture: userpic
         });
 
-      //redirect to profile screen
-      this.props.navigation.navigate("ProfileScreen"); //
-      console.log(global.isLoggedIn);
+      // Redirect to profile screen
+      this.props.navigation.navigate("ProfileScreen");
       global.isLoggedIn = name;
+
+      // If login was successful then we rerender the screen to show the relevant ProfileScreen, else just show
+      // the LoginScreen again.
       this.forceUpdate();
-      console.log(global.isLoggedIn);
     } else {
+      // Indicate the error to the user if they couldn't login.
       alert(type);
     }
   };
 
-  //function to logout
   logout = (async = () => {
+    // Reset the logged in username as null when logged out (this may be used as a measure to check if a user is logged in)
     global.isLoggedIn = null;
+    // On logout, force the screen to rerender as LoginScreen
     this.forceUpdate();
   });
 
@@ -115,7 +100,7 @@ export default class LoginScreen extends Component {
       const url = userinfo["picture"]["data"]["url"];
       const { navigate } = this.props.navigation;
 
-      //profile screen
+      // ProfileScreen's visible form:
       return (
         <ScrollView style={styles.container}>
           <View style={styles.header} />
@@ -132,7 +117,7 @@ export default class LoginScreen extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.logout}
-                onPress={() => this.logout()}
+                onPress={this.logout}
               >
                 <Text>Logout</Text>
               </TouchableOpacity>
@@ -143,7 +128,7 @@ export default class LoginScreen extends Component {
     } else {
       const { navigate } = this.props.navigation;
 
-      //login screen
+      // If we're not logged in, display a login button
       return (
         <KeyboardAvoidingView style={styles.containerView} behavior="padding">
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -155,7 +140,7 @@ export default class LoginScreen extends Component {
                   title="Login with Facebook"
                   button
                   type="facebook"
-                  onPress={() => this.login()}
+                  onPress={this.login}
                 />
               </View>
             </View>
@@ -237,11 +222,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     marginTop: 130
   },
-  //name: {
-  // fontSize: 22,
-  //color: "#FFFFFF",
-  // fontWeight: "600"
-  //},
   userstats: {
     fontSize: 20,
     marginTop: 20,
@@ -261,7 +241,6 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 28,
     marginTop: 40,
-    //color: "#696969",
     textAlign: "center",
     fontWeight: "600"
   },
