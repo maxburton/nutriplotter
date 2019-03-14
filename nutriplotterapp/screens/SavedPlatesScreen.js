@@ -133,22 +133,27 @@ export default class SavedPlatesScreen extends React.Component {
 	};
 
   render() {
-    return (
-		<ScrollView style={styles.bigContainer}>
-			<View style={styles.container}>
-				<FlatList
-					data={global.savedPlates}
-					renderItem={({item, index})=>{
-						return(
-							<FlatListItem flatListParent={this} item={item} index={index}>
-							</FlatListItem>
-						);
-					}}
-				>
-				</FlatList>
-			</View>
-		</ScrollView>
-    );
+	let newline = "\n\n";
+	if(global.savedPlates.length > 0){
+		return (
+			<ScrollView style={styles.bigContainer}>
+				<View style={styles.container}>
+					<FlatList
+						data={global.savedPlates}
+						renderItem={({item, index})=>{
+							return(
+								<FlatListItem flatListParent={this} item={item} index={index}>
+								</FlatListItem>
+							);
+						}}
+					>
+					</FlatList>
+				</View>
+			</ScrollView>
+		);
+	}else{
+		return (<Text style={styles.nothingText}>Nothing here!{newline} Try creating a plate and saving it from the score screen</Text>);
+	}
   }
 }
 
@@ -159,6 +164,11 @@ bigContainer: {
 container: {
 	marginTop: 10,
 	flex: 1,
+},
+nothingText: {
+	marginTop: "45%",
+	textAlign: "center",
+	fontSize: 24,
 },
 image: {
 	width: 50,
