@@ -50,6 +50,7 @@ export default class SettingsScreen extends React.Component {
 			</TouchableOpacity>
 		</View>
 		<View style={styles.bottomContainer}>
+			<Text style={styles.iconText}>Food Icons Courtesy of www.flaticon.com</Text>
 		</View>
 	</View>
     );
@@ -62,11 +63,16 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
 	  flex: 4,
+	  justifyContent: "flex-end",
+	  marginBottom: 5,
   },
   text: {
     fontSize: 24,
 	textAlign: 'center',
 	color: "red",
+  },
+  iconText: {
+	textAlign: 'center',
   },
   button: {
 	flex: 1,

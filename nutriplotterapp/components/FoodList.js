@@ -99,11 +99,11 @@ class FlatListItem extends Component{
 		if(!isPlateIn){
 			global.plate.push({"_id": item.name, "amount": 0, "group": item.group, "data": item.data});
 			this.setState({isSelected: true});
-			console.log(newFoodId + " Inserted");
+			console.log(newFoodId + " Inserted into array");
 		}else{
 			this.setState({isSelected: false});
 			global.plate.splice(index, 1);
-			console.log(newFoodId + " Deleted");
+			console.log(newFoodId + " Deleted from array");
 		}
 		
 		platedb.find({_id: newFoodId}, function (err, newDocs) {
@@ -112,7 +112,6 @@ class FlatListItem extends Component{
 				});
 			}else{
 				platedb.remove({_id: newFoodId}, function (err, numRemoved) {
-					console.log("Removed from DB!");
 				});
 			}
 		});

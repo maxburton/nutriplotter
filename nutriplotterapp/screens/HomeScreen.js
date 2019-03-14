@@ -173,19 +173,18 @@ export default class HomeScreen extends React.Component {
           let pointLoss = Math.round((min - nutrientTotal) * weight);
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "-"]);
+            warnings.push([key, "-", Math.round(((nutrientTotal/min)*10000)/100)]);
           }
         } else if (nutrientTotal > max) {
           let pointLoss = Math.round((nutrientTotal - max) * weight);
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "+"]);
+            warnings.push([key, "+", Math.round(((nutrientTotal/max)*10000)/100)]);
           }
 		  if (pointLoss == 0){
 			warnings.push([key, "perfect"]);
 		  }
         } else{
-			console.log("PERFECT ADDED");
 			warnings.push([key, "perfect"]);
 		  }
       } else if (operator == "<") {
@@ -194,7 +193,7 @@ export default class HomeScreen extends React.Component {
           let pointLoss = Math.round((nutrientTotal - max) * weight);
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "+"]);
+            warnings.push([key, "+", Math.round(((nutrientTotal/max)*10000)/100)]);
           }
         } else{
 			warnings.push([key, "perfect"]);
@@ -205,7 +204,7 @@ export default class HomeScreen extends React.Component {
           let pointLoss = Math.round((min - nutrientTotal) * weight);
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "-"]);
+            warnings.push([key, "-", Math.round(((nutrientTotal/min)*10000)/100)]);
           }
         } else{
 			warnings.push([key, "perfect"]);
@@ -216,7 +215,6 @@ export default class HomeScreen extends React.Component {
     if (score < 0) {
       score = 0;
     }
-    console.log("Score: " + score);
     return {
       score: score,
       warnings: warnings
@@ -235,7 +233,7 @@ export default class HomeScreen extends React.Component {
       omega3: new Array(">", 150),
       calcium: new Array(">", 333),
       vitA: new Array(">", 275),
-      vitB1: new Array(">", 0.275),
+      vitB1: new Array(">", 275),
       vitB9: new Array("-", 250, 160, 333),
       vitC: new Array(">", 25)
     };
@@ -283,7 +281,6 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
-	console.log("RENDERED");
 	calculateTotals = (foodDocs, i, multiplier) =>{
 		global.totals["calories"] +=
           foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);
@@ -306,7 +303,7 @@ export default class HomeScreen extends React.Component {
         global.totals["vitA"] +=
           foodDocs[i].data.vitA * (foodDocs[i].amount * multiplier);
         global.totals["vitB1"] +=
-          foodDocs[i].data.vitB1 * ((foodDocs[i].amount * multiplier));
+          foodDocs[i].data.vitB1 * (foodDocs[i].amount * multiplier * 1000); //multiplied by 1000 because data is in mg but should be in micrograms
         global.totals["vitB9"] +=
           foodDocs[i].data.vitB9 * (foodDocs[i].amount * multiplier);
         global.totals["vitC"] +=
@@ -500,7 +497,7 @@ export default class HomeScreen extends React.Component {
                     this.calculatePercentage("vitA", global.totals["vitA"]) +
                     "%)\n",
                   global.totals["vitB1"] +
-                    "mg  (" +
+                    "μg  (" +
                     this.calculatePercentage("vitB1", global.totals["vitB1"]) +
                     "%)\n",
                   global.totals["vitB9"] +
