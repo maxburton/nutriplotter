@@ -16,7 +16,7 @@ build_android:
   
   script:
     - cd nutriplotterapp
-    - apt-get install openjdk-8-jdk
+    - sudo apt-get install openjdk-8-jdk
     - export EXPO_USERNAME=${CIuser}
     - export EXPO_PASSWORD=${CIpass}
     - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
@@ -28,4 +28,4 @@ build_android:
     - npm install -g turtle-cli
     - expo login -u "${CIuser}" -p "${CIpass}"
     - expo fetch:android:keystore
-    - expo publish
+    - turtle build:android --keystore-path /builds/tp3-2018-cs25/dissertation/nutriplotterapp/nutriplotterapp.jks --keystore-alias QG51dHJpcGxhdHRlci9udXRyaXBsb3R0ZXJhcHA=
