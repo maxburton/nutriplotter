@@ -1,5 +1,10 @@
 /*
-	The main screen of this app - this is what the user first sees when the app is launched and loaded
+  The main screen of this app - this is what the user first sees when the app is launched and loaded
+  It is the initial screen component the user is routed to from the MainTab navigator.
+
+  Consists of an interactive search menu to add food items from a database (Firebase) and vary the percentage
+  present on the plate, all of which is tallied into an overall score for nutrition, and into multiple nutrition
+  attributes (i.e., carbs, calories etc.)
 */
 
 import React from "react";
@@ -33,11 +38,9 @@ import getStyleSheet from "../themes/style";
 var Datastore = require("react-native-local-mongodb"),
   platedb = new Datastore({ filename: "plate", autoload: true });
 
-import Food from "../components/Food";
-
-updateStateHome = (rand) =>{
-    this.setState({"refresh": rand})
-}
+updateStateHome = rand => {
+  this.setState({ refresh: rand });
+};
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -45,12 +48,6 @@ export default class HomeScreen extends React.Component {
   };
 
   constructor(props) {
-    // Window is the draw space available for the app (does not include Android notification bar)
-    //this.state.window = {
-    //  height: Dimensions.get('window').height,
-    //  width: Dimensions.get('window').width
-    //};
-
     super(props);
 
     this.state = {
@@ -60,27 +57,27 @@ export default class HomeScreen extends React.Component {
     };
     this.resetGlobalTotals();
     this.toggleTheme = this.toggleTheme.bind(this);
-
-    // When creating the homescreen, create a reference to the plate to be rendered
-    // so that we may be able to call methods on the plate and manipulate its state from other components
-    // on the screen.
   }
-  
-  updateChild = (rand) => {
-      updateStateHome(rand)
-  }
-  
-  componentDidMount(){
-        this.load()
-        this.props.navigation.addListener('willFocus', this.load)
-    }
-    load = () => {
-        this.updateChild(Math.random());
-    }
 
+  updateChild = rand => {
+    updateStateHome(rand);
+  };
+
+  componentDidMount() {
+    this.load();
+    this.props.navigation.addListener("willFocus", this.load);
+  }
+  load = () => {
+    this.updateChild(Math.random());
+  };
+
+  // Retrieve the current scores for the user from the database
   updateScore = async score => {
-    //get scores as dict
+    // The username of the account the user is currently signed in as.
     name = global.isLoggedIn;
+
+    // Collect the score values from the firebase scores/ table and collect as
+    // an object of attribute -> score key/value pairs.
     firebase
       .database()
       .ref("scores/")
@@ -97,11 +94,11 @@ export default class HomeScreen extends React.Component {
         });
 
         for (var i = 0; i < returnArr.length; i++) {
-          orgDict[returnArr[i]["key"]] = returnArr[i]["userscore"];
+          orgDict[returnArr[i].key] = returnArr[i]["userscore"];
         }
       });
 
-    //get currentscore and add this score
+    // Get score for the user if there is one, update their current score.
     if (orgDict[name]) {
       currentscore = orgDict[name];
       if (score > currentscore) {
@@ -113,7 +110,7 @@ export default class HomeScreen extends React.Component {
       newscore = score;
     }
 
-    //update userscore in db
+    // Update the score for the signed in user in the database.
     firebase
       .database()
       .ref("scores/" + name)
@@ -130,12 +127,9 @@ export default class HomeScreen extends React.Component {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
-  toggleTheme() {
-    this.setState({ darkTheme: !this.state.darkTheme });
-  }
-
+  // Occurs when the `Submit Plate` button is touched.
   _resultsClick() {
-    //check plate size
+    // Check if there is any food on the plate to submit.
     if (global.plate.length > 0) {
       this._toggleModal();
     } else {
@@ -143,6 +137,8 @@ export default class HomeScreen extends React.Component {
     }
   }
 
+  // Calculate the overall score of the meal from how much of each nutrient is present, if it's at, above or
+  // below the recommended value.
   calculateScore() {
     let idealNutrients = {
       calories: new Array("-", 700, 600, 800),
@@ -195,9 +191,9 @@ export default class HomeScreen extends React.Component {
           if (pointLoss > dangerLevel) {
             warnings.push([key, "+", Math.round(((nutrientTotal/max)*10000)/100)]);
           }
-        } else{
-			warnings.push([key, "perfect"]);
-		  }
+        } else {
+          warnings.push([key, "perfect"]);
+        }
       } else if (operator == ">") {
         let min = idealNutrients[key][1];
         if (nutrientTotal < min) {
@@ -206,11 +202,14 @@ export default class HomeScreen extends React.Component {
           if (pointLoss > dangerLevel) {
             warnings.push([key, "-", Math.round(((nutrientTotal/min)*10000)/100)]);
           }
-        } else{
-			warnings.push([key, "perfect"]);
-		  }
+        } else {
+          warnings.push([key, "perfect"]);
+        }
       }
     }
+
+    // For every time the user decides to go back from `Submit Plate` and continue working on their meal,
+    // penalise them 500 points.
     score -= global.tweaks * 250;
     if (score < 0) {
       score = 0;
@@ -221,6 +220,7 @@ export default class HomeScreen extends React.Component {
     };
   }
 
+  // Calculate the percentage taken out of RDA for a nutrient
   calculatePercentage(nutrient, amount) {
     let idealNutrients = {
       calories: new Array("-", 700, 600, 800),
@@ -257,6 +257,8 @@ export default class HomeScreen extends React.Component {
     });
   };
 
+  // The user wants to go back and continue working on the plate, hide the modal and note down that they've
+  // made a(nother) tweak.
   tweakPlate = () => {
     this.setState({ isModalVisible: false });
     global.tweaks++;
@@ -280,60 +282,56 @@ export default class HomeScreen extends React.Component {
     };
   };
 
-  render() {
-	calculateTotals = (foodDocs, i, multiplier) =>{
-		global.totals["calories"] +=
-          foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);
-        global.totals["carbs"] +=
-          foodDocs[i].data.carbs * (foodDocs[i].amount * multiplier);
-        global.totals["fats"] +=
-          foodDocs[i].data.fats * (foodDocs[i].amount * multiplier);
-        global.totals["protein"] +=
-          foodDocs[i].data.protein * (foodDocs[i].amount * multiplier);
-        global.totals["sugar"] +=
-          foodDocs[i].data.sugar * (foodDocs[i].amount * multiplier);
-        global.totals["satfat"] +=
-          foodDocs[i].data.satfat * (foodDocs[i].amount * multiplier);
-        global.totals["fibre"] +=
-          foodDocs[i].data.fibre * (foodDocs[i].amount * multiplier);
-        global.totals["omega3"] +=
-          foodDocs[i].data.omega3 * (foodDocs[i].amount * multiplier * 1000); //multiplied by 1000 because data is in grams but should be in mg
-        global.totals["calcium"] +=
-          foodDocs[i].data.calcium * (foodDocs[i].amount * multiplier);
-        global.totals["vitA"] +=
-          foodDocs[i].data.vitA * (foodDocs[i].amount * multiplier);
-        global.totals["vitB1"] +=
-          foodDocs[i].data.vitB1 * (foodDocs[i].amount * multiplier * 1000); //multiplied by 1000 because data is in mg but should be in micrograms
-        global.totals["vitB9"] +=
-          foodDocs[i].data.vitB9 * (foodDocs[i].amount * multiplier);
-        global.totals["vitC"] +=
-          foodDocs[i].data.vitC * (foodDocs[i].amount * multiplier);
-	}
-	  
-	//Calculates the total nutrients of all foods added together
-    var foodDocs = global.plate;
-    if (foodDocs.length > 0) {
-      this.resetGlobalTotals();
-      let multiplier = 0.05; // 0.01 to get nutrients per gram, then x5 to have a total plate weight of 500g
-      for (let i = 0; i < foodDocs.length; i++) {
-        calculateTotals(foodDocs, i, multiplier);
+  calculateTotals = (foodDocs, i, multiplier) => {
+    // For each food item on the plate, summate their scores into the total scores
+    for (let i = 0; i < foodDocs.length; i++) {
+      for (var property in global.totals) {
+        if (property === "omega3") {
+          // Convert units from grams (as is given in the database) into milligrams.
+          global.totals[property] +=
+            foodDocs[i].data[property] * foodDocs[i].amount * multiplier * 1000;
+        } else if (property === "vitB1") {
+          // Convert units from milligrams into micrograms.
+          global.totals[property] +=
+            (foodDocs[i].data[property] * (foodDocs[i].amount * multiplier)) /
+            1000;
+        } else {
+          global.totals[property] +=
+            foodDocs[i].data[property] * (foodDocs[i].amount * multiplier);
+        }
       }
-	  
     }
-	for(let i = 0; i < global.sideItems.length; i++){
-		if(global.sideItems[i].isIn){
-			for (var nutrient in global.sideItems[i].nutrition){
-				global.totals[nutrient] += global.sideItems[i]["nutrition"][nutrient];
-			}
-		}
-	}
-	for (var key in global.totals) {
-        global.totals[key] = Math.round(global.totals[key] * 10) / 10;
-    }
-    //const styles = getStyleSheet(this.state.darkTheme);
+  };
 
-    //const styles = getStyleSheet(this.state.darkTheme);
-    //const backgroundColor = StyleSheet.flatten(styles.container).backgroundColor;
+  render() {
+    console.log("RENDERED");
+
+    //Calculates the total nutrients of all foods added together
+    var foodDocs = global.plate;
+
+    // Only summate total scores if there is food on the plate
+    if (foodDocs.length > 0) {
+      this.resetGlobalTotals(); // Clear any previous score totals
+      // 0.01 for nutrients per gram, as the plate contains 500g of food, we take 5 servings of nutrients
+      let multiplier = 0.05;
+
+      for (let i = 0; i < foodDocs.length; i++) {
+        this.calculateTotals(foodDocs, i, multiplier);
+      }
+    }
+    for (let i = 0; i < global.sideItems.length; i++) {
+      if (global.sideItems[i].isIn) {
+        for (var nutrient in global.sideItems[i].nutrition) {
+          global.totals[nutrient] += global.sideItems[i]["nutrition"][nutrient];
+        }
+      }
+    }
+
+    // Round scores to eliminate trailing significant figures.
+    for (var key in global.totals) {
+      global.totals[key] = Math.round(global.totals[key] * 10) / 10;
+    }
+
     return (
       <KeyboardAvoidingView
         style={styles.container}
@@ -350,6 +348,7 @@ export default class HomeScreen extends React.Component {
             </View>
           </View>
           <View style={styles.plateView}>
+            {/* Render the plate here. */}
             <Plate />
           </View>
           <View style={styles.rightPlateView}>
@@ -362,10 +361,12 @@ export default class HomeScreen extends React.Component {
           </View>
         </View>
 
+        {/* FoodList component including search bar and recently added food list. */}
         <View style={[styles.list, { marginTop: "5%" }]}>
           <List listParent={this} style={styles.list} />
         </View>
 
+        {/* Plate submission button. */}
         <View>
           <Button
             style={styles.submitPlate}
@@ -374,7 +375,7 @@ export default class HomeScreen extends React.Component {
           />
         </View>
 
-        {/**view start**/}
+        {/* Plate summary and submission modal */}
         <Modal
           backdropOpacity={0.5}
           swipeDirection="down"
@@ -439,76 +440,7 @@ export default class HomeScreen extends React.Component {
                   paddingLeft: 10
                 }}
               >
-                {[
-                  "\n\n" +
-                    global.totals["calories"] +
-                    "kcal  (" +
-                    this.calculatePercentage(
-                      "calories",
-                      global.totals["calories"]
-                    ) +
-                    "%)\n",
-                  global.totals["carbs"] +
-                    "g  (" +
-                    this.calculatePercentage("carbs", global.totals["carbs"]) +
-                    "%)\n",
-                  global.totals["fats"] +
-                    "g  (" +
-                    this.calculatePercentage("fats", global.totals["fats"]) +
-                    "%)\n",
-                  global.totals["protein"] +
-                    "g  (" +
-                    this.calculatePercentage(
-                      "protein",
-                      global.totals["protein"]
-                    ) +
-                    "%)\n",
-                  global.totals["sugar"] +
-                    "g  (" +
-                    this.calculatePercentage("sugar", global.totals["sugar"]) +
-                    "%)\n",
-                  global.totals["satfat"] +
-                    "g  (" +
-                    this.calculatePercentage(
-                      "satfat",
-                      global.totals["satfat"]
-                    ) +
-                    "%)\n",
-                  global.totals["fibre"] +
-                    "g  (" +
-                    this.calculatePercentage("fibre", global.totals["fibre"]) +
-                    "%)\n",
-                  global.totals["omega3"] +
-                    "mg  (" +
-                    this.calculatePercentage(
-                      "omega3",
-                      global.totals["omega3"]
-                    ) +
-                    "%)\n",
-                  global.totals["calcium"] +
-                    "mg  (" +
-                    this.calculatePercentage(
-                      "calcium",
-                      global.totals["calcium"]
-                    ) +
-                    "%)\n",
-                  global.totals["vitA"] +
-                    "mg  (" +
-                    this.calculatePercentage("vitA", global.totals["vitA"]) +
-                    "%)\n",
-                  global.totals["vitB1"] +
-                    "μg  (" +
-                    this.calculatePercentage("vitB1", global.totals["vitB1"]) +
-                    "%)\n",
-                  global.totals["vitB9"] +
-                    "μg  (" +
-                    this.calculatePercentage("vitB9", global.totals["vitB9"]) +
-                    "%)\n",
-                  global.totals["vitC"] +
-                    "mg  (" +
-                    this.calculatePercentage("vitC", global.totals["vitC"]) +
-                    "%)\n"
-                ]}
+                {this.getSummary()}
               </Text>
             </View>
             <View style={{ flex: 1, alignItems: "center" }}>
@@ -545,6 +477,32 @@ export default class HomeScreen extends React.Component {
         </Modal>
       </KeyboardAvoidingView>
     );
+  }
+
+  private;
+  getSummary() {
+    var units = {
+      calories: "kcal",
+      omega3: "mg",
+      calcium: "mg",
+      vitA: "mg",
+      vitB1: "μg",
+      vitB9: "μg",
+      vitC: "mg"
+      // The other attributes are in grams and so wont appear here (undefined gives `g`)
+    };
+
+    var summary = "\n\n";
+    for (var key in global.totals) {
+      summary +=
+        global.totals[key] +
+        (units[key] || "g") +
+        " (" +
+        this.calculatePercentage(key, global.totals[key]) +
+        "%)\n";
+    }
+
+    return summary;
   }
 }
 
