@@ -25,17 +25,43 @@ export default class SettingsScreen extends React.Component {
   }
   
   deleteSavedPlates = () =>{
-	  global.savedPlates = []
-	  savedPlatesdb.remove({}, { multi: true }, function (err, numRemoved) {
-			Alert.alert("Saved Plates Deleted");
-		});
+	  Alert.alert(
+		  'Delete Saved Plates',
+		  'Are you sure you want to delete all saved plates?',
+		  [
+			{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+			{text: 'OK', onPress: () => {
+			savedPlatesdb.remove({}, { multi: true }, function (err, numRemoved) {
+				deletePlate();
+			});
+			}
+			},
+		  ],
+		  { cancelable: false }
+		)
+		deletePlate = () => {
+			global.savedPlates = []
+		}
   }
   
   deleteFavs = () =>{
-	  global.favourites = []
-	  favdb.remove({}, { multi: true }, function (err, numRemoved) {
-			Alert.alert("Recently Searched Foods Deleted");
-		});
+	  Alert.alert(
+		  'Delete Search History',
+		  'Are you sure you want to delete your search history?',
+		  [
+			{text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+			{text: 'OK', onPress: () => {
+			favdb.remove({}, { multi: true }, function (err, numRemoved) {
+				deletePlate();
+			});
+			}
+			},
+		  ],
+		  { cancelable: false }
+		)
+		deletePlate = () => {
+			global.favourites = []
+		}
   }
 
   render(){
@@ -46,7 +72,7 @@ export default class SettingsScreen extends React.Component {
 				<Text style={styles.text}>Delete Saved Plates</Text>
 			</TouchableOpacity>
 			<TouchableOpacity style={styles.button} onPress={()=>this.deleteFavs()}>
-				<Text style={styles.text}>Delete Recently Searched Foods</Text>
+				<Text style={styles.text}>Delete Search History</Text>
 			</TouchableOpacity>
 		</View>
 		<View style={styles.bottomContainer}>

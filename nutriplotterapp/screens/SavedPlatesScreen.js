@@ -21,7 +21,7 @@ var Datastore = require("react-native-local-mongodb"),
   sideItemsdb = new Datastore({ filename: 'sideItems', autoload: true });
   platedb = new Datastore({ filename: 'plate', autoload: true });
 
-class FlatListItem extends React.Component{
+class FlatListItem extends React.Component{  
 	render(){
 		var foodImages = {
 			savouries:require('../assets/images/savouries.png'),
@@ -120,9 +120,17 @@ export default class SavedPlatesScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
+		refresh: 0,
     };
   }
+  
+  	componentDidMount() {
+		this.load();
+		this.props.navigation.addListener("willFocus", this.load);
+	}
+	load = () => {
+		this.setState({refresh: Math.random()});
+	};
 
   render() {
     return (
