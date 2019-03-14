@@ -159,6 +159,7 @@ export default class HomeScreen extends React.Component {
     let dangerLevel = 500;
     let warnings = new Array();
     for (var key in global.totals) {
+	  console.log(score);
       let nutrientTotal = global.totals[key];
       let operator = idealNutrients[key][0];
       let weight = 1000 / idealNutrients[key][1];
@@ -167,12 +168,14 @@ export default class HomeScreen extends React.Component {
         let max = idealNutrients[key][3];
         if (nutrientTotal < min) {
           let pointLoss = Math.round((min - nutrientTotal) * weight);
+		  if(pointLoss > 1000) {pointLoss = 1000}
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
             warnings.push([key, "-", Math.round(((nutrientTotal/min)*10000)/100)]);
           }
         } else if (nutrientTotal > max) {
           let pointLoss = Math.round((nutrientTotal - max) * weight);
+		  if(pointLoss > 1000) {pointLoss = 1000}
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
             warnings.push([key, "+", Math.round(((nutrientTotal/max)*10000)/100)]);
@@ -187,6 +190,7 @@ export default class HomeScreen extends React.Component {
         let max = idealNutrients[key][1];
         if (nutrientTotal > max) {
           let pointLoss = Math.round((nutrientTotal - max) * weight);
+		  if(pointLoss > 1000) {pointLoss = 1000}
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
             warnings.push([key, "+", Math.round(((nutrientTotal/max)*10000)/100)]);
@@ -198,6 +202,7 @@ export default class HomeScreen extends React.Component {
         let min = idealNutrients[key][1];
         if (nutrientTotal < min) {
           let pointLoss = Math.round((min - nutrientTotal) * weight);
+		  if(pointLoss > 1000) {pointLoss = 1000}
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
             warnings.push([key, "-", Math.round(((nutrientTotal/min)*10000)/100)]);
@@ -209,7 +214,7 @@ export default class HomeScreen extends React.Component {
     }
 
     // For every time the user decides to go back from `Submit Plate` and continue working on their meal,
-    // penalise them 500 points.
+    // penalise them 250 points.
     score -= global.tweaks * 250;
     if (score < 0) {
       score = 0;
@@ -293,8 +298,7 @@ export default class HomeScreen extends React.Component {
         } else if (property === "vitB1") {
           // Convert units from milligrams into micrograms.
           global.totals[property] +=
-            (foodDocs[i].data[property] * (foodDocs[i].amount * multiplier)) /
-            1000;
+            foodDocs[i].data[property] * foodDocs[i].amount * multiplier * 1000;
         } else {
           global.totals[property] +=
             foodDocs[i].data[property] * (foodDocs[i].amount * multiplier);
