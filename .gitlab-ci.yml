@@ -1,7 +1,30 @@
-image: blang/latex
-build:
+stages:
+    - build
+    - tests
+    
+build_dissertation:
+  image: blang/latex
+  stage: build
   script:
     - latexmk -pdf -cd docs/dissertation/dissertation.tex
   artifacts:
     paths:
       - "*.pdf"
+
+build_android:
+  stage: build
+  
+  script:
+    - cd nutriplotterapp
+    - export EXPO_USERNAME=${CIuser}
+    - export EXPO_PASSWORD=${CIpass}
+    - export EXPO_ANDROID_KEYSTORE_PASSWORD=${androidKeystore}
+    - export EXPO_ANDROID_KEY_PASSWORD=${androidKey}
+    - npm config set prefix '~/.npm-global'
+    - export PATH=~/.npm-global/bin:$PATH
+    - source ~/.profile
+    - npm install
+    - npm install -g turtle-cli
+    - expo login -u "${CIuser}" -p "${CIpass}"
+    - expo fetch:android:keystore
+    - turtle build:android --keystore-path ./nutriplotterapp.jks --keystore-alias QG51dHJpcGxhdHRlci9udXRyaXBsb3R0ZXJhcHA=
