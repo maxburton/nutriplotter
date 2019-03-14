@@ -1,7 +1,7 @@
 /*
   The main screen of this app - this is what the user first sees when the app is launched and loaded
   It is the initial screen component the user is routed to from the MainTab navigator.
-  
+
   Consists of an interactive search menu to add food items from a database (Firebase) and vary the percentage
   present on the plate, all of which is tallied into an overall score for nutrition, and into multiple nutrition
   attributes (i.e., carbs, calories etc.)
@@ -159,6 +159,7 @@ export default class HomeScreen extends React.Component {
     let dangerLevel = 500;
     let warnings = new Array();
     for (var key in global.totals) {
+	  console.log(score);
       let nutrientTotal = global.totals[key];
       let operator = idealNutrients[key][0];
       let weight = 1000 / idealNutrients[key][1];
@@ -167,30 +168,32 @@ export default class HomeScreen extends React.Component {
         let max = idealNutrients[key][3];
         if (nutrientTotal < min) {
           let pointLoss = Math.round((min - nutrientTotal) * weight);
+		  if(pointLoss > 1000) {pointLoss = 1000}
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "-"]);
+            warnings.push([key, "-", Math.round(((nutrientTotal/min)*10000)/100)]);
           }
         } else if (nutrientTotal > max) {
           let pointLoss = Math.round((nutrientTotal - max) * weight);
+		  if(pointLoss > 1000) {pointLoss = 1000}
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "+"]);
+            warnings.push([key, "+", Math.round(((nutrientTotal/max)*10000)/100)]);
           }
-          if (pointLoss == 0) {
-            warnings.push([key, "perfect"]);
-          }
-        } else {
-          console.log("PERFECT ADDED");
-          warnings.push([key, "perfect"]);
-        }
+		  if (pointLoss == 0){
+			warnings.push([key, "perfect"]);
+		  }
+        } else{
+			warnings.push([key, "perfect"]);
+		  }
       } else if (operator == "<") {
         let max = idealNutrients[key][1];
         if (nutrientTotal > max) {
           let pointLoss = Math.round((nutrientTotal - max) * weight);
+		  if(pointLoss > 1000) {pointLoss = 1000}
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "+"]);
+            warnings.push([key, "+", Math.round(((nutrientTotal/max)*10000)/100)]);
           }
         } else {
           warnings.push([key, "perfect"]);
@@ -199,9 +202,10 @@ export default class HomeScreen extends React.Component {
         let min = idealNutrients[key][1];
         if (nutrientTotal < min) {
           let pointLoss = Math.round((min - nutrientTotal) * weight);
+		  if(pointLoss > 1000) {pointLoss = 1000}
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "-"]);
+            warnings.push([key, "-", Math.round(((nutrientTotal/min)*10000)/100)]);
           }
         } else {
           warnings.push([key, "perfect"]);
@@ -210,12 +214,11 @@ export default class HomeScreen extends React.Component {
     }
 
     // For every time the user decides to go back from `Submit Plate` and continue working on their meal,
-    // penalise them 500 points.
+    // penalise them 250 points.
     score -= global.tweaks * 250;
     if (score < 0) {
       score = 0;
     }
-    console.log("Score: " + score);
     return {
       score: score,
       warnings: warnings
@@ -235,7 +238,7 @@ export default class HomeScreen extends React.Component {
       omega3: new Array(">", 150),
       calcium: new Array(">", 333),
       vitA: new Array(">", 275),
-      vitB1: new Array(">", 0.275),
+      vitB1: new Array(">", 275),
       vitB9: new Array("-", 250, 160, 333),
       vitC: new Array(">", 25)
     };
@@ -295,8 +298,7 @@ export default class HomeScreen extends React.Component {
         } else if (property === "vitB1") {
           // Convert units from milligrams into micrograms.
           global.totals[property] +=
-            (foodDocs[i].data[property] * (foodDocs[i].amount * multiplier)) /
-            1000;
+            foodDocs[i].data[property] * foodDocs[i].amount * multiplier * 1000;
         } else {
           global.totals[property] +=
             foodDocs[i].data[property] * (foodDocs[i].amount * multiplier);

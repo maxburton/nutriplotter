@@ -93,13 +93,14 @@ export default class ScoreScreen extends React.Component {
 				<Text style={styles.textGreen}>Your {nutrient} levels are perfect! Well done!</Text>
 			)
 		}else{
+			let percentage = warnings[i][2]
 			if(operator == "-"){
 				advice = "levels are dangerously low! Try increasing it for a higher score";
 			}else{
 				advice = "levels are dangerously high! Try decreasing it for a higher score";
 			}
 			renderWarnings.push(
-				<Text style={styles.textRed}>Your {nutrient} {advice}</Text>
+				<Text style={styles.textRed}>Your {nutrient} {advice} ({percentage}%)</Text>
 			)
 		}
 	}

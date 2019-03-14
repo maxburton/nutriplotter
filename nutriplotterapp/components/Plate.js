@@ -51,7 +51,6 @@ export default class Plate extends Component {
   componentDidMount() {
     platedb.find({}, function(err, docs) {
       this.setState();
-      console.log("loaded");
     });
     setState = () => {
       this.setState({ isLoaded: true });
@@ -148,7 +147,6 @@ export default class Plate extends Component {
         for (let j = 0; j < amounts.length; j++) {
           if (group == amounts[j].group) {
             amounts[j]["amount"] = plate[i].amount + amounts[j].amount;
-            console.log(amounts);
           }
         }
       }
@@ -272,7 +270,6 @@ export default class Plate extends Component {
 
     for (const food of this.state.foods) {
       foodRender.push(food.render());
-      console.log(food);
     }
     return foodRender;
   }
@@ -290,7 +287,6 @@ export default class Plate extends Component {
 
   // Get the names of all food items on the plate
   getFoodNames() {
-    console.log("Getting food names");
     if (this.state.empty) {
       return "The plate is empty.";
     } else {

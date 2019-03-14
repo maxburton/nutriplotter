@@ -26,7 +26,7 @@ export default class PopulateSideItems extends React.Component {
 		"omega3": 20,
 		"calcium": 0,
 		"vitA": 0.03,
-		"vitB1": 0.03,
+		"vitB1": 30,
 		"vitB9": 0,
 		"vitC": 8.4
 	}},
@@ -45,7 +45,7 @@ export default class PopulateSideItems extends React.Component {
 		"omega3": 10,
 		"calcium": 28,
 		"vitA": 49.00,
-		"vitB1": 0.06,
+		"vitB1": 60,
 		"vitB9": 18,
 		"vitC": 1
 	}},
@@ -64,7 +64,7 @@ export default class PopulateSideItems extends React.Component {
 		"omega3": 820,
 		"calcium": 0,
 		"vitA": 0.00,
-		"vitB1": 0.25,
+		"vitB1": 250,
 		"vitB9": 40,
 		"vitC": 0
 	}},
@@ -83,7 +83,7 @@ export default class PopulateSideItems extends React.Component {
 		"omega3": 0.00,
 		"calcium": 0,
 		"vitA": 0.00,
-		"vitB1": 0.00,
+		"vitB1": 0,
 		"vitB9": 0,
 		"vitC": 0
 	}}]

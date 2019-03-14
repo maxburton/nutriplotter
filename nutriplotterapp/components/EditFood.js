@@ -319,6 +319,7 @@ const styles = StyleSheet.create ({
   },
   scrollContainer: {
      flex: 1,
+	 marginBottom:20,
   },
   clearButton:{
 		textAlign: 'center',
@@ -326,7 +327,6 @@ const styles = StyleSheet.create ({
 		color: 'red',
 		justifyContent: 'flex-end',
 		marginBottom: 20,
-		marginTop: 20,
   },
   imageView: {
 	  flex: 1,
