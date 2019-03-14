@@ -85,6 +85,8 @@ class FlatListItem extends React.Component{
 			plateName = "Untitled Plate"
 		}
 		
+		let score = this.props.item.score;
+		
 		return(
 		<TouchableOpacity onPress = {() => this.loadPlate(this.props.item)}>
 			<View style={styles.container}>
@@ -93,7 +95,7 @@ class FlatListItem extends React.Component{
 			<View style={styles.itemStyle}>
 				{renderImages}
 				<View style={styles.scoreTextView}>
-					<Text style={styles.scoreText}>{this.props.item.score}</Text>
+					<Text style={score < 4333 ? styles.scoreRed : score < 8666 ? styles.scoreAmber : styles.scoreGreen}>{score}</Text>
 				</View>
 			</View>
 		</TouchableOpacity>
@@ -152,7 +154,7 @@ export default class SavedPlatesScreen extends React.Component {
 			</ScrollView>
 		);
 	}else{
-		return (<Text style={styles.nothingText}>Nothing here!{newline} Try creating a plate and saving it from the score screen</Text>);
+		return (<Text style={styles.nothingText}>Nothing here!{newline} Try creating a plate and saving it from the score screen.</Text>);
 	}
   }
 }
@@ -187,17 +189,33 @@ scoreTextView: {
 	flexDirection: 'column',
 	justifyContent: "center",
 },
-scoreText: {
+scoreRed: {
 	flex: 1,
 	fontSize: 24,
 	textAlign: "right",
 	marginRight: 10,
+	color: "red",
+},
+scoreGreen: {
+	flex: 1,
+	fontSize: 24,
+	textAlign: "right",
+	marginRight: 10,
+	color: "green",
+},
+scoreAmber: {
+	flex: 1,
+	fontSize: 24,
+	textAlign: "right",
+	marginRight: 10,
+	color: "yellow",
 },
 title: {
 	flex: 1,
 	fontSize: 24,
 	textAlign: "left",
-	fontWeight: "bold"
+	fontWeight: "bold",
+	marginLeft: "5%",
 },
   
 });
