@@ -287,7 +287,7 @@ export default class HomeScreen extends React.Component {
     };
   };
 
-  calculateTotals = (foodDocs, i, multiplier) => {
+  calculateTotals = (foodDocs, multiplier) => {
     // For each food item on the plate, summate their scores into the total scores
     for (let i = 0; i < foodDocs.length; i++) {
       for (var property in global.totals) {
@@ -316,12 +316,10 @@ export default class HomeScreen extends React.Component {
     // Only summate total scores if there is food on the plate
     if (foodDocs.length > 0) {
       this.resetGlobalTotals(); // Clear any previous score totals
-      // 0.01 for nutrients per gram, as the plate contains 500g of food, we take 5 servings of nutrients
+      // 0.01 for nutrients per gram, so to make up a plate of 500g we take 5 servings
       let multiplier = 0.05;
 
-      for (let i = 0; i < foodDocs.length; i++) {
-        this.calculateTotals(foodDocs, i, multiplier);
-      }
+      this.calculateTotals(foodDocs, multiplier);
     }
     for (let i = 0; i < global.sideItems.length; i++) {
       if (global.sideItems[i].isIn) {
