@@ -3,6 +3,7 @@ import { Icon } from 'expo';
 
 import Colors from '../constants/Colors';
 
+/* Used to provide a component for tab icons which change appearance when selected */
 export default class TabBarIcon extends React.Component {
   render() {
     return (

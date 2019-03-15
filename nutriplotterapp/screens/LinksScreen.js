@@ -63,14 +63,30 @@ export default class HelpScreen extends React.Component {
 	let links = (
 	<View>
 		<Text style={styles.defaultText}>Helpful Links:</Text>
-		<Button onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/live-well/eat-well")} title={"Tips for Balanced Meals - NHS"}/>
-		<Button onPress={()=>this._handleOpenWithWebBrowser("https://www.choosemyplate.gov/ten-tips-build-healthy-meal")} title={"Tips for Balanced Meals - ChooseMyPlate"}/>
-		<Button onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/conditions/vitamins-and-minerals/")} title={"Vitamins and Minerals Tips"}/>
-		<Button onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/live-well/eat-well/how-does-sugar-in-our-diet-affect-our-health/")} title={"Sugar Tips"}/>
-		<Button onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/common-health-questions/food-and-diet/what-should-my-daily-intake-of-calories-be/")} title={"Calorie Tips"}/>
-		<Button onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/live-well/healthy-weight/why-we-need-to-eat-carbs/")} title={"Carbs Tips"}/>
-		<Button onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/live-well/eat-well/different-fats-nutrition/")} title={"Fats Tips"}/>
-		<Button onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/live-well/eat-well/the-eatwell-guide/")} title={"Food Group Tips"}/>
+    <Button style={styles.linkButton}
+      onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/live-well/eat-well")} 
+      title={"Tips for Balanced Meals - NHS"}/>
+    <Button style={styles.linkButton}
+      onPress={()=>this._handleOpenWithWebBrowser("https://www.choosemyplate.gov/ten-tips-build-healthy-meal")} 
+      title={"Tips for Balanced Meals - ChooseMyPlate"}/>
+    <Button style={styles.linkButton}
+      onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/conditions/vitamins-and-minerals/")} 
+      title={"Vitamins and Minerals Tips"}/>
+    <Button style={styles.linkButton}
+      onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/live-well/eat-well/how-does-sugar-in-our-diet-affect-our-health/")} 
+      title={"Sugar Tips"}/>
+    <Button style={styles.linkButton}
+      onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/common-health-questions/food-and-diet/what-should-my-daily-intake-of-calories-be/")} 
+      title={"Calorie Tips"}/>
+    <Button style={styles.linkButton}
+      onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/live-well/healthy-weight/why-we-need-to-eat-carbs/")} 
+      title={"Carbs Tips"}/>
+    <Button style={styles.linkButton}
+      onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/live-well/eat-well/different-fats-nutrition/")} 
+      title={"Fats Tips"}/>
+    <Button style={styles.linkButton}
+      onPress={()=>this._handleOpenWithWebBrowser("https://www.nhs.uk/live-well/eat-well/the-eatwell-guide/")} 
+      title={"Food Group Tips"}/>
 	</View>
 	)
 	
@@ -129,7 +145,7 @@ const styles = StyleSheet.create({
 	flex: 1,
   },
   defaultText: {
-    fontSize: 24,
+    fontSize: 20,
     padding: 15,
 	textAlign: 'center',
   },
@@ -140,5 +156,8 @@ const styles = StyleSheet.create({
   navContainer: {
 	flex: 1,
 	justifyContent: "flex-end",
+  },
+  linkButton: {
+    padding: 40
   }
 });

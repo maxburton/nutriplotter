@@ -34,7 +34,7 @@ var Datastore = require("react-native-local-mongodb"),
 
 export default class Plate extends Component {
   state = {
-    foods: [], // Of Food Component
+    foods: [],
     pieSeries: [],
     pieColours: [],
     empty: true,
@@ -45,7 +45,7 @@ export default class Plate extends Component {
   constructor(props) {
     super(props);
     updateState = updateState.bind(this);
-	updateStateHome = updateStateHome.bind(this);
+	  updateStateHome = updateStateHome.bind(this);
   }
 
   componentDidMount() {
@@ -57,6 +57,8 @@ export default class Plate extends Component {
     };
   }
 
+  // Calculate the percentages (of the total plate mass) of each group of food present on the plate and
+  // return an object giving such percentages, alongside a distinct colour for each of them
   drawPie = () => {
     let drawPieKeys = {};
     let drawPieColours = [];
@@ -73,15 +75,16 @@ export default class Plate extends Component {
     let drawPieSeries = [];
     for (let pieGroup in drawPieKeys) {
       drawPieSeries.push(drawPieKeys[pieGroup]);
-      //global.pieSeries.push()
     }
     return { series: drawPieSeries, colours: drawPieColours };
   };
 
+  // Allow the plate edit modal to appear so the user can adjust what is on their plate and how much of each is on
   platePressed = () => {
     this.setState({ isModalVisible: true });
   };
 
+  // Hide the modal so that the user can select another food/submit the plate
   closeModal = () => {
     this.setState({ isModalVisible: false });
   };
@@ -130,7 +133,7 @@ export default class Plate extends Component {
     };
     let pieData = this.drawPie();
     if (!this.state.isLoaded) {
-      return null;
+      return null;  // If the state has not been loaded properly, undefined behaviour has occurred: throw an error
     }
 
     let renderFoods = [];
@@ -138,12 +141,17 @@ export default class Plate extends Component {
     let percentageSoFar = 0;
     let groupsIn = [];
     let amounts = [];
+    
+    // For each food group for every food on the plate
     for (let i = 0; i < plate.length; i++) {
       let group = plate[i].group;
       if (!groupsIn.includes(group)) {
+        // If not seen before, add the group to groupsIn and record the amount of that food
         groupsIn.push(group);
         amounts.push({ group: group, amount: plate[i].amount });
       } else {
+        // Otherwise if the food group is present, go through the plate and summate the amount of food
+        // part of that food group
         for (let j = 0; j < amounts.length; j++) {
           if (group == amounts[j].group) {
             amounts[j]["amount"] = plate[i].amount + amounts[j].amount;
@@ -151,6 +159,8 @@ export default class Plate extends Component {
         }
       }
     }
+    // For every amount present on the plate, scale the related food group icon proportionately to the percentage
+    // of the plate it takes up.
     for (let i = 0; i < amounts.length; i++) {
       let amount = amounts[i].amount;
       let imageScale = 15+100*Math.sin(amount/310); // Limit image scaling factor to keep it within the plate
@@ -179,6 +189,8 @@ export default class Plate extends Component {
       let leftString = left + "%";
       let group = amounts[i].group;
 
+      // Draw the food group icon alongside the segment of the pie chart it relates to
+      // and draw the segments of the pie chart. 
       renderFoods.push(
         <View
           style={{
@@ -230,7 +242,7 @@ export default class Plate extends Component {
                   on
                   left={25}
                   series={pieData["series"]}
-                  //values to show and color sequentially
+                  // Pie chart segments to show and colour
                   colors={pieData["colours"]}
                   style={StyleSheet.create({ zIndex: 3 })}
                 />
@@ -300,6 +312,7 @@ export default class Plate extends Component {
     }
   }
 
+  // Remove a food from the plate database
   deleteItem = searchString => {
     var dbQuery = "select name from foods;";
     var promise = new Promise(function(resolve, reject) {
@@ -329,7 +342,8 @@ export default class Plate extends Component {
     }
 
     promise.then(results => {
-      //code runs after field deleted
+      // This is required once the field has been deleted from the database for semantics (promises should be 
+      // acted upon when resolved.)
     });
   };
 }

@@ -12,6 +12,7 @@ export default class LeaderboardScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
     title: "Global Leaderboard",
     headerLeft: (
+      
       <Button
         title="Back"
         onPress={() => {
@@ -30,6 +31,7 @@ export default class LeaderboardScreen extends React.Component {
     this.readUserData();
   }
 
+  // Retrieve the user scores from the database
   readUserData = async () => {
     self = this;
     firebase
@@ -62,12 +64,15 @@ export default class LeaderboardScreen extends React.Component {
 
   render() {
     if (!this.state.promiseIsResolved) {
+      // We're still waiting on that async call (readUserData) to resolve so let the user know the data
+      // is still being retrieved.
       return (
         <View>
           <Text>waiting on leaderboards..</Text>
         </View>
       );
     } else {
+      // readUserData resolved so display a leaderboard with the data
       return (
         <Leaderboard data={global.data} sortBy="highScore" labelBy="userName" />
       );
