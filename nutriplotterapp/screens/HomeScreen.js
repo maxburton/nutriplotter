@@ -14,7 +14,7 @@ import SideItem from "../components/SideItem.js";
 import firebase from "../components/Firebase.js";
 import "./LoginScreen";
 import { Card, Button } from "react-native-elements";
-//Initliase firebase database
+//Initialise firebase database
 import {
   Image,
   Platform,

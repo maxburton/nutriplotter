@@ -166,7 +166,7 @@ class FlatListItem extends Component {
 
 
 
-
+// Represents the list of food items
 class List extends Component {
   constructor(props) {
     super(props);
@@ -183,6 +183,7 @@ class List extends Component {
     this.showFavourites();
   }
 
+  // Callback for entering text into the search bar
   onChangeText = name => {
     this.setState({ name });
     if (name.length > 2) {
@@ -222,6 +223,9 @@ class List extends Component {
     );
   }
 
+  // Each food group a food item from the database can have corresponds to a category of food such as:
+	// 	grains, sandwich, rice, pasta, pizza, bread, cereal, biscuits, cakes, pastries, pudding, savouries
+	// milk, cream, cheese etc.
   determineGroup = input => {
     input = input.toLowerCase();
     var group = "";

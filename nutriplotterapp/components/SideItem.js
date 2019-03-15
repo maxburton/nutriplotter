@@ -1,7 +1,13 @@
 /*
 	Renders a side item that displays around the plate in Homescreen. These are toggleable buttons that add specific food items to the outside of your plate.
 	Current items: Apple, yoghurt, slide of bread, soda
+
+	In effect, when we want to add an accompaniment to our meal, we also want to make sure that it impacts the nutrition
+	score of the plate without taking up any place on it.
+
 	Room for growth: Implement modals on press and provide a checklist of items to be added to the side of plate.
+
+	
 */
 import React from 'react';
 import { Text, ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native';
@@ -32,6 +38,8 @@ componentDidMount(){
 }
 
 sideItemPressed(){
+	// On touch, check if we've already addded the item to the side of the plate: if so, remove otherwise add it to
+	// the side of the plate.
 	for(let i = 0; i < global.sideItems.length; i++){
 		if(global.sideItems[i].type == this.state.type){
 			global.sideItems[i]["isIn"] = !global.sideItems[i].isIn;
@@ -48,10 +56,13 @@ sideItemPressed(){
 
 render() {
 	var sideImages = {
+		// Sideimage icon when selected
 		fruit:require('../assets/images/appleSide.png'),
 		dairy:require('../assets/images/yoghurtSide.png'),
 		bread:require('../assets/images/breadSide.png'),
 		drink:require('../assets/images/drinkSide.png'),
+		
+		// Sideimage icon when deselected
 		fruitGrey:require('../assets/images/appleSideGrey.png'),
 		dairyGrey:require('../assets/images/yoghurtSideGrey.png'),
 		breadGrey:require('../assets/images/breadSideGrey.png'),
