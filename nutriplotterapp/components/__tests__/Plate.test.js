@@ -3,14 +3,18 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 
 import Plate from '../Plate.js';
+import popArray from "../../populateArray";
+import popList from "../../populateNameList";
 
+var p = new popArray();
+var q = new popList();
+global.plate = [];
 
 //first test to ensure working correctly
 it('Test conditions working properly', async () => {
     const testVar = true;
     expect(true).toEqual(testVar);
 });
-
 
 it('Plate: renders correctly', () => {
   const tree = renderer.create(<Plate />).toJSON();
@@ -30,20 +34,3 @@ it('Plate: should set passed values to state', () => {
     };
   expect(sideItemComponent.state).toEqual(targetState);
 });
-
-//still to test
-//componentDidMount, state change to loaded:true
-
-//platePressed modal visibility
-
-//closeModel opposite of above, maybe combine and double assert
-
-//renderPieSeries, returns state values, ez pz
-
-//clearFoodState, edits state values
-
-//getFoodNames, returns string. maybe hard to work out but possible
-
-//not sure if this is place to do testing on scores or not
-
-//if this is where scores calc'd, handle component linking here too
