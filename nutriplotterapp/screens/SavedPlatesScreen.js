@@ -21,7 +21,7 @@ var Datastore = require("react-native-local-mongodb"),
   sideItemsdb = new Datastore({ filename: 'sideItems', autoload: true });
   platedb = new Datastore({ filename: 'plate', autoload: true });
 
-class FlatListItem extends React.Component{
+class FlatListItem extends React.Component{  
 	render(){
 		var foodImages = {
 			savouries:require('../assets/images/savouries.png'),
@@ -85,6 +85,8 @@ class FlatListItem extends React.Component{
 			plateName = "Untitled Plate"
 		}
 		
+		let score = this.props.item.score;
+		
 		return(
 		<TouchableOpacity onPress = {() => this.loadPlate(this.props.item)}>
 			<View style={styles.container}>
@@ -93,7 +95,7 @@ class FlatListItem extends React.Component{
 			<View style={styles.itemStyle}>
 				{renderImages}
 				<View style={styles.scoreTextView}>
-					<Text style={styles.scoreText}>{this.props.item.score}</Text>
+					<Text style={score < 4333 ? styles.scoreRed : score < 8666 ? styles.scoreAmber : styles.scoreGreen}>{score}</Text>
 				</View>
 			</View>
 		</TouchableOpacity>
@@ -120,27 +122,40 @@ export default class SavedPlatesScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
+		refresh: 0,
     };
   }
+  
+  	componentDidMount() {
+		this.load();
+		this.props.navigation.addListener("willFocus", this.load);
+	}
+	load = () => {
+		this.setState({refresh: Math.random()});
+	};
 
   render() {
-    return (
-		<ScrollView style={styles.bigContainer}>
-			<View style={styles.container}>
-				<FlatList
-					data={global.savedPlates}
-					renderItem={({item, index})=>{
-						return(
-							<FlatListItem flatListParent={this} item={item} index={index}>
-							</FlatListItem>
-						);
-					}}
-				>
-				</FlatList>
-			</View>
-		</ScrollView>
-    );
+	let newline = "\n\n";
+	if(global.savedPlates.length > 0){
+		return (
+			<ScrollView style={styles.bigContainer}>
+				<View style={styles.container}>
+					<FlatList
+						data={global.savedPlates}
+						renderItem={({item, index})=>{
+							return(
+								<FlatListItem flatListParent={this} item={item} index={index}>
+								</FlatListItem>
+							);
+						}}
+					>
+					</FlatList>
+				</View>
+			</ScrollView>
+		);
+	}else{
+		return (<Text style={styles.nothingText}>Nothing here!{newline} Try creating a plate and saving it from the score screen.</Text>);
+	}
   }
 }
 
@@ -151,6 +166,11 @@ bigContainer: {
 container: {
 	marginTop: 10,
 	flex: 1,
+},
+nothingText: {
+	marginTop: "45%",
+	textAlign: "center",
+	fontSize: 24,
 },
 image: {
 	width: 50,
@@ -169,17 +189,33 @@ scoreTextView: {
 	flexDirection: 'column',
 	justifyContent: "center",
 },
-scoreText: {
+scoreRed: {
 	flex: 1,
 	fontSize: 24,
 	textAlign: "right",
 	marginRight: 10,
+	color: "red",
+},
+scoreGreen: {
+	flex: 1,
+	fontSize: 24,
+	textAlign: "right",
+	marginRight: 10,
+	color: "green",
+},
+scoreAmber: {
+	flex: 1,
+	fontSize: 24,
+	textAlign: "right",
+	marginRight: 10,
+	color: "yellow",
 },
 title: {
 	flex: 1,
 	fontSize: 24,
 	textAlign: "left",
-	fontWeight: "bold"
+	fontWeight: "bold",
+	marginLeft: "5%",
 },
   
 });
