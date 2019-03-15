@@ -10,7 +10,7 @@ import { ListItem } from 'react-native-elements';
 import firebase from "./Firebase.js";
 import {SearchBar} from 'react-native-elements';
 
-var Datastore = require('react-native-local-mongodb'), 
+var Datastore = require('react-native-local-mongodb'),
 db = new Datastore({ filename: 'foods', autoload: true });
 platedb = new Datastore({ filename: 'plate', autoload: true });
 favdb = new Datastore({ filename: 'favourites', autoload: true });
@@ -82,7 +82,7 @@ class FlatListItem extends Component{
 		</TouchableOpacity>
 		);
 	}
-	
+
 	alertItemName = (item) => {
 		this.props.listParent.setState({refresh: Math.random()});
 		var isPlateIn = false;
@@ -105,7 +105,7 @@ class FlatListItem extends Component{
 			global.plate.splice(index, 1);
 			console.log(newFoodId + " Deleted");
 		}
-		
+
 		platedb.find({_id: newFoodId}, function (err, newDocs) {
 			if(newDocs.length == []){
 				platedb.update({ _id: newFoodId}, { $set: { amount: 0, group: item.group, data: item.data } }, { upsert: true }, function (err, numReplaced, upsert) {
@@ -128,13 +128,13 @@ class FlatListItem extends Component{
 		}
 		favdb.update({ _id: newFoodId}, { $set: { amount: 0, group: item.group, data: item.data } }, { upsert: true }, function (err, numReplaced, upsert) {
 		});
-	};	
+	};
 }
-   
+
 class List extends Component {
 	constructor(props){
 		super(props);
-		updateStateHome = updateStateHome.bind(this);
+		//updateStateHome = updateStateHome.bind(this);
 	}
     state = {
 	    name: '',
@@ -142,11 +142,11 @@ class List extends Component {
 	    names: [],
 		refresh: 0,
    }
-   
+
    componentDidMount(){
 	   this.showFavourites();
    }
-   
+
    onChangeText = name => {
 	  this.setState({ name });
 	  if(name.length > 2){
@@ -184,7 +184,7 @@ class List extends Component {
 	    </View>
       )
    }
-   
+
    determineGroup = (input) => {
 			input = input.toLowerCase();
 			var group = "";
@@ -420,7 +420,7 @@ class List extends Component {
 			}
 			return group;
 		}
-   
+
    showFavourites = () => {
 		function capitalizeFirstLetter(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
@@ -428,7 +428,7 @@ class List extends Component {
 
 		var foods = [];
 		var count = 0;
-		
+
 		for(let i = 0; i < global.favourites.length; i++) {
 			let entry = global.favourites[i]._id.toLowerCase();
 			var data = global.foods[entry];
@@ -443,23 +443,23 @@ class List extends Component {
 			names: foods,
 		})
    }
-   
+
     search = searchString => {
 		function capitalizeFirstLetter(string) {
 			return string.charAt(0).toUpperCase() + string.slice(1);
 		}
-		
+
 		handleStateChange = (foodlen, searchlen, foods) => {
-			
+
 		}
-		
-		
+
+
 		if(searchString.length > 0){
 			var stringToGoIntoTheRegex = searchString.toLowerCase();//
 			var regex = new RegExp(stringToGoIntoTheRegex, "g");
 			var foods = [];
 			var count = 0;
-			
+
 			for(let i = 0; i < global.nameList.length; i++) {
 				let entry = global.nameList[i];
 				if(entry.search(regex) != -1){
@@ -503,7 +503,7 @@ const styles = StyleSheet.create ({
       color: '#4f603c'
    },
    scrollStyle: {
-	  height: '80%',  
+	  height: '80%',
    },
   checkDB: {
 	  textAlign: 'center',
@@ -531,7 +531,7 @@ const styles = StyleSheet.create ({
 	  flexDirection: 'column',
   },
   itemStyle: {
-	flex: 1,  
+	flex: 1,
 	flexDirection: 'row',
 	padding: 8,
     marginTop: 3,
@@ -540,7 +540,7 @@ const styles = StyleSheet.create ({
 	justifyContent: 'center',
   },
   itemStyleSelected: {
-	flex: 1,  
+	flex: 1,
 	flexDirection: 'row',
 	padding: 8,
     marginTop: 3,

@@ -3,7 +3,8 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 
 import SideItem from '../SideItem.js';
-
+import PopulateSideItems from '../../PopulateSideItems.js';
+var r = new PopulateSideItems();
 
 //first test to ensure working correctly
 it('Test conditions working properly', async () => {

@@ -6,7 +6,7 @@
 import React from 'react';
 import { Text, ImageBackground, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-var Datastore = require('react-native-local-mongodb'), 
+var Datastore = require('react-native-local-mongodb'),
 sideItemsdb = new Datastore({ filename: 'sideItems', autoload: true });
 
 export default class SideItem extends React.Component {
@@ -19,7 +19,7 @@ state = {
 }
 constructor(props){
 	super(props);
-	updateStateHome = updateStateHome.bind(this);
+	//updateStateHome = updateStateHome.bind(this);
 }
 
 componentDidMount(){
@@ -43,7 +43,7 @@ sideItemPressed(){
 	});
 	let newBool = !this.state.isPressed;
 	this.setState({isPressed: newBool});
-	
+
 }
 
 render() {
@@ -58,7 +58,7 @@ render() {
 		drinkGrey:require('../assets/images/drinkSideGrey.png')
 	}
     return(
-	
+
 		<TouchableOpacity onPress={() => this.sideItemPressed()}>
 		<View style={this.state.isDown ? styles.bottom : styles.top}>
 			<ImageBackground
@@ -70,7 +70,7 @@ render() {
 			</ImageBackground>
 		</View>
 		</TouchableOpacity>
-		
+
 	)
   }
 }
