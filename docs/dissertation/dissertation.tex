@@ -1,223 +1,256 @@
-% This example An LaTeX document showing how to use the l3proj class to
-% write your report. Use pdflatex and bibtex to process the file, creating 
-% a PDF file as output (there is no need to use dvips when using pdflatex).
-
-% Modified 
 
 \documentclass{l3proj}
 
 \begin{document}
+\setlength{\parindent}{10ex}
+\title{Team CS25 - Nutriplotter App}
 
-\title{An Example Project}
+\author{Samuel Owen-Hughes \\
+        Max Kirker Burton \\
+        Joe Kadi \\
+        Lucy Conaghan \\
+        Max Kolle}
 
-\author{Lewis Carroll \\
-        Betty Davis \\
-        James Dean \\
-        Marilyn Monroe \\
-        John Wayne}
-
-\date{9 January 2009}
+\date{25 March 2019}
 
 \maketitle
 
 \begin{abstract}
-
-The abstract goes here
-
+This paper presents a case study of the Nutriplotter App, a healthy eating app with a focus on gamification and user interaction, developed by a group of five Computer Science students. It reflects on the software development process, the issues faced and suggestions on how to resolve them.
 \end{abstract}
 
-%% Comment out this line if you do not wish to give consent for your
-%% work to be distributed in electronic format.
 \educationalconsent
 
 \newpage
-
 %==============================================================================
 \section{Introduction}
 
-Software engineering 
+This paper presents a case study of the project undertook by Team CS25 to create the Nutriplotter mobile app. Our customer for this project was the School of Medicine, Dentistry and Nursing, and the aim was to design a game that helped teach users about healthy nutrition. The customer had done research into public perception of a balanced diet and were looking for an interactive tool to help teach users about how a balanced plate of food should look like, presented in an aesthetically pleasing and easy to understand way.
 
-This paper presents a case study of... 
+This case study will describe the progress and development of our app as well as discussing the challenges encountered over its duration. This project was a chance to implement the modern software development methods taught to us in the Professional Software Development module (PSD3). We shall explain techniques used, their effectiveness and reasoning for not using certain techniques.
+
+The app is designed using the Expo and React Native frameworks and is an offline-focused app with the only online feature being Facebook connectivity and leaderboards. The app allows users to construct a plate of food using a database of over 3000 foods \cite{mccancewiddowson} and compares nutritional values for the plate against daily recommended values \cite{drv}. The user is then given a score and told what nutrients their plate is lacking or has a surplus of. 
+
+\noindent The rest of the case study is structured as follows:
+
+\noindent \ref{sec:background}: \nameref{sec:background} presents the background of the case study discussed, describing the customer and project context, aims, objectives, initial targets and project state at the time of writing. 
+
+\noindent \ref{sec:team}: \nameref{sec:team} is a brief section on the roles taken on by each member, how these evolved over the course of development and the effect on the project caused by some members being absent for extended periods of time during both semesters.
+
+\noindent \ref{sec:development}: \nameref{sec:development} is split into 6 sections. The first is for the technical decisions made before development began and the reasoning behind them. Then one for each of the 5 development cycles. For each cycle we go into the progress made, changes to planned features, any challenges we encountered, how we overcame them and what we learned. We also reflect on the success of each stage.
+
+\noindent \ref{sec:conclusions}: \nameref{sec:conclusions} outlines the lessons that the team learned over the course of the project, the key changes that would be made in hindsight, thoughts on key areas of agile development and how these lessons can be generalized for use in other projects.
 
 
-%% Final paragraph.
-The rest of the case study is structured as follows.  Section
-\ref{sec:background} presents the background of the case study
-discussed, describing the customer and project context, aims and
-objectives and project state at the time of writing.  Sections
-\ref{sec:alice} through Section \ref{sec:managing} discuss issues that
-arose during the project...
 
 %==============================================================================
 \section{Case Study Background}
+\label{sec:background}
 
-Include details of 
+\subsection{Customer}
+The School of Medicine, Dentistry and Nursing is a branch of the University of Glasgow, who were looking for a team in the Computer Science department to help out with a long-envisioned idea. We were working for Prof. Mike Lean, who has a  peer-reviewed book \cite{lean} which made reference to the lack of professional input on nutritional apps, Mrs Janette McBride and Dr Laura Moss. Only Mrs McBride was able to attend the demonstrations on campus so there was a small break in communication between the parties that we addressed by making visits to their offices at the Royal Infirmary on a few occasions.
 
+The customer had done research into public perception of what a healthy meal looks like based on proportions/percentages of food on a plate. The findings suggested that most people were eating excessive amounts of meat (Up to half a plate) and too few vegetables. Unless the person is an athlete or dieting, they should only be trying to meet the daily recommended values for nutrients.
+
+An easy way to achieve this is the well known 5 fruit or veg a day recommendation. Over 3 meals this means that you should have 2 fruit or veg with most of your meals but the general public struggle to get 1 \cite{fruitveg}. In general, a healthy meal has half of the plate taken up by vegetables for 1 or 2 portions of the daily recommended amount. Carbohydrates should fill out the plate with enough dairy to get daily calcium amounts. However, we were told that the average Briton normally fills half their plate with meat and then carbohydrates with a small amount of vegetables. 
+
+\subsection{Aim}
+The customer imagined the app to not only have correct nutritional data, but also encourage healthier eating through graphics and coaching. Their goal was to have an app that could be used to help correct the public's view of what a healthy plate of food should look like. They also wanted the app to have a score system to make use of Gamification theory \cite{gamification} to increase user interaction. 
+
+\subsection{Market Research}
+After receiving the initial brief, we looked at similar apps to find common trends (Nutrients \cite{nutr}, MyFitnessPal \cite{myfitpal} and Make My Plate \cite{plate}) . A lot of healthy eating and diet apps already exist but most of these force their own meals upon users, and often relied on user submitted data rather than data taken from trusted, scientific sources. We found no apps that took the design of a game and also gave correct nutritional data. This gave us a clear target to aim for and gave us inspiration on what features we thought worked well in similar apps.
+
+\subsection{Initial Requirements}
+From the aim of the project, we negotiated a set of initial requirements with the customer to guide the development of the project.
 \begin{itemize}
-\item The customer organisation and background.
-\item The rationale and initial objectives for the project.
-\item The final software was delivered for the customer.
+    \item Users will be able to pick foods they want (from a small group of commonly eaten foods), which will then be shown on plate as a graphic. 
+    \item Foods on the plate will be shown as groups of their respective types. (Fruit, veg, pasta, etc.)
+    \item Upon completion of the meal, users will be shown accurate nutritional data and given a score.
+    \item Users will be able to compare scores to hopefully induce competition to increase engagement in app.
+    \item Users can edit their plates after submission with a score penalty.
+    \item A login system should be implemented.
 \end{itemize}
 
-%==============================================================================
-\section{Alice}
-\label{sec:alice}
+\subsection{Requirements Changes}
+When we went to the Royal Infirmary, Prof. Lean gave a much clearer idea about the exact way he wanted the data to be presented to maximize the ease of displaying the features he wanted. This happened in the last cycle, so we endeavoured to meet their new requirements to the best of our abilities with the time remaining. Things that he brought up included having some standard foods on the side of the plate that could be toggled. These were meant to represent snacks between meals that should also be counted in nutritional totals. Initially he requested being able to add whatever foods but we negotiated the request down to a small set of standard foods set around the plate. Mrs. McBride also had a request for additional functionality: she proposed that we add the ability to save a plate for viewing/editing at a later time, as well as adding default plates to give users an idea of how a plate should be built.
 
-ALICE \cite{alice} was beginning to get very tired of sitting by her sister
-on the bank and of having nothing to do: once or twice she had peeped into
-the book her sister was reading, but it had no pictures or conversations in
-it, ``and what is the use of a book,'' thought Alice, ``without pictures or
-conversations?'
+\subsection{Final Product Features}
+The final release given to the customer is the working app meeting all initially agreed functionality as well as requirements set out in later meetings. We were also able to include the entirety of the provided McCance and Widdowson \cite{mccancewiddowson} composition of foods dataset instead of the originally suggested small set of foods. The customer was very pleased by the flexibility and replay value this offered and encouraged us to include this.
 
-So she was considering, in her own mind (as well as she could, for the hot
-day made her feel very sleepy and stupid), whether the pleasure of making a
-daisy-chain would be worth the trouble of getting up and picking the
-daisies, when suddenly a White Rabbit with pink eyes ran close by her.
+The app opens up to the plate screen, with navigation options to get to other screens, and presents the user with an empty plate and a search bar to add foods to the plate. Recently searched foods are listed allowing users to easily re-add commonly eaten foods. There are snacks around the plate that can be toggled on or off. Once added to the plate, food quantities can be changed by tapping on the plate and using sliders or buttons when the changes need to be incremental. 
 
-There was nothing so very remarkable in that; nor did Alice think it so
-very much out of the way to hear the Rabbit say to itself ``Oh dear! Oh
-dear! I shall be too late!'' (when she thought it over afterwards it
-occurred to her that she ought to have wondered at this, but at the time it
-all seemed quite natural); but, when the Rabbit actually took a watch out
-of its waistcoat-pocket, and looked at it, and then hurried on, Alice
-started to her feet, for it flashed across her mind that she had never
-before seen a rabbit with either a waistcoat-pocket, or a watch to take out
-of it, and burning with curiosity, she ran across the field after it, and
-was just in time to see it pop down a large rabbit-hole under the hedge.
+When finished, the plate can be submitted to receive its nutritional breakdown and score. Feedback is given based on the user's performance. The user may then go back and edit their plate based on the feedback, start anew or save it under a friendly name for later use. Other features include a help screen for instructions with links to healthy eating websites, a saved plates screen where previously made plates can be reloaded and Facebook login with access to online leaderboards.
 
-In another moment down went Alice after it, never once considering how in
-the world she was to get out again.
 
-The rabbit-hole went straight on like a tunnel for some way, and then
-dipped suddenly down, so suddenly that Alice had not a moment to think
-about stopping herself before she found herself falling down what seemed to
-be a very deep well.
+\subsection{Future Features}
+Several features were discussed early in development that were eventually cut. These features included:
+\begin{itemize}
+    \item Push Notifications (Difficulties with Expo proved this to be tiresome)
+    \item Food Icons Being Draggable (Time constraints and complications with cross-platform/differing screen sizes)
+    \item Non-Facebook Login (Seemed unnecessary as the user would only be missing out on leaderboards)
+\end{itemize}
 
-Either the well was very deep, or she fell very slowly, for she had plenty
-of time as she went down to look about her, and to wonder what was going to
-happen next. First, she tried to look down and make out what she was coming
-to, but it was too dark to see anything: then she looked at the sides of
-the well, and noticed that they were filled with cupboards and
-book-shelves: here and there she saw maps and pictures hung upon pegs. She
-took down ajar from one of the shelves as she passed: it was labeled
-``ORANGE MARMALADE'' but to her great disappointment it was empty: she did
-not like to drop the jar, for fear of killing somebody underneath, so
-managed to put it into one of the cupboards as she fell past it.
+\noindent During a post-project discussion, we decided if we were to do the project again we would also like to include these features:
+\begin{itemize}
+    \item Add more Goals aside from daily recommended nutrients (e.g. A more protein weighted goal for muscle-gain)
+    \item Healthier Replacement Suggestions (e.g. Instead of Chips, Sweet Potato Wedges)
+    \item Option to hide certain categories of food (e.g. Vegetarian would hide all meats)
+\end{itemize}
+The first priority, however, for another release would be to fix the known bugs (minor) and consider the densities of each food, as this affects the nutritional accuracy of the plate's nutrient breakdown.
 
-``Well!'' thought Alice to herself ``After such a fall as this, I shall think
-nothing of tumbling down-stairs! How brave they'll all think me at home!
-Why, I wouldn't say anything about it, even if I fell off the top of the
-house!'' (which was very likely true.)
-
-Down, down, down. Would the fall never come to an end? ``I wonder how many
-miles I've fallen by this time?'' she said aloud. ``I must be getting
-somewhere near the centre of the earth. Let me see: that would be four
-thousand miles down, I think-'' (for, you see, Alice had learnt several
-things of this sort in her lessons in the school-room, and though this was
-not a very good opportunity for showing off her knowledge, as there was no
-one to listen to her, still it was good practice to say it over) `` yes
-that's about the right distance -- but then I wonder what Latitude or
-Longitude I've got to?'' (Alice had not the slightest idea what Latitude
-was, or Longitude either, but she thought they were nice grand words to
-say.)
-
-Presently she began again. ``I wonder if I shall fall fight through the
-earth! How funny it'll seem to come out among the people that walk with
-their heads downwards! The antipathies, I think-'' (she was rather glad
-there was no one listening, this time, as it didn't sound at all the right
-word) ``but I shall have to ask them what the name of the country is, you
-know. Please, Ma'am, is this New Zealand? Or Australia?'' (and she tried to
-curtsey as she spoke- fancy, curtseying as you're falling through the air!
-Do you think you could manage it?) ``And what an ignorant little girl she'll
-think me for asking! No, it'll never do to ask: perhaps I shall see it
-written up somewhere.''
-
-Down, down, down. There was nothing else to do, so Alice soon began talking
-again. ``Dinah'll miss me very much to-night, I should think!'' (Dinah was
-the cat.) ``I hope they'll remember her saucer of milk at tea-time. Dinah,
-my dear! I wish you were down here with me! There are no mice in the air,
-I'm afraid, but you might catch a bat, and that's very like a mouse, you
-know. But do cats eat bats, I wonder?'' And here Alice began to get rather
-sleepy, and went on saying to herself, in a dreamy son of way, ``Do cats eat
-bats? Do cats eat bats?'' and sometimes ``Do bats eat cats?'' for, you see, as
-she couldn't answer either question, it didn't much matter which way she
-put it. She felt that she was dozing off, and had just begun to dream that
-she was walking hand in hand with Dinah, and was saying to her, very
-earnestly, ``Now, Dinah, tell me the truth: did you ever eat a bat?'' when
-suddenly, thump! thump! down she came upon a heap of sticks and dry leaves,
-and the fall was over.
-
-Alice was not a bit hurt, and she jumped up on to her feet in a moment: she
-looked up, but it was all dark overhead: before her was another long
-passage, and the White Rabbit was still in sight, hurrying down it. There
-was not a moment to be lost: away went Alice like the wind, and was just in
-time to hear it say, as it turned a comer, ``Oh my ears and whiskers, how
-late it's getting!'' She was close behind it when she turned the comer, but
-the Rabbit was no longer to be seen: she found herself in a long, low hall,
-which was lit up by a row of lamps hanging from the roof.
-
-There were doors all round the hall, but they were all locked; and when
-Alice had been all the way down one side and up the other, trying every
-door, she walked sadly down the middle, wondering how she was ever to get
-out again.
-
-Suddenly she came upon a little three-legged table, all made of solid
-glass: there was nothing on it but a tiny golden key, and Alice's first
-idea was that this might belong to one of the doors of the hall; but, alas!
-either the locks were too large, or the key was too small, but at any rate
-it would not open any of them. However, on the second time round, she came
-upon a low curtain she had not noticed before, and behind it was a little
-door about fifteen inches high: she tried the little golden key in the
-lock, and to her great delight it fitted!
-
-\input{figures/alice}
-
-Alice opened the door (see Figure \ref{fig:alice}) and found that it
-led into a small passage, not much larger than a rat-hole: she knelt
-down and looked along the passage into the loveliest garden you ever
-saw. How she longed to get out of that dark hall, and wander about
-among those beds of bright flowers and those cool fountains, but she
-could not even get her head through the doorway; ``and even if my head
-would go through,'' thought poor Alice, ``it would be of very little
-use without my shoulders. Oh, how I wish I could shut up like a
-telescope! I think I could, if I only knew how to begin.'' For, you
-see, so many out-of-the- way things had happened lately, that Alice
-had begun to think that very few things indeed were really impossible.
 
 %==============================================================================
+\section{Team Dynamics}
+\label{sec:team}
 
-\section{Choice of Colours}
-\label{design}
+\subsection{Initial Team roles}
+We used the spare time at the start of the year before project allocation to give each member a role to manage a part of the process, with the idea being we would all be working on the code in addition to these responsibilities. In theory this would mean that there would be someone in charge of each area of the project to ensure nothing was forgotten about.
+The roles assigned were:
+\begin{itemize}
+    \item Chief Architect - Joe Kadi
+    \item Quality Assurance - Lucy Conaghan
+    \item Project Manager - Max Kirker Burton
+    \item Customer Liaison - Samuel Owen-Hughes
+    \item Tool Smith - Max Kolle
+\end{itemize}
 
-The following diagrams (especially figure \ref{fig:alice}) illustrate the
-process...
+
+\subsection{Participation}
+Almost all members of the team missed various parts or extended stretches of the project for various reasons.
+\subsubsection{Semester 1}
+All members were present for the initial meeting at Kelvin Gallery, but this would be the only time throughout the year that all 5 of us were in the same room. One member was unable to attend any lab sessions or meetings in the first semester due to housing difficulties. Others had Wednesday afternoon commitments such as work and sport that meant they couldn't attend for very long. 
+
+\subsubsection{Semester 2}
+In the second semester, one member stopped responding to any messages from the team. They replied once to say they were having health issues but never did any work or offered to make up for lost time. The member with housing issues did start to contribute in the latter parts of the second semester.
+
+\subsection{Results of these absences}
+Due to the way the team was structured at the start of the year, the long absences forced a massively increased workload onto a few members of the team. One member was made to take up nearly all front end development by themselves, after already handling all back-end issues themselves in the first semester. As the Quality Assurance member was one of the absentees, testing was only done at completion of the project and the continuous integration suite took a long time to be configured. Due to one member being forced to take up a huge workload near the end of the project, some quality control and programming practices were ignored as there was no-one to handle merge requests, etc.
+
+In retrospect, the team roles shouldn't have been so firmly set at the beginning of the year. We should have spread out the testing responsibility between more than one person and responsibilities could have been spread to the remaining members earlier, or we could have made a simplified version of the app and added in additional functionality as the costs became clearer. This is in line with the key ideas behind continuous integration \cite{ci} and agile development, and probably should have been the initial plan even without these absences. 
+
 
 %==============================================================================
-\section{Managing Dress Sense}
-\label{managing}
+\section{Development}
+\label{sec:development}
 
-In this chapter, we describe how the implemented the system.
+\subsection{Technical Decisions}
+At the start of the project we were offered the choice of making a web app or a purely native mobile app. We decided a mobile app would be more beneficial for this small scale project and because of the low amount of data being input from the user. From there we chose to use React Native as our development framework. We chose this as it allowed cross platform portability between iOS and Android devices (the customer wanted as large of a market share as possible), as well as advertising the ease of features such as push notifications and Facebook login. We wanted Facebook login as it seemed to be the easiest way to allow users to have profiles and we wouldn't have to worry about security and GDPR.
 
-%------------------------------------------------------------------------------
-\section{Kangaroo Practices}
+Using React Native also allowed us to use Expo to run the app on our phones during development to track the progress we were making and test for any errors or warnings. Near the end of our first functional release we published the app on Expo so that the customer had access to it, and could view changes as soon as we made them.
+
+We needed a way to store persistent data, and decided to use a database rather than local asynchronous storage, as databases provided a way to interrogate the large amount of data involved. At first we used SQLite, but since it didn't work as intended on certain versions of Android, we switched over to MongoDB. We also had several local JSON arrays that would read from MongoDB and save session data. Some of the data we stored included the dataset of all 3000+ foods, a user's saved plates, the current plate and their recently searched foods, as well as others.
+
+Testing was run by Jest, the built in testing environment for React Native, using snapshots for regression testing.
+
+React Native was good for our needs, very few changes or platform specific code was required. However, we would not use Expo if we were to re-develop the app. The CI and push notification issues (described in 4.5.2) were not worth the benefit of testing the app live on our phones. Instead, we would use pure React Native.
+
+\subsection{Cycle 1 - Deadline 14/11}
+\subsubsection{Progress}
+This cycle had no project development. Instead we spent time choosing, setting up and getting used to the development environment; planning specification requirements and looking into future features that could be implemented. 
+
+We spent time trying to get React Native environments working on the University lab computers but soon realized that it was too much effort compared with setting it up individually on our own laptops. We then started doing tutorials to get to grips with the language and software, committing to no development in the first cycle. 
+
+We did however work on researching similar apps, writing documentation, negotiating the requirements shown earlier in \nameref{sec:background} and drawing up wire-frames to give the customer an idea of how we envisioned the app to look. This helped greatly in understanding how our ideas differed and ensured our aims were aligned early on.
+
+We also got acquainted with the version control system that we would be using for this project (GitLab). From early in the project we ensured that branches were used for all work and issues were created any time new work was assigned or discovered. This gave the team a clear view of the work they were all expected to do and when it was expected to be done. The issue allocation could have been improved by going over all issues that breached their deadlines to ensure members weren't having problems. Later on in the project we would also include labels and deadlines for each issue, which would help us prioritise issues by importance.
+
+\subsubsection{Challenges Encountered}
+The provided system for the virtual machine (VM) wasn't enabled at the start of the year due to issues from the University. This was the first of multiple issues out of our control. It delayed the setup of our VM but the system was online shortly after this cycle concluded. We didn't have much work to do in these weeks before we met the customer, but having an unsolvable issue so early into the project was a humbling experience. The consequence of this was that we couldn't get our continuous integration up and working before work on the project begun, which led to larger problems down the road. 
+
+Little developmental progress was made (as intended) during this cycle. If we were to do something differently it would be to give all members tutorials on different technologies in the first week, then begin bare-bones production towards the end of the cycle as a means to put our learning into practice. Having a slow start meant that there was always going to be a constant increase in the amount of work to be done, and is against the continuous deployment model we were aiming for. 
+
+There was no way to have the game mechanics working for the first presentation, even if the concept was simplified as much as possible and we ignored all minor features. We should however have created the base of the app so we had something to build on come the next cycle. Building in these small steps would give us a greater idea of the costs of the features we wanted to add and give the customer a better opportunity to provide feedback.
+
+%%----------------------------------
+\subsection{Cycle 2 - Deadline 5/12}
+\subsubsection{Progress}
+The plan for this iteration was to develop a basic version of the app that would have all basic functionality except for the gameplay itself. As we thought figuring out and implementing a good gameplay solution would require much time and effort, we wanted to collaborate on development as a team in future cycles, and not have to worry about the functionality of the rest of the app.
+
+The navigation bar was added to the app as well as all the screens associated with it. The main plate screen was added with a simple background and a text input field. A help screen was given simple text and a link to a government healthy eating page was added. The settings screen was left blank as we were unsure what features would be going there.
+
+\subsubsection{Challenges Encountered}
+To import all the food's nutritional data from the provided database \cite{mccancewiddowson}, a Python script was used to generate a SQLite command for each food. These were put into a JavaScript file which was imported on the app's first launch and saved to a local JSON array. This worked seamlessly on the iOS devices but when tested on certain Android devices foods would not be stored properly. To solve this we switched from SQLite to MongoDB, which also provided a streamlined method of fetching data (as we no longer needed to rely on individual promise functions). 
+
+The navigation bar implementation was easy to figure out from other React Native examples but screen to screen navigation proved difficult to solve. This problem became a major time sink, with 3 members struggling to solve it before the 4th found a solution. The issue was a lack of understanding of the React's navigation system, and was solved by including routing paths in the AppNavigator file in the navigation folder. This problem lasted over a month and better communication would have resulted in less time being wasted.
+
+We used instant messaging (Slack, Facebook) as our main communication channel throughout the project, however during this cycle it started to become clear that this was not effective, as messages were often ignored. A more effective approach would have been to discuss issues at the start of every meeting, to identify the major issues that required collaboration to solve. A weekly stand-up \cite{standup} where members would talk about their progress and any challenges would have provided motivation and assistance to those struggling.
 
 
 
-% - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-\section{Knots and Bundles}
-\label{sec:managing}
+%%-----------------------------------
+\subsection{Cycle 3 - Deadline 22/1}
+\subsubsection{Progress}
+The goal of this iteration was to deliver a working game to the customer, with basic features such as a score system. We told the customer we could deliver this and would focus on the aesthetics and supplementary features towards the end of our project.
+
+\subsubsection{Challenges Encountered}
+There were problems with the Computer Science department's security over Christmas and access to the project repository was revoked until the problem was corrected in the new year. This delayed progress but our initial goal of delivering a working app had been overly ambitious as well. 
+
+This sort of problem could have been fixed using methods such as planning poker \cite{poker} or MoSCoW prioritization \cite{moscow}. Planning poker would have helped with understanding the issues we were facing and the actual time required to meet our goals. MoSCoW prioritization would have helped us focus on the key features as many of them were of low importance but members were committing to completing them before switching onto newer, higher priority tasks. 
+
+We underestimated the difficulty of integrating each of the components (score system, plate data, local and session databases, etc). Furthermore the lack of a version control system in the first half of the cycle resulted in members working on different solutions to the same problems. When we collated our work, additional work had to be done fixing merge conflicts and deciding whose work would actually be used. This lowered team morale as some members work was not used, and time was wasted.
+
+This could have been prevented via merge requests, however being forced to migrate to another version control system and a lack of communication made this difficult. Perhaps a simple prototype could have been developed as a proof of concept but this would have taken away from our already limited time. Instead we admitted to the customer that we hadn't met our targets and would be more careful when setting goals so we wouldn't promise features we couldn't complete. 
+
+As a temporary workaround, the member with the most recent copy of the app created a repository on git for the team to use while the system was down. We also all signed up for Trac accounts to manage our issues. These two solutions were enough for us to be able to continue our work without the security concern being much of a problem.
 
 
-%------------------------------------------------------------------------------
+%%-----------------------------------
+\subsection{Cycle 4 - Deadline 18/2}
+\subsubsection{Progress}
+The key focus for this cycle was to get the game working before the last customer meeting. Those not involved in this worked on setting up the online database for tracking Facebook users logging into the app and placing them onto the leaderboard. 
+
+Due to few tasks being completed concurrently, some members tried using pair programming to more efficiently complete work. The cost of pair programming was that it required two members to work on the issue, but if there wasn't any other pressing issues the cost can be ignored to gain the benefits of faster completion times and higher code quality \cite{pairprogramming}. This exercise proved to be effective when working on simple tasks but when we moved onto more complex tasks, the programmers would have different ideas which led to lower productivity. It would have been useful to experiment more with pair programming throughout the year, as it did result in an overall increase in quality.
+
+For the demonstration we were unable to complete the submission feature but the plate system and results screen were fully implemented. 
+
+\subsubsection{Challenges Encountered}
+Months were spent trying to get CI/CD up and running with Expo. The main issue was that Expo hosts its APKs on the cloud, and fetching a local version of it to test in an automation script proved very finicky, as the tool to fetch it required several dependencies not included in the VM's image. There was also no way to set up CI for iOS builds as this required an Apple Developer account. Eventually it was decided to test the app locally for logic errors and have Expo check for syntax errors, before automatically publishing the APK.
+
+The benefits of having a CI/CD system running were immediately noticed. Changes to external artefacts such as app icons and splash screens (which were not covered by our Jest and snapshot testing) caused the build to fail (certain images needed to be square). This may not have been noticed if we did not have CI/CD set up, and showed how critical of a system it was. Throughout the rest of the project this system would rapidly alert us of any unforeseen consequences and allow us to fix issues in minutes. Had we focused on setting this up in the first cycle we could have saved a lot of time wasted searching for issues.
+
+We also wanted to include draggable food icons to the plate screen. These would appear when a food is searched, and could be dragged onto the plate to add it, or flicked off to delete it. Unfortunately the member assigned to this stopped responding to messages two days prior to a meeting at the Royal Infirmary and we were forced to scrap this and replace it with the current, simpler solution.
+
+Originally the customer also wanted users to be able to drag segments of foods on the plate to increase their amounts. We decided due to the small size of an average mobile phone screen the ergonomics would be poor and users would become frustrated. We instead decided to implement sliders and buttons, for large and small changes respectively, which the customer agreed was the better approach. 
+
+
+%%-----------------------------------
+\subsection{Cycle 5 - Deadline 15/3}
+\subsubsection{Progress}
+In the last iteration we managed to finally get the game system working properly and added the save plate feature. Due to the slow start, we now felt the pressure to get as much work done as possible. We decided to cut some supplementary features that were low priority, such as push notifications, sounds, non-Facebook login and most of the options page. This increase of workload could have been avoided if work was managed in a more organised fashion from the start of the year.
+
+\subsubsection{Challenges Encountered}
+The pressure was increased when the University shut down the computing labs due to a bomb threat on the day we were planning our last meeting before the code deadline. This removed a huge percentage of our remaining time and forced us to stop working on features and to instead move onto documentation. This kind of unpredictable problem is why development teams should try to avoid a build up of work.
+
+However despite all these difficulties, all major features requested by the customer in the specification were completed. The Project Manager also kept in regular contact with the customer in the last few weeks providing them with updated releases to test and give feedback via a Google sheets document. This feedback allowed us to implement some supplementary features quickly, fix bugs and change features the customer did not like. This included adding the recently searched foods list (the customer was very keen on this feature being added), adding tips to the score screen and changing scores to be colour coded based on performance. 
+
+As mentioned earlier, testing was left to the end of the project due to members being absent. The snapshot tests worked fine and handled regression well. The problems came when trying to create unit tests for state in components. Due to the amount of coupling involved in the components making the game work, it was difficult to render the components so that their functions could be tested. Some of these issues were solved by commenting out lines of code from the component being tested. While not a complete fix this allowed us to test the functions, at the cost of not being able to have the CI run our test suite on new builds. In hindsight, we could have utilised test driven development \cite{tdd}, so each member would have been responsible for writing tests for code they would then implement.
+
+%==============================================================================
 \section{Conclusions}
+\label{sec:conclusions}
 
-Explain the wider lessons that you learned about software engineering,
-based on the specific issues discussed in previous sections.  Reflect
-on the extent to which these lessons could be generalised to other
-types of software project.  Relate the wider lessons to others
-reported in case studies in the software engineering literature.
+%Explain the wider lessons that you learned about software engineering,
+%based on the specific issues discussed in previous sections.  Reflect
+%on the extent to which these lessons could be generalized to other
+%types of software project.
+
+The key challenge for our project was a lack of time that was felt throughout the second half of development. A number of issues arose that compounded these problems.
+
+A big time sink that was evident throughout the project was merge conflicts. In many instances, multiple members pushed their changes to the master branch or merged their development branches to master. As a result, merge conflicts arose and would have to be corrected. The simple solution to this was to use merge requests and have an independent member review any conflicts and approve of the merge. Although we did very briefly experiment with merge requests at the start of the project, we didn't really understand how they worked or their purpose so decided not to utilise them. It wasn't until the end of the project that we realised how useful they would have been.
+
+What helped us massively in the project was keeping all our work well documented. Although team communication was lacking, by thoroughly documenting changes and code explanations on the wiki and in the code itself, we were able to understand each others code quickly. As far as possible we wanted to write code that was self-documenting and keep comments to a minimum, however since this was a completely new language and environment for all of us, and with the amount of external modules/API used, comments were more often than not necessary.
+
+We completed a team retrospective after every cycle, with the key issues being discussed using stop, start and continue prompts. This increased the teams use of issues and branching at the start of development as these were stressed heavily. A downside was that we didn't always focus on software practices. A solution to this would have been to clearly explain its purpose early in the project.
+
+Our thorough issue management helped us keep track of what needed to be done. We would immediately make issues for any problems that did and we thought would arise. At the start of the year we simply assigned issues to members, but starting around cycle three we also included priority and feature labels (e.g. bug, supplementary feature) to each issue, as well as deadlines. This let us easily sort what issues were most urgent. This system proved vital in the success of our project, but would be most effective if the entire team could be relied on to contribute.
+
+We also kept track of the minutes of each customer meeting, our following retrospectives, reflections of our previous cycles as well as evaluating our coding practices (pair programming and code reviews). This gave a physical handbook that we could refer to and ensure we never made the same mistakes twice. 
+
+To summarise, the use of modern agile development techniques greatly improved efficiency whenever implemented. We should have strived to use them more often but issues in team availability limited these opportunities. If we can see the impact of these techniques in our small scale project, the benefits are clear for applications in the real world.
+
 
 %==============================================================================
+\newpage
 \bibliographystyle{plain}
 \bibliography{dissertation}
 \end{document}
