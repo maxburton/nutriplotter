@@ -6,7 +6,9 @@ build_dissertation:
   image: blang/latex
   stage: build
   script:
-    - latexmk -pdf -cd docs/dissertation/dissertation.tex
+    - cd docs/dissertation
+    - ant clean
+    - ant build
   artifacts:
     paths:
       - "*.pdf"
