@@ -1,3 +1,5 @@
+image: openjdk:8
+
 before_script:
   - apt-get update
   - apt-get -y install ant
@@ -7,15 +9,11 @@ stages:
     - tests
     
 build_dissertation:
-  image: blang/latex
   stage: build
   script:
     - cd docs/dissertation
     - ant clean
     - ant build
-  artifacts:
-    paths:
-      - "*.pdf"
 
 build_android:
   stage: build
