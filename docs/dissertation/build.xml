@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<project basedir="." default="build" name="l3proj-casestudy-TEAM">
+<project basedir="." default="build" name="l3proj-casestudy-cs25">
   
   <target name="clean">    
     <delete>      
