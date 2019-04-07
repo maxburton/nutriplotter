@@ -5,6 +5,8 @@ stages:
 build_dissertation:
   stage: build
   script:
+    - apt-get update
+    - apt-get -y install ant
     - cd docs/dissertation
     - ant clean
     - ant build
