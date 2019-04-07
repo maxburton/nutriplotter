@@ -1,9 +1,3 @@
-image: openjdk:8
-
-before_script:
-  - sudo su
-  - apt-get -y install ant
-
 stages:
     - build
     - tests
