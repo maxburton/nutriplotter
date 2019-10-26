@@ -5,11 +5,13 @@
     "slug": "nutriplotterapp",
     "privacy": "public",
     "sdkVersion": "34.0.0",
-    "platforms": [
-      "ios",
-      "android"
-    ],
-    "version": "1.0.0",
+    "ios": {
+	    "bundleIdentifier": "com.maxkb.nutriplotter"
+	},
+	"android": {
+	    "package": "com.maxkb.nutriplotter"
+    },
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "splash": {
