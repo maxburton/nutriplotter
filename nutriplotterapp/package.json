@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
-    "@expo/vector-icons": "^10.0.0",
     "braces": "^3.0.2",
     "expo": "^34.0.0",
     "expo-asset": "~6.0.0",
@@ -47,7 +46,7 @@
     "ws": "^7.2.0"
   },
   "devDependencies": {
-    "@expo/vector-icons": "^10.0.0",
+    "@expo/vector-icons": "^10.0.6",
     "babel-preset-expo": "^6.0.0",
     "jest-expo": "^34.0.0"
   }
