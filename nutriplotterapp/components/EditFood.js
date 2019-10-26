@@ -17,7 +17,7 @@ import {
   Slider,
   ScrollView
 } from "react-native";
-import { WebBrowser } from "expo";
+import * as WebBrowser from 'expo-web-browser';
 import IconMI from "react-native-vector-icons/MaterialIcons";
 import IconFA from "react-native-vector-icons/FontAwesome";
 

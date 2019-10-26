@@ -14,15 +14,15 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
-    "expo": "^33.0.7",
+    "expo": "^34.0.0",
     "expo-cli": "^3.4.1",
     "firebase": "^5.11.1",
-    "react": "^16.8.3",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-33.0.0.tar.gz",
+    "react": "16.8.3",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.2.tar.gz",
     "react-native-dialog-input": "^1.0.7",
     "react-native-elements": "^1.2.6",
     "react-native-fbsdk": "^0.8.0",
-    "react-native-gesture-handler": "^1.4.1",
+    "react-native-gesture-handler": "~1.3.0",
     "react-native-leaderboard": "^1.0.6",
     "react-native-local-mongodb": "^2.2.9",
     "react-native-modal": "^7.0.2",
@@ -30,11 +30,18 @@
     "react-native-settings-list": "^1.8.0",
     "react-native-timeline-listview": "^0.2.3",
     "react-native-vector-icons": "^6.6.0",
-    "react-navigation": "^2.18.3"
+    "react-navigation": "^2.18.3",
+    "@expo/vector-icons": "^10.0.0",
+    "expo-asset": "~6.0.0",
+    "expo-constants": "~6.0.0",
+    "expo-facebook": "~6.0.0",
+    "expo-font": "~6.0.1",
+    "expo-sqlite": "~6.0.0",
+    "expo-web-browser": "~6.0.0"
   },
   "devDependencies": {
-    "@expo/vector-icons": "^8.1.0",
-    "babel-preset-expo": "^5.2.0",
-    "jest-expo": "^33.0.0"
+    "@expo/vector-icons": "^10.0.0",
+    "babel-preset-expo": "^6.0.0",
+    "jest-expo": "^34.0.0"
   }
 }

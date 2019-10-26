@@ -20,7 +20,7 @@ import {
 } from "react-native";
 
 import { Button } from "react-native-elements";
-import { WebBrowser } from "expo";
+import * as WebBrowser from 'expo-web-browser';
 import Modal from "react-native-modal";
 import Pie from "react-native-pie";
 

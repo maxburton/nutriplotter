@@ -26,6 +26,8 @@ import {
 } from "react-native";
 import * as Expo from "expo";
 
+import * as Facebook from 'expo-facebook';
+
 const id = "2301384936810927";
 
 const FBSDK = require("react-native-fbsdk");
@@ -46,7 +48,7 @@ export default class LoginScreen extends Component {
 
   // Attempt a login to facebook using the app id, requesting permissions to read the user profile and email address.
   login = async () => {
-    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync(
+    const { type, token } = await Facebook.logInWithReadPermissionsAsync(
       id,
       {
         permissions: ["public_profile", "email"]

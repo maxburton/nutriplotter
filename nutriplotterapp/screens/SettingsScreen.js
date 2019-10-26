@@ -3,13 +3,14 @@
 */
 
 import * as React from 'react';
-import { Constants, WebBrowser } from 'expo';
+import * as WebBrowser from 'expo-web-browser';
+import Constants from 'expo-constants';
 import {Linking, Text, View, StyleSheet, Button, ScrollView, TouchableOpacity, Alert} from 'react-native';
 import { MonoText } from '../components/StyledText';
 
 var Datastore = require("react-native-local-mongodb"),
   savedPlatesdb = new Datastore({ filename: "savedPlates", autoload: true });
-  favdb = new Datastore({ filename: 'favourites', autoload: true });
+favdb = new Datastore({ filename: 'favourites', autoload: true });
 
 export default class SettingsScreen extends React.Component {
   static navigationOptions = {

@@ -3,7 +3,8 @@
 */
 
 import * as React from 'react';
-import { Constants, WebBrowser } from 'expo';
+import * as WebBrowser from 'expo-web-browser';
+import Constants from 'expo-constants';
 import {Linking, Text, View, StyleSheet, Button, ScrollView} from 'react-native';
 import { MonoText } from '../components/StyledText';
 

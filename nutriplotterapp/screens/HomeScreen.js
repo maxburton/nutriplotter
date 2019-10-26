@@ -30,7 +30,8 @@ import {
   ImageBackground
 } from "react-native";
 import Modal from "react-native-modal";
-import { WebBrowser, SQLite } from "expo";
+import { SQLite } from 'expo-sqlite';
+import * as WebBrowser from 'expo-web-browser';
 
 import { MonoText } from "../components/StyledText";
 import getStyleSheet from "../themes/style";
