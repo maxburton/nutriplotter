@@ -15,14 +15,14 @@
   "dependencies": {
     "@expo/samples": "2.1.1",
     "braces": "^3.0.2",
-    "expo": "^34.0.0",
-    "expo-asset": "~6.0.0",
+    "expo": "^35.0.0",
+    "expo-asset": "~7.0.0",
     "expo-cli": "^3.4.1",
-    "expo-constants": "~6.0.0",
-    "expo-facebook": "~6.0.0",
-    "expo-font": "~6.0.1",
-    "expo-sqlite": "~6.0.0",
-    "expo-web-browser": "~6.0.0",
+    "expo-constants": "~7.0.0",
+    "expo-facebook": "~7.0.0",
+    "expo-font": "~7.0.0",
+    "expo-sqlite": "~7.0.0",
+    "expo-web-browser": "~7.0.1",
     "firebase": "^7.15.5",
     "handlebars": "^4.4.5",
     "js-yaml": "^3.13.1",
@@ -30,7 +30,7 @@
     "lodash.merge": "^4.6.2",
     "mem": "^5.1.1",
     "react": "16.8.3",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.2.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-35.0.0.tar.gz",
     "react-native-dialog-input": "^1.0.7",
     "react-native-elements": "^1.2.6",
     "react-native-fbsdk": "^0.8.0",
@@ -46,8 +46,8 @@
     "ws": "^7.2.0"
   },
   "devDependencies": {
-    "@expo/vector-icons": "^10.0.6",
-    "babel-preset-expo": "^6.0.0",
-    "jest-expo": "^34.0.0"
+    "@expo/vector-icons": "^10.0.0",
+    "babel-preset-expo": "^7.0.0",
+    "jest-expo": "^35.0.0"
   }
 }
