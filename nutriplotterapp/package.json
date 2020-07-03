@@ -23,7 +23,7 @@
     "expo-font": "~6.0.1",
     "expo-sqlite": "~6.0.0",
     "expo-web-browser": "~6.0.0",
-    "firebase": "^5.11.1",
+    "firebase": "^7.15.5",
     "handlebars": "^4.4.5",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.15",
