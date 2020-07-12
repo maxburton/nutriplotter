@@ -22,9 +22,9 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Dimensions,
   TextInput,
   KeyboardAvoidingView,
-  Dimensions,
   measure,
   Alert,
   ImageBackground
@@ -510,7 +510,8 @@ export default class HomeScreen extends React.Component {
 }
 
 const offset = 24;
-const { width, height } = require("Dimensions").get("window");
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
 const styles = StyleSheet.create({
   container: {
     flex: 1

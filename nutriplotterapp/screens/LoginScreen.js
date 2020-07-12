@@ -7,7 +7,6 @@ import { ExpoConfigView } from "@expo/samples";
 import React, { Component } from "react";
 import { TouchableOpacity } from "react-native";
 import { SocialIcon } from "react-native-elements";
-import Timeline from "react-native-timeline-listview";
 import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from "../components/Firebase.js";
 
