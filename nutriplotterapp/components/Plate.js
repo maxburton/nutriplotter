@@ -67,7 +67,7 @@ export default class Plate extends Component {
 
     // sort series (and colour) alphabetically by group so the pie chart displays its slices in a consistent order
     let sorted_groups = Object.keys(drawPieKeys);
-    console.log(sorted_groups);
+    //console.log(sorted_groups);
     sorted_groups.sort();
     for (let pieGroup of sorted_groups) {
       drawPieSeries.push(drawPieKeys[pieGroup]);
