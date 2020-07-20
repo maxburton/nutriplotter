@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@expo/samples": "2.1.1",
-    "@react-native-community/art": "^1.2.0",
     "braces": "^3.0.2",
     "expo": "^38.0.0",
     "expo-asset": "~8.1.7",
@@ -39,7 +38,6 @@
     "react-native-leaderboard": "^1.0.6",
     "react-native-local-mongodb": "^2.2.9",
     "react-native-modal": "^7.0.2",
-    "react-native-pie": "^1.1.2",
     "react-native-settings-list": "^1.8.0",
     "react-native-svg": "12.1.0",
     "react-native-svg-charts": "^5.4.0",
