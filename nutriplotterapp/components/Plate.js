@@ -9,23 +9,12 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
-  StyleSheet,
   View,
-  TextInput,
-  ImageBackground,
   Image,
-  Alert,
-  UIManager,
-  findNodeHandle
 } from "react-native";
 
 import { PieChart } from 'react-native-svg-charts'
-import { Button } from "react-native-elements";
-import * as WebBrowser from 'expo-web-browser';
 import Modal from "react-native-modal";
-
-import Food from "./Food";
-import SideItem from "./SideItem";
 import EditFood from "./EditFood";
 import styles from "../themes/plateStyle";
 
@@ -60,8 +49,11 @@ export default class Plate extends Component {
   // Calculate the percentages (of the total plate mass) of each group of food present on the plate and
   // return an object giving such percentages, alongside a distinct colour for each of them
   drawPie = () => {
-    let drawPieKeys = {};
+    let drawPieSeries = [];
     let drawPieColours = [];
+
+    let drawPieKeys = {};
+    let drawPieColoursMap = {};
     let plate = global.plate;
     for (let i = 0; i < plate.length; i++) {
       let group = plate[i].group;
@@ -69,14 +61,20 @@ export default class Plate extends Component {
         drawPieKeys[group] += plate[i].amount;
       } else {
         drawPieKeys[group] = plate[i].amount;
-        drawPieColours.push(global.colours[group]);
+        drawPieColoursMap[group] = global.colours[group];
       }
     }
-    let drawPieSeries = [];
-    for (let pieGroup in drawPieKeys) {
+
+    // sort series (and colour) alphabetically by group so the pie chart displays its slices in a consistent order
+    let sorted_groups = Object.keys(drawPieKeys);
+    console.log(sorted_groups);
+    sorted_groups.sort();
+    for (let pieGroup of sorted_groups) {
       drawPieSeries.push(drawPieKeys[pieGroup]);
+      drawPieColours.push(drawPieColoursMap[pieGroup]);
     }
-    return { series: drawPieSeries, colours: drawPieColours };
+
+    return { series: drawPieSeries, colours: drawPieColours};
   };
 
   // Allow the plate edit modal to appear so the user can adjust what is on their plate and how much of each is on
@@ -90,21 +88,6 @@ export default class Plate extends Component {
   };
 
   render() {
-    const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]
-
-    const randomColor = () => ('#' + ((Math.random() * 0xffffff) << 0).toString(16) + '000000').slice(0, 7)
-
-    const pieData = data
-      .filter((value) => value > 0)
-      .map((value, index) => ({
-        value,
-        svg: {
-          fill: randomColor(),
-          onPress: () => console.log('press', index),
-        },
-        key: `pie-${index}`,
-      }))
-
     var foodImages = {
       savouries: require("../assets/images/savouries.png"),
       misc: require("../assets/images/misc.png"),
@@ -146,7 +129,21 @@ export default class Plate extends Component {
       sandwich: require("../assets/images/sandwich.png"),
       grains: require("../assets/images/grains.png")
     };
-    let pieDataTemp = this.drawPie();
+
+    // Update pie chart with current data
+    let data = this.drawPie();
+    const pieData = []
+    for (let i = 0; i < data['series'].length; i++) {
+      if (data['series'][i] < 0){
+        data['series'][i] = 0;
+      }
+      pieData.push({
+        key: i+1,
+        value: data['series'][i],
+        svg: {fill: data['colours'][i]}
+      })
+    }
+
     if (!this.state.isLoaded) {
       return null;  // If the state has not been loaded properly, undefined behaviour has occurred: throw an error
     }
@@ -224,6 +221,9 @@ export default class Plate extends Component {
       );
     }
 
+    // Custom sort function, which keeps pie chart sections in input order (currently alphabetical based on group name)
+    let noSort = (a, b) => 0;
+
     return (
       <View style={styles.viewContainer}>
         <View
@@ -258,6 +258,7 @@ export default class Plate extends Component {
                 outerRadius={'100%'}
                 innerRadius={'50%'}
                 padAngle={0}
+                sort={noSort}
               />
               {renderFoods}
             </View>
