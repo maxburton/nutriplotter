@@ -11,10 +11,26 @@ const styles = StyleSheet.create({
      flex:1,
      margin: '10%'
     },
+    backgroundContainer: {
+     position: 'absolute',
+     top: 0,
+     bottom: 0,
+     left: 0,
+     right: 0,
+    },
     plate: {
      flex:1,
      alignItems: 'center',
      justifyContent: 'space-around',
+    },
+    plateImage: {
+     zIndex: 2,
+     height: 200,
+     width: 200,
+    },
+    pieChart: {
+     height: 200,
+     width: 200   
     },
     text: {
        color: '#4f603c'

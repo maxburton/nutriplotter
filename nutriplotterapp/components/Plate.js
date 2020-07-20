@@ -45,17 +45,39 @@ export default class Plate extends Component {
   constructor(props) {
     super(props);
     updateState = updateState.bind(this);
-	  updateStateHome = updateStateHome.bind(this);
+    updateStateHome = updateStateHome.bind(this);
   }
 
   componentDidMount() {
-    platedb.find({}, function(err, docs) {
+    platedb.find({}, function (err, docs) {
       this.setState();
     });
     setState = () => {
       this.setState({ isLoaded: true });
     };
   }
+
+  // Calculate the percentages (of the total plate mass) of each group of food present on the plate and
+  // return an object giving such percentages, alongside a distinct colour for each of them
+  drawPie = () => {
+    let drawPieKeys = {};
+    let drawPieColours = [];
+    let plate = global.plate;
+    for (let i = 0; i < plate.length; i++) {
+      let group = plate[i].group;
+      if (group in drawPieKeys) {
+        drawPieKeys[group] += plate[i].amount;
+      } else {
+        drawPieKeys[group] = plate[i].amount;
+        drawPieColours.push(global.colours[group]);
+      }
+    }
+    let drawPieSeries = [];
+    for (let pieGroup in drawPieKeys) {
+      drawPieSeries.push(drawPieKeys[pieGroup]);
+    }
+    return { series: drawPieSeries, colours: drawPieColours };
+  };
 
   // Allow the plate edit modal to appear so the user can adjust what is on their plate and how much of each is on
   platePressed = () => {
@@ -70,19 +92,19 @@ export default class Plate extends Component {
   render() {
     const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]
 
-        const randomColor = () => ('#' + ((Math.random() * 0xffffff) << 0).toString(16) + '000000').slice(0, 7)
+    const randomColor = () => ('#' + ((Math.random() * 0xffffff) << 0).toString(16) + '000000').slice(0, 7)
 
-        const pieData = data
-            .filter((value) => value > 0)
-            .map((value, index) => ({
-                value,
-                svg: {
-                    fill: randomColor(),
-                    onPress: () => console.log('press', index),
-                },
-                key: `pie-${index}`,
-            }))
-      
+    const pieData = data
+      .filter((value) => value > 0)
+      .map((value, index) => ({
+        value,
+        svg: {
+          fill: randomColor(),
+          onPress: () => console.log('press', index),
+        },
+        key: `pie-${index}`,
+      }))
+
     var foodImages = {
       savouries: require("../assets/images/savouries.png"),
       misc: require("../assets/images/misc.png"),
@@ -124,6 +146,7 @@ export default class Plate extends Component {
       sandwich: require("../assets/images/sandwich.png"),
       grains: require("../assets/images/grains.png")
     };
+    let pieDataTemp = this.drawPie();
     if (!this.state.isLoaded) {
       return null;  // If the state has not been loaded properly, undefined behaviour has occurred: throw an error
     }
@@ -133,7 +156,7 @@ export default class Plate extends Component {
     let percentageSoFar = 0;
     let groupsIn = [];
     let amounts = [];
-    
+
     // For each food group for every food on the plate
     for (let i = 0; i < plate.length; i++) {
       let group = plate[i].group;
@@ -155,7 +178,7 @@ export default class Plate extends Component {
     // of the plate it takes up.
     for (let i = 0; i < amounts.length; i++) {
       let amount = amounts[i].amount;
-      let imageScale = 15+100*Math.sin(amount/310); // Limit image scaling factor to keep it within the plate
+      let imageScale = 15 + 100 * Math.sin(amount / 310); // Limit image scaling factor to keep it within the plate
       let oldPercentage = percentageSoFar;
       percentageSoFar += amount;
       let midPoint = Math.floor((percentageSoFar + oldPercentage) / 2);
@@ -221,15 +244,22 @@ export default class Plate extends Component {
           }}
         >
           <TouchableOpacity onPress={() => this.platePressed()}>
-            <View>
-            {/* Pie chart rendered here */}
-              <ImageBackground
+            <View style={styles.backgroundContainer}>
+              {/* Pie chart rendered here */}
+              <Image
                 alignContent={"center"}
-                style={StyleSheet.create({ zIndex: 2 })}
+                style={styles.plateImage}
                 source={require("../assets/images/plate.png")}
-              >
-
-              </ImageBackground>
+              />
+            </View>
+            <View>
+              <PieChart 
+                style={styles.pieChart} data={pieData} 
+                outerRadius={'100%'}
+                innerRadius={'50%'}
+                padAngle={0}
+              />
+              {renderFoods}
             </View>
           </TouchableOpacity>
         </View>
@@ -242,9 +272,9 @@ export default class Plate extends Component {
               borderColor: "#eee",
               borderWidth: 2,
               marginTop: "90%"
-						}}
+            }}
           >
-						
+
             <TouchableOpacity
               onPress={() => this.setState({ isModalVisible: false })}
             >
@@ -270,7 +300,7 @@ export default class Plate extends Component {
 
   // Give the % of the pie chart as a given nutrition score, which dynamically updates to reflect
   // what's on the plate.
-  renderPieSeries = function() {
+  renderPieSeries = function () {
     return [this.state.nutritionScore];
   };
 
@@ -297,12 +327,12 @@ export default class Plate extends Component {
   // Remove a food from the plate database
   deleteItem = searchString => {
     var dbQuery = "select name from foods;";
-    var promise = new Promise(function(resolve, reject) {
-      db.transaction(function(transaction) {
+    var promise = new Promise(function (resolve, reject) {
+      db.transaction(function (transaction) {
         transaction.executeSql(
           dbQuery,
           [],
-          function(transaction, result) {
+          function (transaction, result) {
             resolve(JSON.stringify(result)); // here the returned Promise is resolved
           },
           nullHandler,
