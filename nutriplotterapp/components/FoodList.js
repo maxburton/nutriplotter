@@ -473,21 +473,26 @@ class List extends Component {
 		
 
 		// Collect all of the food items present in the favourites table of the database into a list of objects
-		// to display.
+		// to display. If food does not exist locally (i.e. hand-picked dataset), ignore it.
     for (let i = 0; i < global.favourites.length; i++) {
-      let entry = global.favourites[i]._id.toLowerCase();
-      var data = global.foods[entry];
-      var formattedString = entry.replace(/['"]+/g, "");
-      formattedString = capitalizeFirstLetter(formattedString);
-      var group = this.determineGroup(data.group.toLowerCase());
-      foods.push({
-        id: count,
-        name: formattedString,
-        group: group,
-        data: data
-      });
-      count++;
-		}
+      try {
+          let entry = global.favourites[i]._id.toLowerCase();
+          var data = global.foods[entry];
+          console.log(data);
+          var formattedString = entry.replace(/['"]+/g, "");
+          formattedString = capitalizeFirstLetter(formattedString);
+          var group = this.determineGroup(data["group"].toLowerCase());
+          foods.push({
+            id: count,
+            name: formattedString,
+            group: group,
+            data: data
+          });
+          count++;
+		} catch (TypeError) {
+            console.log("Food does not exist in database, has the DB been changed recently? (i.e. hand-picked dataset)");
+        }
+    }
     this.setState({
       test: "Recently Searched:",
       names: foods

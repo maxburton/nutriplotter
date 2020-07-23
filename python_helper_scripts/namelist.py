@@ -196,6 +196,6 @@ with open('populateArray.js', 'w') as output:
             else:
                 output.write("  \"" + key + "\": " + food[key] + ",\n")
         output.write("}\n")
-    output.write("}}\n")
+    output.write("}}}\n")
 
 print("Output written to files. Please move the file to the ./nutriplotterapp directory.")
