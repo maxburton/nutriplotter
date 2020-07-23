@@ -4,3 +4,4 @@
 *.log
 
 nutriplotterapp/.idea/*
+python_helper_scripts/*.js
