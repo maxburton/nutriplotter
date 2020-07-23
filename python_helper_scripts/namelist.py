@@ -198,4 +198,8 @@ with open('populateArray.js', 'w') as output:
         output.write("}\n")
     output.write("}}}\n")
 
-print("Output written to files. Please move the file to the ./nutriplotterapp directory.")
+print("Output written to files. Please move the populateArray.js and populateNameList.js files to the "
+      "./nutriplotterapp directory.")
+print("(NOT RECOMMENDED:) If you want to update the mongodb DB with the same subset of foods, also copy the "
+      "populateDatabase.js file. This will likely cause old versions of the app to crash as it may refer to foods that "
+      "no longer exist.")
