@@ -13,28 +13,17 @@ import Plate from "../components/Plate.js";
 import SideItem from "../components/SideItem.js";
 import firebase from "../components/Firebase.js";
 import "./LoginScreen";
-import { Card, Button } from "react-native-elements";
+import { Button } from "react-native-elements";
 //Initialise firebase database
 import {
-  Image,
-  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
   Dimensions,
-  TextInput,
   KeyboardAvoidingView,
-  measure,
-  Alert,
-  ImageBackground
 } from "react-native";
 import Modal from "react-native-modal";
-import { SQLite } from 'expo-sqlite';
-import * as WebBrowser from 'expo-web-browser';
-
-import { MonoText } from "../components/StyledText";
-import getStyleSheet from "../themes/style";
 
 var Datastore = require("react-native-local-mongodb"),
   platedb = new Datastore({ filename: "plate", autoload: true });
@@ -82,12 +71,12 @@ export default class HomeScreen extends React.Component {
     firebase
       .database()
       .ref("scores/")
-      .on("value", function(snapshot) {
+      .on("value", function (snapshot) {
         var returnArr = [];
         global.orgDict = {};
         currentscore = 0;
 
-        snapshot.forEach(function(childSnapshot) {
+        snapshot.forEach(function (childSnapshot) {
           var item = childSnapshot.val();
           item.key = childSnapshot.key;
 
@@ -138,6 +127,10 @@ export default class HomeScreen extends React.Component {
     }
   }
 
+  getScore(nutrientTotal, limit) {
+    return Math.round(((nutrientTotal / limit) * 10000) / 100)
+  }
+
   // Calculate the overall score of the meal from how much of each nutrient is present, if it's at, above or
   // below the recommended value.
   calculateScore() {
@@ -160,63 +153,72 @@ export default class HomeScreen extends React.Component {
     let dangerLevel = 500;
     let warnings = new Array();
     for (var key in global.totals) {
-	  console.log(score);
+      console.log(score);
       let nutrientTotal = global.totals[key];
       let operator = idealNutrients[key][0];
       let weight = 1000 / idealNutrients[key][1];
       if (operator == "-") {
+        // if nutrient has a range requirement
         let min = idealNutrients[key][2];
         let max = idealNutrients[key][3];
         if (nutrientTotal < min) {
           let pointLoss = Math.round((min - nutrientTotal) * weight);
-		  if(pointLoss > 1000) {pointLoss = 1000}
+          if (pointLoss > 1000) { pointLoss = 1000 }
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "-", Math.round(((nutrientTotal/min)*10000)/100)]);
+            warnings.push([key, "-", this.getScore(nutrientTotal, min)]);
+          } else{
+            // if nutrient is not perfect but also not dangerously low
+            warnings.push([key, "ok", this.getScore(nutrientTotal, min)]);
           }
         } else if (nutrientTotal > max) {
           let pointLoss = Math.round((nutrientTotal - max) * weight);
-		  if(pointLoss > 1000) {pointLoss = 1000}
+          if (pointLoss > 1000) { pointLoss = 1000 }
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "+", Math.round(((nutrientTotal/max)*10000)/100)]);
+            warnings.push([key, "+", this.getScore(nutrientTotal, max)]);
+          } else{
+            warnings.push([key, "ok", this.getScore(nutrientTotal, max)]);
           }
-		  if (pointLoss == 0){
-			warnings.push([key, "perfect"]);
-		  }
-        } else{
-			warnings.push([key, "perfect"]);
-		  }
+        } else {
+          warnings.push([key, "perfect", 100]);
+        }
       } else if (operator == "<") {
+        // if nutrient has a maximum requirement
         let max = idealNutrients[key][1];
         if (nutrientTotal > max) {
           let pointLoss = Math.round((nutrientTotal - max) * weight);
-		  if(pointLoss > 1000) {pointLoss = 1000}
+          if (pointLoss > 1000) { pointLoss = 1000 }
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "+", Math.round(((nutrientTotal/max)*10000)/100)]);
+            warnings.push([key, "+", this.getScore(nutrientTotal, max)]);
+          } else{
+            warnings.push([key, "ok", this.getScore(nutrientTotal, max)]);
           }
         } else {
-          warnings.push([key, "perfect"]);
+          warnings.push([key, "perfect", this.getScore(nutrientTotal, max)]);
         }
       } else if (operator == ">") {
+        // if nutrient has a minimum requirement
         let min = idealNutrients[key][1];
         if (nutrientTotal < min) {
           let pointLoss = Math.round((min - nutrientTotal) * weight);
-		  if(pointLoss > 1000) {pointLoss = 1000}
+          if (pointLoss > 1000) { pointLoss = 1000 }
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "-", Math.round(((nutrientTotal/min)*10000)/100)]);
+            warnings.push([key, "-", this.getScore(nutrientTotal, min)]);
+          } else{
+            warnings.push([key, "ok", this.getScore(nutrientTotal, min)]);
           }
         } else {
-          warnings.push([key, "perfect"]);
+          warnings.push([key, "perfect", this.getScore(nutrientTotal, min)]);
         }
       }
     }
 
     // For every time the user decides to go back from `Submit Plate` and continue working on their meal,
-    // penalise them 250 points.
-    score -= global.tweaks * 250;
+    // penalise them some points.
+    score -= global.tweaks * global.tweakPenalty;
     if (score < 0) {
       score = 0;
     }

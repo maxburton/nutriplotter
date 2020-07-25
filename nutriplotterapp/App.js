@@ -103,6 +103,7 @@ export default class App extends React.Component {
 	var q = new popList();
 	var r = new popSideItems();
 	global.tweaks = 0;
+    global.tweakPenalty = 250;
 	global.plate = [];
 	global.totals = {};
 	global.savedPlates = new Array();

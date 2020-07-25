@@ -5,14 +5,14 @@ nutriplotter notes
 -when keyboard is up, change submit button text and function to return to plate view
 -scoring system - revamp to 100%?
 -learn more button for each nutrient to explain nutrient rich foods and dangers of under/overdosing
--on score screen mention all nutrients even if they're only 'ok'
--check calcium levels if theyre correct
--check colour of veg segment - if white, change colour
+X-on score screen mention all nutrients even if they're only 'ok'
+X-check calcium levels if theyre correct (Seems ok to me)
+X-check colour of veg segment - if white, change colour (doesn't look white to me)
 -delete individual saved plates
 -check if scores are being calculated correctly
--descriptions for each side items - v2 have dropdowns/modals for each
+-descriptions for each side items (e.g. fruit, dairy, drink) - v2 have dropdowns/modals for each
 -remove upper limit of plate? it's 100% of the plate no matter what
--replace dangerously low with very low
+X-replace dangerously low with very low
 -make android version look better
 
 Optional:
