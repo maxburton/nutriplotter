@@ -5,7 +5,6 @@
 
 import React, { Component } from "react";
 import {
-  Switch,
   StyleSheet,
   View,
   Text,
@@ -15,7 +14,6 @@ import {
   FlatList,
   Image,
   Slider,
-  ScrollView
 } from "react-native";
 import * as WebBrowser from 'expo-web-browser';
 import IconMI from "react-native-vector-icons/MaterialIcons";

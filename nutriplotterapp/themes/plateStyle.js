@@ -30,7 +30,8 @@ const styles = StyleSheet.create({
     },
     pieChart: {
      height: 200,
-     width: 200   
+     width: 200,
+    zIndex: 3,     
     },
     text: {
        color: '#4f603c'

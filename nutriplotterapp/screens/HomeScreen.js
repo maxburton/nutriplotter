@@ -181,7 +181,7 @@ export default class HomeScreen extends React.Component {
             warnings.push([key, "ok", this.getScore(nutrientTotal, max)]);
           }
         } else {
-          warnings.push([key, "perfect", 100]);
+          warnings.push([key, "perfect", this.getScore(nutrientTotal, max)]);
         }
       } else if (operator == "<") {
         // if nutrient has a maximum requirement

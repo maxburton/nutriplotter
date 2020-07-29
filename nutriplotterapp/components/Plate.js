@@ -256,7 +256,7 @@ export default class Plate extends Component {
               <PieChart 
                 style={styles.pieChart} data={pieData} 
                 outerRadius={'100%'}
-                innerRadius={'50%'}
+                innerRadius={'80%'}
                 padAngle={0}
                 sort={noSort}
               />
@@ -265,24 +265,25 @@ export default class Plate extends Component {
           </TouchableOpacity>
         </View>
         <Modal backdropOpacity={0} isVisible={this.state.isModalVisible}>
-          <ScrollView
-            style={{
-              flex: 1,
-              backgroundColor: "#fff",
-              borderRadius: 4,
-              borderColor: "#eee",
-              borderWidth: 2,
-              marginTop: "90%"
-            }}
-          >
-
+          <View 
+              style={{
+                flex: 1,
+                backgroundColor: "#fff",
+                borderRadius: 4,
+                borderColor: "#eee",
+                borderWidth: 2,
+                marginTop: "90%"
+              }}>
             <TouchableOpacity
               onPress={() => this.setState({ isModalVisible: false })}
             >
               <Text style={styles.backButton}>Back to Plate</Text>
             </TouchableOpacity>
+          
+          <ScrollView>
             <EditFood />
           </ScrollView>
+          </View>
         </Modal>
       </View>
     );

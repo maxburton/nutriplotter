@@ -130,9 +130,9 @@ macro_array = []
 with open(filenames[0]+".csv") as csvfile:
     readCSV = csv.reader(csvfile, delimiter=',')
     bigtext = "db.insert(["
-    linenum = 0
+    linenum = 1
     for row in readCSV:
-        if linenum >= 3:
+        if linenum > 4:
             if get_only_desired_ids(linenum):
                 totalfibre = (float(beautify(row[24])) + float(beautify(row[25])))
                 totalfibre = "%.2f" % round(totalfibre,2)
@@ -155,9 +155,9 @@ with open(filenames[0]+".csv") as csvfile:
 inorganics_array = []
 with open(filenames[1]+".csv") as csvfileinorg:
     readCSVinorg = csv.reader(csvfileinorg, delimiter=',')
-    linenum = 0
+    linenum = 1
     for row in readCSVinorg:
-        if linenum >= 3:
+        if linenum > 4:
             if get_only_desired_ids(linenum):
 
                 inorganics_dict = {
@@ -169,9 +169,9 @@ with open(filenames[1]+".csv") as csvfileinorg:
 vitamin_array = []
 with open(filenames[2]+".csv") as csvfilevits:
     readCSVvits = csv.reader(csvfilevits, delimiter=',')
-    linenum = 0
+    linenum = 1
     for row in readCSVvits:
-        if linenum >= 3:
+        if linenum > 4:
             if get_only_desired_ids(linenum):
                 totalvitA = (float(beautify(row[7])) + float(beautify(row[8])))
                 totalvitA = "%.2f" % round(totalvitA, 2)
