@@ -536,7 +536,7 @@ class List extends Component {
         });
       } else {
         this.setState({
-          test: "No foods found matching that criteria, please try again using single word queries (e.g. bread) and scrolling through the list",
+          test: "No foods found matching that criteria, please try again using single word queries (e.g. chicken) and scrolling through the list",
           names: foods
         });
       }

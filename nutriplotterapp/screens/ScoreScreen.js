@@ -97,7 +97,7 @@ export default class ScoreScreen extends React.Component {
 			if (operator == "perfect") {
 				// Use renderWarnings.unshift to put new item at the beginning of the array
 				renderWarnings.push(
-					<Text style={styles.textGreen}>Perfect! Well done!</Text>
+					<Text style={styles.textGreen}>Perfect!</Text>
 				)
 			} else if (operator == "ok") {
 				renderWarnings.push(
@@ -124,7 +124,7 @@ export default class ScoreScreen extends React.Component {
 						submitInput={(inputText) => { this.savePlate(inputText, plate, score) }}
 						closeDialog={() => { this.setState({ isDialogVisible: false }) }}>
 					</DialogInput>
-					<Text style={score < 4333 ? styles.scoreRed : score < 8666 ? styles.scoreAmber : styles.scoreGreen}>You Scored: {score}/13000 points!{newline}</Text>
+					<Text style={score < 4333 ? styles.scoreRed : score < 8666 ? styles.scoreAmber : styles.scoreGreen}>You Scored: {score}/13000 points!</Text>
 					<Text style={styles.textAdjustments}>You made {tweaks} adjustment(s) to your plate, and your score has been reduced by {tweaks * global.tweakPenalty} points.</Text>
 					<View style={styles.row}>
 						<View style={styles.columnNames}>
@@ -164,19 +164,20 @@ const styles = StyleSheet.create({
 		flexDirection: 'row'
 	},
 	columnNames: {
-		flex: 3,
+
 		flexDirection: 'column'
 	},
 	columnAdvice: {
-		flex: 5,
+
 		flexDirection: 'column'
 	},
 	columnScore: {
-		flex: 3,
+		flex: 1,
 		flexDirection: 'column'
 	},
 	scoreRed: {
 		marginTop: offset,
+		marginBottom: offset,
 		flex: 1,
 		fontSize: 24,
 		textAlign: "center",
@@ -184,6 +185,7 @@ const styles = StyleSheet.create({
 	},
 	scoreAmber: {
 		marginTop: offset,
+		marginBottom: offset,
 		flex: 1,
 		fontSize: 24,
 		textAlign: "center",
@@ -191,6 +193,7 @@ const styles = StyleSheet.create({
 	},
 	scoreGreen: {
 		marginTop: offset,
+		marginBottom: offset,
 		flex: 1,
 		fontSize: 24,
 		textAlign: "center",
@@ -206,7 +209,7 @@ const styles = StyleSheet.create({
 		marginRight: offset,
 	},
 	textNames: {
-		flex: 1,
+
 		marginTop: offset,
 		fontSize: offset,
 		textAlign: "left",
@@ -222,7 +225,7 @@ const styles = StyleSheet.create({
 		marginRight: offset,
 	},
 	text: {
-		flex: 1,
+
 		marginTop: offset,
 		fontSize: offset,
 		textAlign: "center",
@@ -230,21 +233,21 @@ const styles = StyleSheet.create({
 		marginRight: offset,
 	},
 	textGreen: {
-		flex: 1,
+
 		marginTop: offset,
 		fontSize: offset,
 		textAlign: "left",
 		color: "green",
 	},
 	textRed: {
-		flex: 1,
+
 		marginTop: offset,
 		fontSize: offset,
 		textAlign: "left",
 		color: "red",
 	},
 	textGrey: {
-		flex: 1,
+
 		marginTop: offset,
 		fontSize: offset,
 		textAlign: "left",
