@@ -65,10 +65,10 @@ export default class Plate extends Component {
       }
     }
 
-    // sort series (and colour) alphabetically by group so the pie chart displays its slices in a consistent order
     let sorted_groups = Object.keys(drawPieKeys);
+    // sort series (and colour) alphabetically by group so the pie chart displays its slices in a consistent order
     //console.log(sorted_groups);
-    sorted_groups.sort();
+    //sorted_groups.sort();
     for (let pieGroup of sorted_groups) {
       drawPieSeries.push(drawPieKeys[pieGroup]);
       drawPieColours.push(drawPieColoursMap[pieGroup]);
@@ -177,6 +177,10 @@ export default class Plate extends Component {
     for (let i = 0; i < amounts.length; i++) {
       totalPlateWeight += amounts[i].amount;
     }
+    if(totalPlateWeight <= 0){
+      totalPlateWeight = 1;
+    }
+    let numOfZeroFoods = 0;
     for (let i = 0; i < amounts.length; i++) {
       let amountGrams = amounts[i].amount;
       // get amount in percentage
@@ -201,8 +205,13 @@ export default class Plate extends Component {
         left = 10 + Math.floor(20 * (midPoint * 0.04 - 3));
       }
       if (amount == 0) {
-        top = 45;
-        left = 45;
+        top = -20;
+        left = 10 + (numOfZeroFoods * 10);
+        numOfZeroFoods += 1;
+      }
+      if (amount == 100) {
+        top = 35;
+        left = 38;
       }
       let topString = top + "%";
       let leftString = left + "%";
