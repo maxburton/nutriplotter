@@ -216,7 +216,7 @@ export default class Plate extends Component {
             style={{ height: imageScale, width: imageScale }}
             source={foodImages[group]}
           />
-          <Text style={{ textAlign: "center" }}>{amount}%</Text>
+          <Text style={{ textAlign: "center" }}>{amount}g</Text>
         </View>
       );
     }

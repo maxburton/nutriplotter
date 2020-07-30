@@ -15,37 +15,44 @@ import {
   Image,
   Slider,
 } from "react-native";
-import * as WebBrowser from 'expo-web-browser';
 import IconMI from "react-native-vector-icons/MaterialIcons";
 import IconFA from "react-native-vector-icons/FontAwesome";
 
 var Datastore = require("react-native-local-mongodb"),
   platedb = new Datastore({ filename: "plate", autoload: true });
 
-import getStyleSheet from "../themes/style";
-
 // Represents a food item in a list of food
 class FlatListItem extends Component {
   state = {
     grams: this.props.item.name[1],
+    gramsInTransition: this.props.item.name[1],
+    max: this.props.item.name[1] + 100,
+    min: (this.props.item.name[1] <= 100) ? 0 : this.props.item.name[1] - 100,
     maximum: global.maximum, // The amount of space left available on the plate
     refresh: 0
   };
   // Update the amount of this particular food item in the plate array and the plate database
-  updatePlate = val => {
-    this.props.flatListParent.updateChild(val);
-    this.props.flatListParent.setState({ refresh: 1 });
+  updatePlate = sliderVal => {
+    let newVal = this.updateValue(sliderVal);
+    this.props.flatListParent.updateChild(newVal);
+    this.props.flatListParent.setState({ refresh: 1});
+    if(newVal <= 100){
+      sliderMin = 0;
+    }else{
+      sliderMin = newVal - 100;
+    }
+    this.setState({ grams: newVal, min: sliderMin, max: newVal + 100, refresh: Math.random() });
     for (let i = 0; i < global.plate.length; i++) {
       if (
         global.plate[i]._id.toLowerCase() ==
         this.props.item.name[0].toLowerCase()
       ) {
-        global.plate[i].amount = val;
+        global.plate[i].amount = newVal;
       }
     }
     platedb.update(
       { _id: this.props.item.name[0].toLowerCase() },
-      { $set: { amount: val } },
+      { $set: { amount: newVal } },
       {},
       function(err, numReplaced) {
         platedb.find({}, function(err, docs) {});
@@ -57,10 +64,9 @@ class FlatListItem extends Component {
   plusButtonPressed = () => {
     var oldWeight = this.state.grams;
     var newWeight = oldWeight + 1;
-    if (!(newWeight > global.maximum + oldWeight)) {
-      this.sliderChange(newWeight);
-      this.updatePlate(newWeight);
-    }
+
+    this.sliderChange(newWeight);
+    this.updatePlate(newWeight);
   };
 
   // Decrease the amount of this food item by 1g
@@ -145,8 +151,8 @@ class FlatListItem extends Component {
           <Slider
             style={styles.slider}
             step={1}
-            minimumValue={0}
-            maximumValue={this.state.grams + global.maximum}
+            minimumValue={this.state.min}
+            maximumValue={this.state.max}
             value={this.state.grams}
             onValueChange={val => this.sliderChange(val)}
             onSlidingComplete={val => this.updatePlate(val)}
@@ -156,17 +162,16 @@ class FlatListItem extends Component {
               <IconFA name="plus-circle" size={22} />
             </Text>
           </TouchableOpacity>
-          <Text style={styles.sliderText}>{this.state.grams}%</Text>
+          <Text style={styles.sliderText}>{this.state.grams}g</Text>
         </View>
       </View>
     );
   }
   // Upon moving the food amount slider, change the amount of this food on the plate and update and rerender
   // the pie chart to match.
-  sliderChange = newVal => {
-    global.maximum -= newVal - this.state.grams;
-    this.setState({ grams: newVal, maximum: global.maximum });
-    console.log("Percentage of plate left: " + this.state.maximum);
+  sliderChange = sliderVal => {
+    let newVal = this.updateValue(sliderVal);
+    this.setState({ grams: newVal });
     for (let i = 0; i < global.plate.length; i++) {
       if (
         global.plate[i]._id.toLowerCase() ==
@@ -178,6 +183,13 @@ class FlatListItem extends Component {
     this.rerenderPie(Math.random());
     this.props.flatListParent.setState({ refresh: Math.random() });
   };
+
+  updateValue = sliderVal => {
+    if(sliderVal < 0){
+      sliderVal = 0;
+    }
+    return sliderVal;
+  }
 
   // Change one of the values present in the pie chart
   rerenderPie = newVal => {
@@ -206,7 +218,7 @@ class FlatListItem extends Component {
     this.setState({ grams: this.props.item.name[1] });
   };
 
-  // Work out based on the food present, how much space is left on the plate
+  // Work out based on the food present, how much space is left on the plate (deprecated)
   recalculateMaximum = () => {
     global.maximum = 100;
     for (let i = 0; i < global.plate.length; i++) {
@@ -246,7 +258,7 @@ export default class EditFoodScreen extends Component {
     refresh: 0
   };
 
-  // Work out based on the food present, how much space is left on the plate
+  // Work out based on the food present, how much space is left on the plate (deprecated)
   recalculateMaximum = () => {
     global.maximum = 100;
     for (let i = 0; i < global.plate.length; i++) {

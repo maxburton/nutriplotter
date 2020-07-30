@@ -164,11 +164,9 @@ const styles = StyleSheet.create({
 		flexDirection: 'row'
 	},
 	columnNames: {
-
 		flexDirection: 'column'
 	},
 	columnAdvice: {
-
 		flexDirection: 'column'
 	},
 	columnScore: {

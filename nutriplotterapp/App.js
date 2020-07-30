@@ -197,7 +197,7 @@ export default class App extends React.Component {
       vitC: 0
     };
     if (foodDocs.length > 0) {
-		let multiplier = 0.05; // 0.01 to get nutrients per gram, then x5 to have a total plate weight of 500g
+		let multiplier = 0.01; // nutrients are listed per 100g, so we multiply by 0.01 so 1g on the plate is represented as 1g of nutrients.
         for (let i = 0; i < foodDocs.length; i++) {
 			
 			global.totals["calories"] += foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);
