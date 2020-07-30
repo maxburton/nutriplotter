@@ -173,8 +173,15 @@ export default class Plate extends Component {
     }
     // For every amount present on the plate, scale the related food group icon proportionately to the percentage
     // of the plate it takes up.
+    let totalPlateWeight = 0;
     for (let i = 0; i < amounts.length; i++) {
-      let amount = amounts[i].amount;
+      totalPlateWeight += amounts[i].amount;
+    }
+    for (let i = 0; i < amounts.length; i++) {
+      let amountGrams = amounts[i].amount;
+      // get amount in percentage
+      let amount = (amountGrams / totalPlateWeight) * 100;
+      amount = Math.round(amount);
       let imageScale = 15 + 100 * Math.sin(amount / 310); // Limit image scaling factor to keep it within the plate
       let oldPercentage = percentageSoFar;
       percentageSoFar += amount;
@@ -216,7 +223,7 @@ export default class Plate extends Component {
             style={{ height: imageScale, width: imageScale }}
             source={foodImages[group]}
           />
-          <Text style={{ textAlign: "center" }}>{amount}g</Text>
+          <Text style={{ textAlign: "center" }}>{amountGrams}g</Text>
         </View>
       );
     }
