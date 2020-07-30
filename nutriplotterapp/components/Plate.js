@@ -279,7 +279,7 @@ export default class Plate extends Component {
                 borderRadius: 4,
                 borderColor: "#eee",
                 borderWidth: 2,
-                marginTop: "90%"
+                marginTop: "110%"
               }}>
             <TouchableOpacity
               onPress={() => this.setState({ isModalVisible: false })}
