@@ -74,7 +74,7 @@ export default class Plate extends Component {
       drawPieColours.push(drawPieColoursMap[pieGroup]);
     }
 
-    return { series: drawPieSeries, colours: drawPieColours};
+    return { series: drawPieSeries, colours: drawPieColours };
   };
 
   // Allow the plate edit modal to appear so the user can adjust what is on their plate and how much of each is on
@@ -134,13 +134,13 @@ export default class Plate extends Component {
     let data = this.drawPie();
     const pieData = []
     for (let i = 0; i < data['series'].length; i++) {
-      if (data['series'][i] < 0){
+      if (data['series'][i] < 0) {
         data['series'][i] = 0;
       }
       pieData.push({
-        key: i+1,
+        key: i + 1,
         value: data['series'][i],
-        svg: {fill: data['colours'][i]}
+        svg: { fill: data['colours'][i] }
       })
     }
 
@@ -177,7 +177,7 @@ export default class Plate extends Component {
     for (let i = 0; i < amounts.length; i++) {
       totalPlateWeight += amounts[i].amount;
     }
-    if(totalPlateWeight <= 0){
+    if (totalPlateWeight <= 0) {
       totalPlateWeight = 1;
     }
     let numOfZeroFoods = 0;
@@ -190,20 +190,42 @@ export default class Plate extends Component {
       let oldPercentage = percentageSoFar;
       percentageSoFar += amount;
       let midPoint = Math.floor((percentageSoFar + oldPercentage) / 2);
-      let top = 10;
-      let left = 50;
-      if (midPoint < 50) {
-        top = 10 + Math.floor(50 * (midPoint * 0.02));
-      } else {
-        top = 60 + Math.floor(50 * (1 - midPoint * 0.02));
+      if (midPoint <= 0) {
+        midPoint = 1;
       }
-      if (midPoint < 25) {
-        left = 50 + Math.floor(10 * (midPoint * 0.04));
-      } else if (midPoint < 75) {
-        left = 60 + Math.floor(25 * (1 - midPoint * 0.04));
+
+      let radius = 25;
+      let vert = 0;
+      let hor = 0;
+      if (midPoint <= 25) {
+        let angle = ((Math.PI / 2) / 25) * midPoint;
+        let arcsine = Math.sin(angle);
+        let arccos = Math.cos(angle);
+        vert = -arccos * radius;
+        hor = arcsine * radius;
+      } else if (midPoint <= 50) {
+        let angle = ((Math.PI / 2) / 25) * midPoint;
+        let arcsine = Math.sin(angle);
+        let arccos = Math.cos(angle);
+        vert = -arccos * radius;
+        hor = arcsine * radius;
+      } else if (midPoint <= 75) {
+        let angle = ((Math.PI / 2) / 25) * midPoint;
+        let arcsine = Math.sin(angle);
+        let arccos = Math.cos(angle);
+        vert = -arccos * radius;
+        hor = arcsine * radius;
       } else {
-        left = 10 + Math.floor(20 * (midPoint * 0.04 - 3));
+        let angle = ((Math.PI / 2) / 25) * midPoint;
+        let arcsine = Math.sin(angle);
+        let arccos = Math.cos(angle);
+        vert = -arccos * radius;
+        hor = arcsine * radius;
       }
+
+      let top = 40 + vert;
+      let left = 45 + hor;
+
       if (amount == 0) {
         top = -20;
         left = 10 + (numOfZeroFoods * 10);
@@ -216,6 +238,7 @@ export default class Plate extends Component {
       let topString = top + "%";
       let leftString = left + "%";
       let group = amounts[i].group;
+
 
       // Draw the food group icon alongside the segment of the pie chart it relates to
       // and draw the segments of the pie chart. 
@@ -236,6 +259,7 @@ export default class Plate extends Component {
         </View>
       );
     }
+
 
     // Custom sort function, which keeps pie chart sections in input order (currently alphabetical based on group name)
     let noSort = (a, b) => 0;
@@ -269,8 +293,8 @@ export default class Plate extends Component {
               />
             </View>
             <View>
-              <PieChart 
-                style={styles.pieChart} data={pieData} 
+              <PieChart
+                style={styles.pieChart} data={pieData}
                 outerRadius={'100%'}
                 innerRadius={'80%'}
                 padAngle={0}
@@ -281,24 +305,24 @@ export default class Plate extends Component {
           </TouchableOpacity>
         </View>
         <Modal backdropOpacity={0} isVisible={this.state.isModalVisible}>
-          <View 
-              style={{
-                flex: 1,
-                backgroundColor: "#fff",
-                borderRadius: 4,
-                borderColor: "#eee",
-                borderWidth: 2,
-                marginTop: "110%"
-              }}>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: "#fff",
+              borderRadius: 4,
+              borderColor: "#eee",
+              borderWidth: 2,
+              marginTop: "110%"
+            }}>
             <TouchableOpacity
               onPress={() => this.setState({ isModalVisible: false })}
             >
               <Text style={styles.backButton}>Back to Plate</Text>
             </TouchableOpacity>
-          
-          <ScrollView>
-            <EditFood />
-          </ScrollView>
+
+            <ScrollView>
+              <EditFood />
+            </ScrollView>
           </View>
         </Modal>
       </View>
