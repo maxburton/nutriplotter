@@ -76,42 +76,57 @@ export default class ScoreScreen extends React.Component {
 		const score = navigation.getParam('score', 0);
 		const warnings = navigation.getParam('warnings', new Array());
 
-		let nutrientNames = new Array();
-		let renderWarnings = new Array();
-		let nutrientScores = new Array();
-		let newline = "\n\n";
+		let nutrientNames = new Array(<Text style={[styles.colHeader, styles.colHeaderLeft]}>Nutrient</Text>);
+		let renderWarnings = new Array(<Text style={[styles.colHeader, styles.colHeaderMid]}>Advice</Text>);
+		let dailyRecNutrients = new Array(<Text style={[styles.colHeader, styles.colHeaderMid]}>RDA</Text>);
+		let nutrientScores = new Array(<Text style={[styles.colHeader, styles.colHeaderRight]}>Score</Text>);
+		let newline = "\n";
+
+		let adjustmentPlural = "s";
+		if(tweaks == 1){
+			adjustmentPlural = "";
+		}
 
 		for (let i = 0; i < warnings.length; i++) {
 			let nutrient = warnings[i][0];
-			nutrient = capitalizeFirstLetter(nutrient);
+			neatNutrient = global.neatNutrients[nutrient];
+			//nutrient = capitalizeFirstLetter(nutrient);
 			nutrientNames.push(
-				<Text style={styles.textNames}>{nutrient}:</Text>
+				<Text style={[styles.textColLeft, styles.textCol]}>{neatNutrient}:</Text>
 			)
 			let percentage = warnings[i][2]
 			nutrientScores.push(
-				<Text style={styles.textScores}>{percentage}%</Text>
+				<Text style={[styles.textColRight, styles.textCol]}>{percentage}%</Text>
 			)
 
-			let operator = warnings[i][1];
+			let scoreRating = warnings[i][1];
 			let advice = "";
-			if (operator == "perfect") {
+			let operator = warnings[i][3];
+			let operatorLimit = warnings[i][4];
+			let unit = (global.nutrientUnits[nutrient] || "g"); // if no key, use grams (g)
+
+			dailyRecNutrients.push(
+				<Text style={[styles.textColMid, styles.textCol]}>{operator}{operatorLimit}{unit}</Text>
+			)
+
+			if (scoreRating == "perfect") {
 				// Use renderWarnings.unshift to put new item at the beginning of the array
 				renderWarnings.push(
-					<Text style={styles.textGreen}>Perfect!</Text>
+					<Text style={[styles.textGreen, styles.textColMid, styles.textCol]}>Perfect!</Text>
 				)
-			} else if (operator == "ok") {
+			} else if (scoreRating == "ok") {
 				renderWarnings.push(
-					<Text style={styles.textGrey}>Not Bad!</Text>
+					<Text style={[styles.textGrey, styles.textColMid, styles.textCol]}>Not Bad!</Text>
 				)
 			} else {
 				// If nutrient score is bad
-				if (operator == "-") {
+				if (scoreRating == "-") {
 					advice = "Very low!";
-				} else {
+				} else {  //if (scoreRating == "+") 
 					advice = "Very high!";
 				}
 				renderWarnings.push(
-					<Text style={styles.textRed}>{advice}</Text>
+					<Text style={[styles.textRed, styles.textColMid, styles.textCol]}>{advice}</Text>
 				)
 			}
 		}
@@ -124,16 +139,19 @@ export default class ScoreScreen extends React.Component {
 						submitInput={(inputText) => { this.savePlate(inputText, plate, score) }}
 						closeDialog={() => { this.setState({ isDialogVisible: false }) }}>
 					</DialogInput>
-					<Text style={score < 4333 ? styles.scoreRed : score < 8666 ? styles.scoreAmber : styles.scoreGreen}>You Scored: {score}/13000 points!</Text>
-					<Text style={styles.textAdjustments}>You made {tweaks} adjustment(s) to your plate, and your score has been reduced by {tweaks * global.tweakPenalty} points.</Text>
+					<Text style={score < 4333 ? [styles.score, styles.red] : score < 8666 ? [styles.score, styles.grey] : [styles.score, styles.green]}>You Scored: {score}/13000 points!</Text>
+					<Text style={styles.textAdjustments}>You made {tweaks} adjustment{adjustmentPlural} to your plate, and your score has been reduced by {tweaks * global.tweakPenalty} points.</Text>
 					<View style={styles.row}>
-						<View style={styles.columnNames}>
+						<View style={styles.column}>
 							{nutrientNames}
 						</View>
-						<View style={styles.columnAdvice}>
+						<View style={styles.column}>
 							{renderWarnings}
 						</View>
-						<View style={styles.columnScore}>
+						<View style={styles.column}>
+							{dailyRecNutrients}
+						</View>
+						<View style={styles.columnRight}>
 							{nutrientScores}
 						</View>
 					</View>
@@ -153,7 +171,7 @@ export default class ScoreScreen extends React.Component {
 
 
 };
-
+// amber colour = #f4b342
 const offset = 16;
 const styles = StyleSheet.create({
 	container: {
@@ -163,39 +181,19 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row'
 	},
-	columnNames: {
+	column: {
 		flexDirection: 'column'
 	},
-	columnAdvice: {
-		flexDirection: 'column'
-	},
-	columnScore: {
+	columnRight: {
 		flex: 1,
 		flexDirection: 'column'
 	},
-	scoreRed: {
+	score: {
 		marginTop: offset,
 		marginBottom: offset,
 		flex: 1,
 		fontSize: 24,
 		textAlign: "center",
-		color: "red"
-	},
-	scoreAmber: {
-		marginTop: offset,
-		marginBottom: offset,
-		flex: 1,
-		fontSize: 24,
-		textAlign: "center",
-		color: "#f4b342",
-	},
-	scoreGreen: {
-		marginTop: offset,
-		marginBottom: offset,
-		flex: 1,
-		fontSize: 24,
-		textAlign: "center",
-		color: "green",
 	},
 	textAdjustments: {
 		flex: 1,
@@ -206,56 +204,57 @@ const styles = StyleSheet.create({
 		marginLeft: offset,
 		marginRight: offset,
 	},
-	textNames: {
-
+	textCol: {
 		marginTop: offset,
-		fontSize: offset,
+		fontSize: offset - 2,
+	},
+	textColLeft: {
 		textAlign: "left",
 		marginLeft: offset,
-		marginRight: offset,
 	},
-	textScores: {
-		flex: 1,
-		marginTop: offset,
-		fontSize: offset,
-		textAlign: "right",
+	textColMid: {
+		textAlign: "center",
+		marginRight: offset,
 		marginLeft: offset,
+	},
+	textColRight: {
+		flex: 1,
+		textAlign: "right",
 		marginRight: offset,
 	},
-	text: {
-
+	colHeader: {
 		marginTop: offset,
-		fontSize: offset,
+		fontSize: offset - 2,
+		fontWeight: 'bold',
+	},
+	colHeaderLeft: {
+		textAlign: "left",
+		marginLeft: offset,
+	},
+	colHeaderMid: {
 		textAlign: "center",
 		marginLeft: offset,
 		marginRight: offset,
 	},
+	colHeaderRight: {
+		flex: 1,
+		textAlign: "right",
+		marginRight: offset,
+	},
 	textGreen: {
-
-		marginTop: offset,
-		fontSize: offset,
-		textAlign: "left",
 		color: "green",
 	},
 	textRed: {
-
-		marginTop: offset,
-		fontSize: offset,
-		textAlign: "left",
 		color: "red",
 	},
 	textGrey: {
-
-		marginTop: offset,
-		fontSize: offset,
-		textAlign: "left",
 		color: "gray",
 	},
 	buttonText: {
 		flex: 1,
-		marginTop: "5%",
+		marginTop: "3%",
 		fontSize: 24,
-		marginBottom: "5%",
+		marginBottom: "3%",
 		color: "blue",
 		textAlign: "center",
 	},

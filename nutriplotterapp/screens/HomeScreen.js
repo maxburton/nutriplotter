@@ -22,6 +22,7 @@ import {
   View,
   Dimensions,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import Modal from "react-native-modal";
 
@@ -127,18 +128,16 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-  getScore(nutrientTotal, limit) {
-    return Math.round(((nutrientTotal / limit) * 10000) / 100)
+  calculateScore(nutrientTotal, limit) {
+    return Math.round(((nutrientTotal / limit) * 10000) / 100);
   }
 
-  // Calculate the overall score of the meal from how much of each nutrient is present, if it's at, above or
-  // below the recommended value.
-  calculateScore() {
+  getIdealNutrients() {
     let idealNutrients = {
-      calories: new Array("-", 700, 600, 800),
-      carbs: new Array("-", 30, 17, 51),
-      fats: new Array("-", 21, 15, 26),
-      protein: new Array("-", 24, 15, 33),
+      calories: new Array("~", 700, 600, 800),
+      carbs: new Array("~", 30, 17, 51),
+      fats: new Array("~", 21, 15, 26),
+      protein: new Array("~", 24, 15, 33),
       sugar: new Array("<", 10),
       satfat: new Array("<", 8),
       fibre: new Array(">", 10),
@@ -146,42 +145,56 @@ export default class HomeScreen extends React.Component {
       calcium: new Array(">", 333),
       vitA: new Array(">", 275),
       vitB1: new Array(">", 275),
-      vitB9: new Array("-", 250, 160, 333),
+      vitB9: new Array("~", 250, 160, 333),
       vitC: new Array(">", 25)
     };
+    return idealNutrients;
+  }
+
+  // Calculate the overall score of the meal from how much of each nutrient is present, if it's at, above or
+  // below the recommended value.
+  calculateScore() {
+    let idealNutrients = this.getIdealNutrients();
     let score = 13000;
     let dangerLevel = 500;
     let warnings = new Array();
+
     for (var key in global.totals) {
       console.log(score);
       let nutrientTotal = global.totals[key];
       let operator = idealNutrients[key][0];
       let weight = 1000 / idealNutrients[key][1];
-      if (operator == "-") {
+      let ideal = idealNutrients[key][1];
+      let advice = "ok";
+
+      if (operator == "~") {
         // if nutrient has a range requirement
         let min = idealNutrients[key][2];
         let max = idealNutrients[key][3];
         if (nutrientTotal < min) {
           let pointLoss = Math.round((min - nutrientTotal) * weight);
-          if (pointLoss > 1000) { pointLoss = 1000 }
+          if (pointLoss > 1000) {
+            pointLoss = 1000
+          }
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "-", this.getScore(nutrientTotal, min)]);
-          } else{
-            // if nutrient is not perfect but also not dangerously low
-            warnings.push([key, "ok", this.getScore(nutrientTotal, min)]);
+            advice = "-";
+          } else {
+            // if nutrient is not perfect but also not very low
+            advice = "ok";
           }
         } else if (nutrientTotal > max) {
           let pointLoss = Math.round((nutrientTotal - max) * weight);
           if (pointLoss > 1000) { pointLoss = 1000 }
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "+", this.getScore(nutrientTotal, max)]);
-          } else{
-            warnings.push([key, "ok", this.getScore(nutrientTotal, max)]);
+            advice = "+";
+          } else {
+            // if nutrient is not perfect but also not very high
+            advice = "ok";
           }
         } else {
-          warnings.push([key, "perfect", this.getScore(nutrientTotal, max)]);
+          advice = "perfect";
         }
       } else if (operator == "<") {
         // if nutrient has a maximum requirement
@@ -191,12 +204,12 @@ export default class HomeScreen extends React.Component {
           if (pointLoss > 1000) { pointLoss = 1000 }
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "+", this.getScore(nutrientTotal, max)]);
-          } else{
-            warnings.push([key, "ok", this.getScore(nutrientTotal, max)]);
+            advice = "+";
+          } else {
+            advice = "ok";
           }
         } else {
-          warnings.push([key, "perfect", this.getScore(nutrientTotal, max)]);
+          advice = "perfect";
         }
       } else if (operator == ">") {
         // if nutrient has a minimum requirement
@@ -206,14 +219,16 @@ export default class HomeScreen extends React.Component {
           if (pointLoss > 1000) { pointLoss = 1000 }
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
-            warnings.push([key, "-", this.getScore(nutrientTotal, min)]);
-          } else{
-            warnings.push([key, "ok", this.getScore(nutrientTotal, min)]);
+            advice = "-";
+          } else {
+            advice = "ok";
           }
         } else {
-          warnings.push([key, "perfect", this.getScore(nutrientTotal, min)]);
+          advice = "perfect";
         }
       }
+
+      warnings.push([key, advice, this.calculatePercentage(key, nutrientTotal), operator, ideal]);
     }
 
     // For every time the user decides to go back from `Submit Plate` and continue working on their meal,
@@ -230,21 +245,7 @@ export default class HomeScreen extends React.Component {
 
   // Calculate the percentage taken out of RDA for a nutrient
   calculatePercentage(nutrient, amount) {
-    let idealNutrients = {
-      calories: new Array("-", 700, 600, 800),
-      carbs: new Array("-", 30, 17, 51),
-      fats: new Array("-", 21, 15, 26),
-      protein: new Array("-", 24, 15, 33),
-      sugar: new Array("<", 10),
-      satfat: new Array("<", 8),
-      fibre: new Array(">", 10),
-      omega3: new Array(">", 150),
-      calcium: new Array(">", 333),
-      vitA: new Array(">", 275),
-      vitB1: new Array(">", 275),
-      vitB9: new Array("-", 250, 160, 333),
-      vitC: new Array(">", 25)
-    };
+    let idealNutrients = this.getIdealNutrients();
     let idealAmount = idealNutrients[nutrient][1];
     let percentage = Math.floor((amount / idealAmount) * 100);
     return percentage;
@@ -290,6 +291,7 @@ export default class HomeScreen extends React.Component {
     };
   };
 
+  // Calculate food totals since it's been loaded (see App.js for loading totals on app launch)
   calculateTotals = (foodDocs, multiplier) => {
     // For each food item on the plate, summate their scores into the total scores
     for (let i = 0; i < foodDocs.length; i++) {
@@ -319,8 +321,8 @@ export default class HomeScreen extends React.Component {
     // Only summate total scores if there is food on the plate
     if (foodDocs.length > 0) {
       this.resetGlobalTotals(); // Clear any previous score totals
-      // 0.01 for nutrients per gram, so to make up a plate of 500g we take 5 servings
-      let multiplier = 0.05;
+      // nutrients are listed per 100g, so we multiply by 0.01 so 1g on the plate is represented as 1g of nutrients.
+      let multiplier = 0.01;
 
       this.calculateTotals(foodDocs, multiplier);
     }
@@ -422,21 +424,7 @@ export default class HomeScreen extends React.Component {
                   paddingRight: 10
                 }}
               >
-                {[
-                  "\n\nCalories: \n",
-                  "Carbohydrates: \n",
-                  "Fats: \n",
-                  "Protein: \n",
-                  "Sugar: \n",
-                  "Saturated Fats: \n",
-                  "Fibre: \n",
-                  "Omega3: \n",
-                  "Calcium: \n",
-                  "Vitamin A: \n",
-                  "Vitamin B1: \n",
-                  "Vitamin B9: \n",
-                  "Vitamin C: \n"
-                ]}
+                {this.getNeatNames()}
               </Text>
               <Text
                 style={{
@@ -486,28 +474,25 @@ export default class HomeScreen extends React.Component {
 
   private;
   getSummary() {
-    var units = {
-      calories: "kcal",
-      omega3: "mg",
-      calcium: "mg",
-      vitA: "mg",
-      vitB1: "μg",
-      vitB9: "μg",
-      vitC: "mg"
-      // The other attributes are in grams and so wont appear here (undefined gives `g`)
-    };
-
     var summary = "\n\n";
     for (var key in global.totals) {
       summary +=
         global.totals[key] +
-        (units[key] || "g") +
+        (global.nutrientUnits[key] || "g") +
         " (" +
         this.calculatePercentage(key, global.totals[key]) +
         "%)\n";
     }
 
     return summary;
+  }
+
+  getNeatNames() {
+    var names = "\n\n";
+    for (var key in global.totals) {
+      names += global.neatNutrients[key] + ":\n";
+    }
+    return names;
   }
 }
 

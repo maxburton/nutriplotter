@@ -1,0 +1,10 @@
+-Facebook integration, showing top player's streaks and cumulative scores
+-Food comparison: when searching for food or when its on your plate (edit modal), have a button that lets you compare that food's nutrients with another (opens a modal to display differences).
+-Smart (ML) food replacement suggestions: suggest healthier alternatives to foods on plates (perhaps when tweaking?) using ML
+-Auto-generated shopping lists: When a plate is finished, have a button on the score screen to generate a shopping list with all items on the plate and their weight values. Can be easily screenshotted or exported to AnyList
+-No Ads
+-Customisable nutrients (checkboxes of which nutrients the user wants to be scored on/consider)
+-Customisable goals (e.g. high protein, low carb (keto), carb cycling, fasting, etc.) perhaps have sliders so user's can set custom goals?
+-Allergen filters (removes all items containing certain allergens, and also filters for religious reasons e.g. halal, kosher, etc.)
+-Sideitems have modals with many food choices.
+-Have meals for breakfast, lunch and dinner, and use those to score cumulatively -- OR -- each day your highest scored plate is used as your daily score, and this adds up over time to give overall score.

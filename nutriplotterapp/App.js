@@ -22,8 +22,8 @@ import popSideItems from "./populateSideItems";
 import popSavedPlates from "./populateSavedPlates";
 import firebase from "./components/Firebase.js";
 
-var Datastore = require('react-native-local-mongodb'), 
-db = new Datastore({ filename: 'foods', autoload: true });
+var Datastore = require('react-native-local-mongodb'),
+  db = new Datastore({ filename: 'foods', autoload: true });
 platedb = new Datastore({ filename: 'plate', autoload: true });
 savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
 sideItemsdb = new Datastore({ filename: 'sideItems', autoload: true });
@@ -32,7 +32,7 @@ favdb = new Datastore({ filename: 'favourites', autoload: true });
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false,
-	isLoaded: false,
+    isLoaded: false,
   };
 
   submitToDB = async (
@@ -74,13 +74,13 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-	let loadingCount = 0;
-	loadingCheck = () =>{
-		loadingCount++;
-		if(loadingCount >= 4){
-			this.setState({isLoaded: true});
-		}
-	}
+    let loadingCount = 0;
+    loadingCheck = () => {
+      loadingCount++;
+      if (loadingCount >= 4) {
+        this.setState({ isLoaded: true });
+      }
+    }
     //Disables warning messages: TRUE FOR DEMOS
     console.disableYellowBox = true;
     global.isLoggedIn = false;
@@ -96,133 +96,166 @@ export default class App extends React.Component {
       }
     };
     _retrieveData();
-	
-	
-	
-	var p = new popArray();
-	var q = new popList();
-	var r = new popSideItems();
-	global.tweaks = 0;
+
+
+
+    var p = new popArray();
+    var q = new popList();
+    var r = new popSideItems();
+    global.tweaks = 0;
     global.tweakPenalty = 250;
-	global.plate = [];
-	global.totals = {};
-	global.savedPlates = new Array();
-	global.maximum = 100;
-	savedPlatesdb.find({}, function (err, newDocs) {
-		if(newDocs.length > 0){
-			global.savedPlates = newDocs;
-			loadingCheck();
-		}else{
-			var s = new popSavedPlates(); //Load in default plates
-			savedPlatesdb.insert(global.savedPlates[0], function (err, newDoc) {
-				loadingCheck();
-			});
-		}
-	});
-	sideItemsdb.find({}, function (err, newDocs) {
-		if(newDocs.length > 0){
-			global.sideItems = newDocs;
-			loadingCheck();
-		}else{
-			sideItemsdb.insert(global.sideItems, function (err, newDocs) {
-				loadingCheck();
-			});
-		}
-	});
-	global.favourites = [];
-	favdb.find({}, function (err, newDocs) {
-		global.favourites = newDocs;
-		loadingCheck();
-	});
-	
-	global.colours = {
-		"grains": "#EFCC6D",
-		"sandwich": "#AF881F",
-		"rice": "#F3EAD2",
-		"pasta": "#F4E57E",
-		"pizza": "#E37536",
-		"bread": "#CA952A",
-		"cereals": "#F4C973",
-		"biscuits": "#9D6F13",
-		"cakes": "#DE3BA7",
-		"pastries": "#CD9848",
-		"pudding": "#6B4610",
-		"savouries": "#AB854B",
-		"milk": "#F7F0E6",
-		"cream": "#E6F1F7",
-		"cheese": "#FEF602",
-		"icecream": "#E9F7E6",
-		"egg": "#FEDD02",
-		"potato": "#E6CE56",
-		"beans": "#4A7325",
-		"veg": "#75D125",
-		"vegdish": "#B4E888",
-		"fruit": "#EA0606",
-		"juice": "#FEB201", 
-		"nuts": "#C19A3F",
-		"herbs": "#2A9547",
-		"fish": "#668390",
-		"bacon": "#CB5639",
-		"beef": "#BA492D",
-		"chicken": "9D721D",
-		"game": "#8D6E31",
-		"burger": "#82581A",
-		"oil": "#FAF5B0",
-		"drinks": "#22C9F3",
-		"booze": "#6132BF",
-		"sweets": "#D805F9",
-		"chocolate": "#603C12",
-		"snacks": "#D1C737",
-		"soup": "#ECD6E8",
-		"sauce": "#BD2121",
-		"misc": "#010101",
-	}
-	
-	platedb.find({}, function (err, newDocs) {
-		global.plate = newDocs;
-		let foodDocs = global.plate;
-		var totals = {
-      calories: 0,
-      carbs: 0,
-      fats: 0,
-      protein: 0,
-      sugar: 0,
-      satfat: 0,
-      fibre: 0,
-      omega3: 0,
-      calcium: 0,
-      vitA: 0,
-      vitB1: 0,
-      vitB9: 0,
-      vitC: 0
+    global.plate = [];
+    global.totals = {};
+    global.savedPlates = new Array();
+    global.maximum = 100;
+    savedPlatesdb.find({}, function (err, newDocs) {
+      if (newDocs.length > 0) {
+        global.savedPlates = newDocs;
+        loadingCheck();
+      } else {
+        var s = new popSavedPlates(); //Load in default plates
+        savedPlatesdb.insert(global.savedPlates[0], function (err, newDoc) {
+          loadingCheck();
+        });
+      }
+    });
+    sideItemsdb.find({}, function (err, newDocs) {
+      if (newDocs.length > 0) {
+        global.sideItems = newDocs;
+        loadingCheck();
+      } else {
+        sideItemsdb.insert(global.sideItems, function (err, newDocs) {
+          loadingCheck();
+        });
+      }
+    });
+    global.favourites = [];
+    favdb.find({}, function (err, newDocs) {
+      global.favourites = newDocs;
+      loadingCheck();
+    });
+
+    // Names of all nutrients nicely formatted
+    global.neatNutrients =  {
+        calories: "Calories",
+        carbs: "Carbohydrates",
+        fats: "Fats",
+        protein: "Protein",
+        sugar: "Sugar",
+        satfat: "Saturated Fats",
+        fibre: "Fibre",
+        omega3: "Omega3",
+        calcium: "Calcium",
+        vitA: "Vitamin",
+        vitB1: "Vitamin B1",
+        vitB9: "Vitamin B9",
+        vitC: "Vitamin C"
+      };
+
+
+    // Unites for each nutrient
+    global.nutrientUnits = {
+      calories: "kcal",
+      omega3: "mg",
+      calcium: "mg",
+      vitA: "mg",
+      vitB1: "μg",
+      vitB9: "μg",
+      vitC: "mg"
+      // The other attributes are in grams and so wont appear here (undefined gives `g`)
     };
-    if (foodDocs.length > 0) {
-		let multiplier = 0.01; // nutrients are listed per 100g, so we multiply by 0.01 so 1g on the plate is represented as 1g of nutrients.
+
+    // Colours of pie chart for each group
+    global.colours = {
+      "grains": "#EFCC6D",
+      "sandwich": "#AF881F",
+      "rice": "#F3EAD2",
+      "pasta": "#F4E57E",
+      "pizza": "#E37536",
+      "bread": "#CA952A",
+      "cereals": "#F4C973",
+      "biscuits": "#9D6F13",
+      "cakes": "#DE3BA7",
+      "pastries": "#CD9848",
+      "pudding": "#6B4610",
+      "savouries": "#AB854B",
+      "milk": "#F7F0E6",
+      "cream": "#E6F1F7",
+      "cheese": "#FEF602",
+      "icecream": "#E9F7E6",
+      "egg": "#FEDD02",
+      "potato": "#E6CE56",
+      "beans": "#4A7325",
+      "veg": "#75D125",
+      "vegdish": "#B4E888",
+      "fruit": "#EA0606",
+      "juice": "#FEB201",
+      "nuts": "#C19A3F",
+      "herbs": "#2A9547",
+      "fish": "#668390",
+      "bacon": "#CB5639",
+      "beef": "#BA492D",
+      "chicken": "#9D721D",
+      "game": "#8D6E31",
+      "burger": "#82581A",
+      "oil": "#FAF5B0",
+      "drinks": "#22C9F3",
+      "booze": "#6132BF",
+      "sweets": "#D805F9",
+      "chocolate": "#603C12",
+      "snacks": "#D1C737",
+      "soup": "#ECD6E8",
+      "sauce": "#BD2121",
+      "misc": "#010101",
+    }
+
+    platedb.find({}, function (err, newDocs) {
+      global.plate = newDocs;
+      let foodDocs = global.plate;
+      global.totals = {
+        calories: 0,
+        carbs: 0,
+        fats: 0,
+        protein: 0,
+        sugar: 0,
+        satfat: 0,
+        fibre: 0,
+        omega3: 0,
+        calcium: 0,
+        vitA: 0,
+        vitB1: 0,
+        vitB9: 0,
+        vitC: 0
+      };
+
+      // Get the nutritional info for all foods already on the plate on load
+      if (foodDocs.length > 0) {
+        let multiplier = 0.01; // nutrients are listed per 100g, so we multiply by 0.01 so 1g on the plate is represented as 1g of nutrients.
         for (let i = 0; i < foodDocs.length; i++) {
-			
-			global.totals["calories"] += foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);
-			global.totals["carbs"] += foodDocs[i].data.carbs * (foodDocs[i].amount * multiplier);
-			global.totals["fats"] += foodDocs[i].data.fats * (foodDocs[i].amount * multiplier);
-			global.totals["protein"] += foodDocs[i].data.protein * (foodDocs[i].amount * multiplier);
-			global.totals["sugar"] += foodDocs[i].data.sugar * (foodDocs[i].amount * multiplier);
-			global.totals["satfat"] += foodDocs[i].data.satfat * (foodDocs[i].amount * multiplier);
-			global.totals["fibre"] += foodDocs[i].data.fibre * (foodDocs[i].amount * multiplier);
-			global.totals["omega3"] += foodDocs[i].data.omega3 * (foodDocs[i].amount * multiplier * 1000); //multiplied by 1000 because data is in grams but should be in mg
-			global.totals["calcium"] += foodDocs[i].data.calcium * (foodDocs[i].amount * multiplier);
-			global.totals["vitA"] += foodDocs[i].data.vitA * (foodDocs[i].amount * multiplier);
-			global.totals["vitB1"] += foodDocs[i].data.vitB1 * (foodDocs[i].amount * multiplier / 1000); //divided by 1000 because data is in mg but should be in micrograms
-			global.totals["vitB9"] += foodDocs[i].data.vitB9 * (foodDocs[i].amount * multiplier);
-			global.totals["vitC"] += foodDocs[i].data.vitC * (foodDocs[i].amount * multiplier);
-			
-			for(var key in global.totals){
-				global.totals[key] = Math.round(global.totals[key] * 10) / 10;
-			}
+
+          global.totals["calories"] += foodDocs[i].data.calories * (foodDocs[i].amount * multiplier);
+          global.totals["carbs"] += foodDocs[i].data.carbs * (foodDocs[i].amount * multiplier);
+          global.totals["fats"] += foodDocs[i].data.fats * (foodDocs[i].amount * multiplier);
+          global.totals["protein"] += foodDocs[i].data.protein * (foodDocs[i].amount * multiplier);
+          global.totals["sugar"] += foodDocs[i].data.sugar * (foodDocs[i].amount * multiplier);
+          global.totals["satfat"] += foodDocs[i].data.satfat * (foodDocs[i].amount * multiplier);
+          global.totals["fibre"] += foodDocs[i].data.fibre * (foodDocs[i].amount * multiplier);
+          global.totals["omega3"] += foodDocs[i].data.omega3 * (foodDocs[i].amount * multiplier * 1000); //multiplied by 1000 because data is in grams but should be in mg
+          global.totals["calcium"] += foodDocs[i].data.calcium * (foodDocs[i].amount * multiplier);
+          global.totals["vitA"] += foodDocs[i].data.vitA * (foodDocs[i].amount * multiplier);
+          global.totals["vitB1"] += foodDocs[i].data.vitB1 * (foodDocs[i].amount * multiplier / 1000); //divided by 1000 because data is in mg but should be in micrograms
+          global.totals["vitB9"] += foodDocs[i].data.vitB9 * (foodDocs[i].amount * multiplier);
+          global.totals["vitC"] += foodDocs[i].data.vitC * (foodDocs[i].amount * multiplier);
+
+          for (var key in global.totals) {
+            global.totals[key] = Math.round(global.totals[key] * 10) / 10;
+          }
         }
-	}
-	loadingCheck();
-	});
-	
-	
+      }
+      loadingCheck();
+    });
+
+
     _storeData = async () => {
       try {
         await AsyncStorage.setItem("isFirstLaunch", "0");

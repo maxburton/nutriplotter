@@ -186,7 +186,8 @@ export default class Plate extends Component {
       // get amount in percentage
       let amount = (amountGrams / totalPlateWeight) * 100;
       amount = Math.round(amount);
-      let imageScale = 15 + 100 * Math.sin(amount / 310); // Limit image scaling factor to keep it within the plate
+      //let imageScale = 15 + 100 * Math.sin(amount / 310); // Limit image scaling factor to keep it within the plate
+      let imageScale = 32;
       let oldPercentage = percentageSoFar;
       percentageSoFar += amount;
       let midPoint = Math.floor((percentageSoFar + oldPercentage) / 2);
@@ -227,13 +228,15 @@ export default class Plate extends Component {
       let left = 45 + hor;
 
       if (amount == 0) {
+        imageScale = 16;
         top = -20;
         left = 10 + (numOfZeroFoods * 10);
         numOfZeroFoods += 1;
       }
       if (amount == 100) {
-        top = 35;
-        left = 38;
+        imageScale = 64;
+        top = 30;
+        left = 35;
       }
       let topString = top + "%";
       let leftString = left + "%";
