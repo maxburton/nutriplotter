@@ -112,11 +112,10 @@ for i in range(len(macro_array)):
 # populateDatabase
 with open('populateNameList.js', 'w') as output:
     output.write("/*\n"
-                 "Populates a local JSON array with every food's name.\n"
+                 "Populates a local JSON array with every (curated) food's name.\n"
                  "*/\n\n"
                  "import React from 'react';\n"
-                 "import { Platform} from 'react-native';\n\n"
-                 "export default class PopulateDatabase extends React.Component {\n"
+                 "export default class PopulateNameList extends React.Component {\n"
                  "	constructor(){\n"
                  "		super();\n\n"
                  "global.nameList = [\n\n")
@@ -137,7 +136,6 @@ with open('populateDatabase.js', 'w') as output:
                  "Populates a mongodb database with all foods and their nutritional info\n"
                  "*/\n\n"
                  "import React from 'react';\n"
-                 "import { Platform} from 'react-native';\n\n"
                  "var Datastore = require('react-native-local-mongodb'),\n"
                  "db = new Datastore({ filename: 'foods', autoload: true });\n\n"
                  "export default class PopulateDatabase extends React.Component {\n"
@@ -173,11 +171,10 @@ with open('populateDatabase.js', 'w') as output:
 # populateArray
 with open('populateArray.js', 'w') as output:
     output.write("/*\n"
-                 "Populates a local JSON array with every food and their nutritional info\n"
+                 "Populates a local JSON array with every (curated) food and their nutritional info\n"
                  "*/\n\n"
                  "import React from 'react';\n"
-                 "import { Platform} from 'react-native';\n\n"
-                 "export default class PopulateDatabase extends React.Component {\n"
+                 "export default class PopulateArray extends React.Component {\n"
                  "	constructor(){\n"
                  "		super();\n\n"
                  "global.foods = {\n\n")

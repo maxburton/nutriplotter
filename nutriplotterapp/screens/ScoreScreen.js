@@ -139,7 +139,7 @@ export default class ScoreScreen extends React.Component {
 						submitInput={(inputText) => { this.savePlate(inputText, plate, score) }}
 						closeDialog={() => { this.setState({ isDialogVisible: false }) }}>
 					</DialogInput>
-					<Text style={score < 4333 ? [styles.score, styles.red] : score < 8666 ? [styles.score, styles.grey] : [styles.score, styles.green]}>You Scored: {score}/13000 points!</Text>
+					<Text style={score < 4333 ? [styles.score, styles.textRed] : score < 8666 ? [styles.score, styles.textGrey] : [styles.score, styles.textGreen]}>You Scored: {score}/13000 points!</Text>
 					<Text style={styles.textAdjustments}>You made {tweaks} adjustment{adjustmentPlural} to your plate, and your score has been reduced by {tweaks * global.tweakPenalty} points.</Text>
 					<View style={styles.row}>
 						<View style={styles.column}>

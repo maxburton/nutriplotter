@@ -3,7 +3,6 @@ Populates a local JSON array with every food and their nutritional info
 */
 
 import React from 'react';
-import { Platform} from 'react-native';
 
 export default class PopulateDatabase extends React.Component {
 	constructor(){

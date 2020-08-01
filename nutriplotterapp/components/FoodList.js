@@ -11,24 +11,21 @@ import {
   TouchableOpacity,
   StyleSheet,
   View,
-  TextInput,
   FlatList,
-  Alert
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 
 var Datastore = require("react-native-local-mongodb"),
-db = new Datastore({ filename: "foods", autoload: true });
-platedb = new Datastore({ filename: "plate", autoload: true });
+  platedb = new Datastore({ filename: "plate", autoload: true });
 favdb = new Datastore({ filename: "favourites", autoload: true });
 
 class FlatListItem extends Component {
-	state = { isSelected: false };
-	
+  state = { isSelected: false };
+
 
   render() {
-		let isSelected = false;
-		// If the food item in the FlatList is on the plate, it has been selected
+    let isSelected = false;
+    // If the food item in the FlatList is on the plate, it has been selected
     for (let i = 0; i < global.plate.length; i++) {
       if (global.plate[i].data.name == this.props.item.name.toLowerCase()) {
         isSelected = true;
@@ -75,12 +72,12 @@ class FlatListItem extends Component {
       sandwich: require("../assets/images/sandwich.png"),
       grains: require("../assets/images/grains.png")
     };
-		var group = this.props.item.group;
-		
+    var group = this.props.item.group;
+
     return (
       <TouchableOpacity onPress={() => this.alertItemName(this.props.item)}>
 
-				{/* Mark the item with a differented color iff it has been selected previously */}
+        {/* Mark the item with a differented color iff it has been selected previously */}
         <View style={isSelected ? styles.itemStyleSelected : styles.itemStyle}>
           <Image source={foodImages[group]} style={styles.image} />
           <View style={styles.buttonView}>
@@ -121,24 +118,24 @@ class FlatListItem extends Component {
       console.log(newFoodId + " Deleted");
     }
 
-		// Search the plate table in the database for the given food; if not present, update its record otherwise 
-		// remove.
-    platedb.find({ _id: newFoodId }, function(err, newDocs) {
+    // Search the plate table in the database for the given food; if not present, update its record, otherwise 
+    // remove.
+    platedb.find({ _id: newFoodId }, function (err, newDocs) {
       if (newDocs.length == []) {
         platedb.update(
           { _id: newFoodId },
           { $set: { amount: 0, group: item.group, data: item.data } },
           { upsert: true },
-          function(err, numReplaced, upsert) {}
+          function (err, numReplaced, upsert) { }
         );
       } else {
-        platedb.remove({ _id: newFoodId }, function(err, numRemoved) {
+        platedb.remove({ _id: newFoodId }, function (err, numRemoved) {
           console.log("Removed from DB!");
         });
       }
     });
-		
-		// Add to favourites
+
+    // Add to favourites
     let inDB = false;
     for (let i = 0; i < global.favourites.length; i++) {
       if (global.favourites[i]._id.toLowerCase() == newFoodId) {
@@ -146,20 +143,20 @@ class FlatListItem extends Component {
       }
     }
     if (!inDB) {
-			// If not in the database, put the food item at the start of the favourite food items list
+      // If not in the database, put the food item at the start of the favourite food items list
       global.favourites.unshift({
         _id: item.name,
         amount: 0,
         group: item.group,
         data: item.data
       });
-		}
-		// Update the favourite foods database record for the current item
+    }
+    // Update the favourite foods database record for the current item
     favdb.update(
       { _id: newFoodId },
       { $set: { amount: 0, group: item.group, data: item.data } },
       { upsert: true },
-      function(err, numReplaced, upsert) {}
+      function (err, numReplaced, upsert) { }
     );
   };
 }
@@ -211,11 +208,11 @@ class List extends Component {
             keyboardShouldPersistTaps={"handled"}
             data={this.state.names}
             renderItem={({ item, index }) => {
-                return (<FlatListItem
-                  listParent={this.props.listParent}
-                  item={item}
-                  index={index}
-                />);
+              return (<FlatListItem
+                listParent={this.props.listParent}
+                item={item}
+                index={index}
+              />);
             }}
           />
         </View>
@@ -224,8 +221,8 @@ class List extends Component {
   }
 
   // Each food group a food item from the database can have corresponds to a category of food such as:
-	// 	grains, sandwich, rice, pasta, pizza, bread, cereal, biscuits, cakes, pastries, pudding, savouries
-	// milk, cream, cheese etc.
+  // 	grains, sandwich, rice, pasta, pizza, bread, cereal, biscuits, cakes, pastries, pudding, savouries
+  // milk, cream, cheese etc.
   determineGroup = input => {
     input = input.toLowerCase();
     var group = "";
@@ -462,7 +459,7 @@ class List extends Component {
     return group;
   };
 
-	// Show all of the food items recorded as favourites (from the favourites table in the database)
+  // Show all of the food items recorded as favourites (from the favourites table in the database)
   showFavourites = () => {
     function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
@@ -470,28 +467,28 @@ class List extends Component {
 
     var foods = [];
     var count = 0;
-		
 
-		// Collect all of the food items present in the favourites table of the database into a list of objects
-		// to display. If food does not exist locally (i.e. hand-picked dataset), ignore it.
+
+    // Collect all of the food items present in the favourites table of the database into a list of objects
+    // to display. If food does not exist locally (i.e. hand-picked dataset), ignore it.
     for (let i = 0; i < global.favourites.length; i++) {
       try {
-          let entry = global.favourites[i]._id.toLowerCase();
-          var data = global.foods[entry];
-          console.log(data);
-          var formattedString = entry.replace(/['"]+/g, "");
-          formattedString = capitalizeFirstLetter(formattedString);
-          var group = this.determineGroup(data["group"].toLowerCase());
-          foods.push({
-            id: count,
-            name: formattedString,
-            group: group,
-            data: data
-          });
-          count++;
-		} catch (TypeError) {
-            console.log("Food does not exist in database, has the DB been changed recently? (i.e. hand-picked dataset)");
-        }
+        let entry = global.favourites[i]._id.toLowerCase();
+        var data = global.foods[entry];
+        console.log(data);
+        var formattedString = entry.replace(/['"]+/g, "");
+        formattedString = capitalizeFirstLetter(formattedString);
+        var group = this.determineGroup(data["group"].toLowerCase());
+        foods.push({
+          id: count,
+          name: formattedString,
+          group: group,
+          data: data
+        });
+        count++;
+      } catch (TypeError) {
+        console.log("Food does not exist in database, has the DB been changed recently? (i.e. hand-picked dataset)");
+      }
     }
     this.setState({
       test: "Recently Searched:",
@@ -499,13 +496,13 @@ class List extends Component {
     });
   };
 
-	// Search the foods database for food items matching or involving the search query
+  // Search the foods database for food items matching or involving the search query
   search = searchString => {
     function capitalizeFirstLetter(string) {
       return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    handleStateChange = (foodlen, searchlen, foods) => {};
+    handleStateChange = (foodlen, searchlen, foods) => { };
 
     if (searchString.length > 0) {
       var regex = new RegExp(searchString.toLowerCase(), "g");
@@ -527,8 +524,8 @@ class List extends Component {
           });
           count++;
         }
-			}
-			
+      }
+
       if (count > 0 || searchString.length == 0) {
         this.setState({
           test: "",
@@ -540,14 +537,14 @@ class List extends Component {
           names: foods
         });
       }
-		} else {
-			// Report any errors/food items found as a result of the search
-			this.setState({
-				test: '',
-				names: []
-			})
-		}
-    
+    } else {
+      // Report any errors/food items found as a result of the search
+      this.setState({
+        test: '',
+        names: []
+      })
+    }
+
 
   };
 } export default List;

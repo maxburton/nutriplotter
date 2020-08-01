@@ -17,13 +17,14 @@ import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import AppNavigator from "./navigation/AppNavigator";
 import popArray from "./populateArray";
+import popArrayFull from "./populateArrayFull";
 import popList from "./populateNameList";
 import popSideItems from "./populateSideItems";
 import popSavedPlates from "./populateSavedPlates";
 import firebase from "./components/Firebase.js";
 
 var Datastore = require('react-native-local-mongodb'),
-  db = new Datastore({ filename: 'foods', autoload: true });
+db = new Datastore({ filename: 'foods', autoload: true });
 platedb = new Datastore({ filename: 'plate', autoload: true });
 savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
 sideItemsdb = new Datastore({ filename: 'sideItems', autoload: true });
@@ -99,9 +100,10 @@ export default class App extends React.Component {
 
 
 
-    var p = new popArray();
-    var q = new popList();
-    var r = new popSideItems();
+    new popArray();
+    new popArrayFull();
+    new popList();
+    new popSideItems();
     global.tweaks = 0;
     global.tweakPenalty = 250;
     global.plate = [];
@@ -136,21 +138,21 @@ export default class App extends React.Component {
     });
 
     // Names of all nutrients nicely formatted
-    global.neatNutrients =  {
-        calories: "Calories",
-        carbs: "Carbohydrates",
-        fats: "Fats",
-        protein: "Protein",
-        sugar: "Sugar",
-        satfat: "Saturated Fats",
-        fibre: "Fibre",
-        omega3: "Omega3",
-        calcium: "Calcium",
-        vitA: "Vitamin",
-        vitB1: "Vitamin B1",
-        vitB9: "Vitamin B9",
-        vitC: "Vitamin C"
-      };
+    global.neatNutrients = {
+      calories: "Calories",
+      carbs: "Carbohydrates",
+      fats: "Fats",
+      protein: "Protein",
+      sugar: "Sugar",
+      satfat: "Saturated Fats",
+      fibre: "Fibre",
+      omega3: "Omega3",
+      calcium: "Calcium",
+      vitA: "Vitamin A",
+      vitB1: "Vitamin B1",
+      vitB9: "Vitamin B9",
+      vitC: "Vitamin C"
+    };
 
 
     // Unites for each nutrient

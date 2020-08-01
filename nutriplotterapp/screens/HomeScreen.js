@@ -134,18 +134,18 @@ export default class HomeScreen extends React.Component {
 
   getIdealNutrients() {
     let idealNutrients = {
-      calories: new Array("~", 700, 600, 800),
-      carbs: new Array("~", 30, 17, 51),
-      fats: new Array("~", 21, 15, 26),
-      protein: new Array("~", 24, 15, 33),
-      sugar: new Array("<", 10),
-      satfat: new Array("<", 8),
+      calories: new Array("~", 700),
+      carbs: new Array("~", 90),
+      fats: new Array("~", 25),
+      protein: new Array("~", 36),
+      sugar: new Array("<", 30),
+      satfat: new Array("<", 7),
       fibre: new Array(">", 10),
       omega3: new Array(">", 150),
       calcium: new Array(">", 333),
       vitA: new Array(">", 275),
       vitB1: new Array(">", 275),
-      vitB9: new Array("~", 250, 160, 333),
+      vitB9: new Array("~", 250),
       vitC: new Array(">", 25)
     };
     return idealNutrients;
@@ -166,11 +166,15 @@ export default class HomeScreen extends React.Component {
       let weight = 1000 / idealNutrients[key][1];
       let ideal = idealNutrients[key][1];
       let advice = "ok";
+      
+      let acceptableRangeMultiplier = 0.15; // 15% either way
+      let acceptableCustion = Math.round(acceptableRangeMultiplier * ideal);
 
       if (operator == "~") {
         // if nutrient has a range requirement
-        let min = idealNutrients[key][2];
-        let max = idealNutrients[key][3];
+        let min = ideal - acceptableCustion;
+        let max = ideal + acceptableCustion;
+
         if (nutrientTotal < min) {
           let pointLoss = Math.round((min - nutrientTotal) * weight);
           if (pointLoss > 1000) {
@@ -198,9 +202,8 @@ export default class HomeScreen extends React.Component {
         }
       } else if (operator == "<") {
         // if nutrient has a maximum requirement
-        let max = idealNutrients[key][1];
-        if (nutrientTotal > max) {
-          let pointLoss = Math.round((nutrientTotal - max) * weight);
+        if (nutrientTotal > ideal) {
+          let pointLoss = Math.round((nutrientTotal - ideal) * weight);
           if (pointLoss > 1000) { pointLoss = 1000 }
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
@@ -213,9 +216,8 @@ export default class HomeScreen extends React.Component {
         }
       } else if (operator == ">") {
         // if nutrient has a minimum requirement
-        let min = idealNutrients[key][1];
-        if (nutrientTotal < min) {
-          let pointLoss = Math.round((min - nutrientTotal) * weight);
+        if (nutrientTotal < ideal) {
+          let pointLoss = Math.round((ideal - nutrientTotal) * weight);
           if (pointLoss > 1000) { pointLoss = 1000 }
           score -= pointLoss;
           if (pointLoss > dangerLevel) {
