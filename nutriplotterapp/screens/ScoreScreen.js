@@ -13,11 +13,19 @@ import {
 	Alert,
 } from 'react-native';
 import DialogInput from 'react-native-dialog-input';
+import Modal from "react-native-modal";
 
 var Datastore = require('react-native-local-mongodb');
 savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
 
 export default class ScoreScreen extends React.Component {
+	state = {
+		modalNutrientName: "",
+		isModalVisible: false,
+		plateSaved: false,
+		isDialogVisible: false
+	};
+
 	static navigationOptions = ({ navigation }) => ({
 		//header: null,
 		title: 'Score',
@@ -62,14 +70,16 @@ export default class ScoreScreen extends React.Component {
 		this.setState({ plateSaved: false });
 	}
 
-	state = { plateSaved: false, isDialogVisible: false }
+	showModal = (nutrientName) => {
+		this.setState({ modalNutrientName: global.neatNutrients[nutrientName] });
+		this.setState({ isModalVisible: true });
+	};
+
+	closeModal = () => {
+		this.setState({ isModalVisible: false });
+	};
 
 	render() {
-
-		function capitalizeFirstLetter(string) {
-			return string.charAt(0).toUpperCase() + string.slice(1);
-		}
-
 		const { navigation } = this.props;
 		const plate = navigation.getParam('plate', new Array());
 		const tweaks = navigation.getParam('tweaks', 0);
@@ -83,7 +93,7 @@ export default class ScoreScreen extends React.Component {
 		let newline = "\n";
 
 		let adjustmentPlural = "s";
-		if(tweaks == 1){
+		if (tweaks == 1) {
 			adjustmentPlural = "";
 		}
 
@@ -92,7 +102,9 @@ export default class ScoreScreen extends React.Component {
 			neatNutrient = global.neatNutrients[nutrient];
 			//nutrient = capitalizeFirstLetter(nutrient);
 			nutrientNames.push(
-				<Text style={[styles.textColLeft, styles.textCol]}>{neatNutrient}:</Text>
+				<TouchableOpacity onPress={() => this.showModal(nutrient)}>
+					<Text style={[styles.textColLeft, styles.textCol]}>{neatNutrient}:</Text>
+				</TouchableOpacity>
 			)
 			let percentage = warnings[i][2]
 			nutrientScores.push(
@@ -135,11 +147,11 @@ export default class ScoreScreen extends React.Component {
 				<ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
 					<DialogInput isDialogVisible={this.state.isDialogVisible}
 						title={"Name Your Plate"}
-						hintInput={"Plate name"}
+						hintInput={"Plate Name"}
 						submitInput={(inputText) => { this.savePlate(inputText, plate, score) }}
 						closeDialog={() => { this.setState({ isDialogVisible: false }) }}>
 					</DialogInput>
-					<Text style={score < 4333 ? [styles.score, styles.textRed] : score < 8666 ? [styles.score, styles.textGrey] : [styles.score, styles.textGreen]}>You Scored: {score}/13000 points!</Text>
+					<Text style={score < 4333 ? [styles.header, styles.textRed] : score < 8666 ? [styles.header, styles.textGrey] : [styles.header, styles.textGreen]}>You Scored: {score}/13000 points!</Text>
 					<Text style={styles.textAdjustments}>You made {tweaks} adjustment{adjustmentPlural} to your plate, and your score has been reduced by {tweaks * global.tweakPenalty} points.</Text>
 					<View style={styles.row}>
 						<View style={styles.column}>
@@ -165,7 +177,36 @@ export default class ScoreScreen extends React.Component {
 						<Text style={styles.buttonText}>Make A New Plate</Text>
 					</TouchableOpacity>
 				</ScrollView>
-			</View>
+				<Modal
+					backdropOpacity={0}
+					isVisible={this.state.isModalVisible}
+					animationType="slide"
+				>
+					<View style={{
+						flex: 1,
+						backgroundColor: "#fff",
+						borderRadius: 4,
+						borderColor: "#eee",
+						borderWidth: 2,
+						marginTop: "40%",
+					}}>
+						<TouchableOpacity
+							onPress={() => this.setState({ isModalVisible: false })}
+						>
+							<Text style={[styles.closeModal, styles.textBlue]}>Back</Text>
+						</TouchableOpacity>
+						<ScrollView
+							style={styles.container}
+						>
+
+							<Text style={styles.header}>{this.state.modalNutrientName}</Text>
+							<Text style={styles.header2}>Why It's Important</Text>
+							<Text style={styles.header2}>Health Risks</Text>
+							<Text style={styles.header2}>Foods Rich in {this.state.modalNutrientName}</Text>
+						</ScrollView>
+					</View>
+				</Modal>
+			</View >
 		);
 	};
 
@@ -188,12 +229,30 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'column'
 	},
-	score: {
-		marginTop: offset,
+	header: {
+		marginTop: offset * 2,
 		marginBottom: offset,
-		flex: 1,
 		fontSize: 24,
 		textAlign: "center",
+	},
+	footer: {
+		marginTop: offset,
+		marginBottom: offset,
+		fontSize: 16,
+		textAlign: "center",
+	},
+	header2: {
+		marginTop: offset,
+		marginBottom: offset,
+		marginLeft: offset,
+		fontSize: 18,
+		textAlign: "left",
+	},
+	closeModal: {
+		fontSize: 18,
+		textAlign: "left",
+		marginTop: offset,
+		marginLeft: offset
 	},
 	textAdjustments: {
 		flex: 1,
@@ -211,6 +270,8 @@ const styles = StyleSheet.create({
 	textColLeft: {
 		textAlign: "left",
 		marginLeft: offset,
+		textDecorationLine: 'underline',
+		textDecorationStyle: 'dotted'
 	},
 	textColMid: {
 		textAlign: "center",
@@ -249,6 +310,9 @@ const styles = StyleSheet.create({
 	},
 	textGrey: {
 		color: "gray",
+	},
+	textBlue: {
+		color: "blue",
 	},
 	buttonText: {
 		flex: 1,
