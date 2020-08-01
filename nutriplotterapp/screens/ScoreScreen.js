@@ -184,19 +184,31 @@ export default class ScoreScreen extends React.Component {
 				>
 					<View style={{
 						flex: 1,
-						backgroundColor: "#fff",
-						borderRadius: 4,
-						borderColor: "#eee",
+						backgroundColor: "#f5f5f5",
+						borderRadius: 12,
+						borderColor: "gray",
 						borderWidth: 2,
 						marginTop: "40%",
+						marginBottom: "10%",
+						marginLeft: -10,
+						marginRight: -10,
 					}}>
 						<TouchableOpacity
+							style={{
+								backgroundColor: "#fff",
+								borderRadius: 12,
+								borderBottomWidth: 2,
+								borderColor: "gray",
+							}}
 							onPress={() => this.setState({ isModalVisible: false })}
 						>
 							<Text style={[styles.closeModal, styles.textBlue]}>Back</Text>
 						</TouchableOpacity>
 						<ScrollView
-							style={styles.container}
+							style={{
+								flex: 1,
+								backgroundColor: "eee"
+							}}
 						>
 
 							<Text style={styles.header}>{this.state.modalNutrientName}</Text>
@@ -252,6 +264,7 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		textAlign: "left",
 		marginTop: offset,
+		marginBottom: offset,
 		marginLeft: offset
 	},
 	textAdjustments: {
