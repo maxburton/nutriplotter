@@ -3,8 +3,9 @@
 */
 
 import React from 'react';
+
 var Datastore = require('react-native-local-mongodb'),
-	fooddb = new Datastore({ filename: 'foods', autoload: true });
+db = new Datastore({ filename: 'foods', autoload: true });
 
 export default class PopulateSideItems extends React.Component {
 	constructor() {
@@ -23,26 +24,37 @@ export default class PopulateSideItems extends React.Component {
 		global.sideItems = [];
 
 		for (let i = 0; i < sideItemFoods.length; i++) {
-			let foodItem = global.foodsFull[sideItemFoods[i]];
+			db.find({ _id: sideItemFoods[i] }, function (err, foodItem) {
+				if (err) {
+					throw err;
+				}
+				if (foodItem.length == 0) {
+					throw Error("[populateSideItems.js] This food doesn't exist in the mongoDB!");
+				}else{
+					// Get map from array
+					foodItem = foodItem[0];
+					
+					// remove metadata
+					delete foodItem["_id"];
+					delete foodItem["group"];
 
-			// remove metadata
-			delete foodItem["name"];
-			delete foodItem["group"];
+					// get nutrients according to their weight
+					let multiplier = sideItemWeights[i] / 100;
+					for (key in foodItem) {
+						foodItem[key] = foodItem[key] * multiplier;
+					}
+					
+					// add item to global array
+					global.sideItems.push({
+						"_id": i + 1,
+						"type": sideItemTypes[i],
+						"isIn": false,
+						"nutrition": foodItem
+					});
+				}
 
-			// get nutrients according to their weight
-			let multiplier = sideItemWeights[i] / 100;
-			for (key in foodItem) {
-				foodItem[key] = foodItem[key] * multiplier;
-			}
-			console.log("\n\n FOOD ITEMS BBY2:\n");
-			console.log(foodItem);
-			// add item to global array
-			global.sideItems.push({
-				"_id": i + 1,
-				"type": sideItemTypes[i],
-				"isIn": false,
-				"nutrition": foodItem
 			});
+
 		}
 
 		/*

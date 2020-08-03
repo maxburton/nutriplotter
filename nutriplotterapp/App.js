@@ -16,19 +16,21 @@ import * as Icon from '@expo/vector-icons';
 import * as Font from 'expo-font';
 import { Asset } from 'expo-asset';
 import AppNavigator from "./navigation/AppNavigator";
+import popDatabase from "./populateDatabase";
 import popArray from "./populateArray";
-import popArrayFull from "./populateArrayFull";
 import popList from "./populateNameList";
 import popSideItems from "./populateSideItems";
 import popSavedPlates from "./populateSavedPlates";
+import popSettings from "./populateSettings";
 import firebase from "./components/Firebase.js";
 
 var Datastore = require('react-native-local-mongodb'),
-db = new Datastore({ filename: 'foods', autoload: true });
+  db = new Datastore({ filename: 'foods', autoload: true });
 platedb = new Datastore({ filename: 'plate', autoload: true });
 savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
 sideItemsdb = new Datastore({ filename: 'sideItems', autoload: true });
 favdb = new Datastore({ filename: 'favourites', autoload: true });
+settingsdb = new Datastore({ filename: 'settings', autoload: true });
 
 export default class App extends React.Component {
   state = {
@@ -99,9 +101,44 @@ export default class App extends React.Component {
     _retrieveData();
 
 
+    // populate mongoDB of all foods if it's empty
+    db.find({}, function (err, foodDB) {
+      if (foodDB.length == 0) {
+        new popDatabase();
+      }
+    });
+
+    // initialise (populate) mongoDB of settings if it's empty
+    settingsdb.find({}, function (err, settings) {
+      if (settings.length == 0) {
+        new popSettings();
+      }
+
+      // convert mongodb into global json array
+      settingsdb.find({}, function (err, fetchedSettings) {
+        // convert object to map
+        fetchedSettings = fetchedSettings;
+
+        settingsMap = {};
+        console.log("\n\nFETCHED SETTINGS:")
+        console.log(fetchedSettings)
+        for (let i = 0; i < fetchedSettings.length; i++) {
+          let fetchedSetting = fetchedSettings[i];
+          let key = fetchedSetting["_id"];
+          let value = fetchedSetting["value"];
+          settingsMap[key] = value;
+        }
+
+        global.settings = settingsMap;
+
+        console.log("\n\nGLOBAL SETTINGS:")
+        console.log(global.settings)
+      });
+    });
+
+
 
     new popArray();
-    new popArrayFull();
     new popList();
     new popSideItems();
     global.tweaks = 0;
@@ -110,30 +147,30 @@ export default class App extends React.Component {
     global.totals = {};
     global.savedPlates = new Array();
     global.maximum = 100;
-    savedPlatesdb.find({}, function (err, newDocs) {
-      if (newDocs.length > 0) {
-        global.savedPlates = newDocs;
+    savedPlatesdb.find({}, function (err, savedPlates) {
+      if (savedPlates.length > 0) {
+        global.savedPlates = savedPlates;
         loadingCheck();
       } else {
-        var s = new popSavedPlates(); //Load in default plates
+        new popSavedPlates(); //Load in default saved plates
         savedPlatesdb.insert(global.savedPlates[0], function (err, newDoc) {
           loadingCheck();
         });
       }
     });
-    sideItemsdb.find({}, function (err, newDocs) {
-      if (newDocs.length > 0) {
-        global.sideItems = newDocs;
+    sideItemsdb.find({}, function (err, sideItems) {
+      if (sideItems.length > 0) {
+        global.sideItems = sideItems;
         loadingCheck();
       } else {
-        sideItemsdb.insert(global.sideItems, function (err, newDocs) {
+        sideItemsdb.insert(global.sideItems, function (err, sideItems) {
           loadingCheck();
         });
       }
     });
     global.favourites = [];
-    favdb.find({}, function (err, newDocs) {
-      global.favourites = newDocs;
+    favdb.find({}, function (err, fav) {
+      global.favourites = fav;
       loadingCheck();
     });
 

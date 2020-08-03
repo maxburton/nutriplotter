@@ -41,6 +41,7 @@
     "react-native-settings-list": "^1.8.0",
     "react-native-svg": "12.1.0",
     "react-native-svg-charts": "^5.4.0",
+    "react-native-switch": "^2.0.0",
     "react-native-vector-icons": "^6.6.0",
     "react-navigation": "^2.18.3",
     "ws": "^7.2.0"

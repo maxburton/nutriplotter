@@ -1,3 +1,5 @@
+// Global styles
+
 import { StyleSheet } from 'react-native';
 
 export const Colors = {
@@ -42,6 +44,35 @@ const baseSettingList = {
     backgroundColor: '#FFFFFF',
     //titleStyle: {color: '#000000'}
 }
+
+const global = StyleSheet.create({
+    flex: {
+        flex: 1
+    },
+    
+    // colours
+    blue: {
+        color: "blue",
+    },
+    red: {
+        color: "red",
+    },
+    green: {
+        color: "green",
+    },
+    grey: {
+        color: "grey",
+    },
+    darkgrey: {
+        color: "#f3f3f3",
+    },
+    white: {
+        color: "#fff"
+    },
+    black: {
+        color: "#000"
+    },
+});
 
 const lightStyleSheet = StyleSheet.create({
     container: {

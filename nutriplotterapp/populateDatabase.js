@@ -3,7 +3,6 @@
 */
 
 import React from 'react';
-import { Platform} from 'react-native';
 
 var Datastore = require('react-native-local-mongodb'), 
 db = new Datastore({ filename: 'foods', autoload: true });
