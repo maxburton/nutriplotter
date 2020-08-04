@@ -77,13 +77,16 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
+    // Wait until all content is fetched from DBs, then render
     let loadingCount = 0;
-    loadingCheck = () => {
+    componentLoaded = () => {
       loadingCount++;
-      if (loadingCount >= 4) {
+      if (loadingCount >= 5) {
         this.setState({ isLoaded: true });
+        console.log("All App.js components & global variables loaded")
       }
     }
+
     //Disables warning messages: TRUE FOR DEMOS
     console.disableYellowBox = true;
     global.isLoggedIn = false;
@@ -108,36 +111,6 @@ export default class App extends React.Component {
       }
     });
 
-    // initialise (populate) mongoDB of settings if it's empty
-    settingsdb.find({}, function (err, settings) {
-      if (settings.length == 0) {
-        new popSettings();
-      }
-
-      // convert mongodb into global json array
-      settingsdb.find({}, function (err, fetchedSettings) {
-        // convert object to map
-        fetchedSettings = fetchedSettings;
-
-        settingsMap = {};
-        console.log("\n\nFETCHED SETTINGS:")
-        console.log(fetchedSettings)
-        for (let i = 0; i < fetchedSettings.length; i++) {
-          let fetchedSetting = fetchedSettings[i];
-          let key = fetchedSetting["_id"];
-          let value = fetchedSetting["value"];
-          settingsMap[key] = value;
-        }
-
-        global.settings = settingsMap;
-
-        console.log("\n\nGLOBAL SETTINGS:")
-        console.log(global.settings)
-      });
-    });
-
-
-
     new popArray();
     new popList();
     new popSideItems();
@@ -147,31 +120,67 @@ export default class App extends React.Component {
     global.totals = {};
     global.savedPlates = new Array();
     global.maximum = 100;
+    global.settings = {};
+    global.populatedSettings = false;
+
+    // initialise (populate) mongoDB of settings if it's empty
+    settingsdb.find({}, function (err, settings) {
+      if (settings.length == 0) {
+        new popSettings();
+
+        // wait until settings are populated to continue
+        while (!global.populatedSettings){
+          continue;
+        }
+      }
+
+      // convert mongodb into global json array
+      settingsdb.find({}, function (err, fetchedSettings) {
+        // convert object to map
+        fetchedSettings = fetchedSettings;
+        settingsMap = {};
+
+        for (let i = 0; i < fetchedSettings.length; i++) {
+          let fetchedSetting = fetchedSettings[i];
+          let key = fetchedSetting["_id"];
+          let value = fetchedSetting["value"];
+          settingsMap[key] = value;
+        }
+        global.settings = settingsMap;
+
+        console.log("\n\nGLOBAL SETTINGS:")
+        console.log(global.settings)
+        componentLoaded();
+      });
+    });
+
     savedPlatesdb.find({}, function (err, savedPlates) {
       if (savedPlates.length > 0) {
         global.savedPlates = savedPlates;
-        loadingCheck();
+        componentLoaded();
       } else {
         new popSavedPlates(); //Load in default saved plates
         savedPlatesdb.insert(global.savedPlates[0], function (err, newDoc) {
-          loadingCheck();
+          componentLoaded();
         });
       }
     });
+
     sideItemsdb.find({}, function (err, sideItems) {
       if (sideItems.length > 0) {
         global.sideItems = sideItems;
-        loadingCheck();
+        componentLoaded();
       } else {
         sideItemsdb.insert(global.sideItems, function (err, sideItems) {
-          loadingCheck();
+          componentLoaded();
         });
       }
     });
+
     global.favourites = [];
     favdb.find({}, function (err, fav) {
       global.favourites = fav;
-      loadingCheck();
+      componentLoaded();
     });
 
     // Names of all nutrients nicely formatted
@@ -191,8 +200,7 @@ export default class App extends React.Component {
       vitC: "Vitamin C"
     };
 
-
-    // Unites for each nutrient
+    // Units for each nutrient
     global.nutrientUnits = {
       calories: "kcal",
       omega3: "mg",
@@ -291,7 +299,7 @@ export default class App extends React.Component {
           }
         }
       }
-      loadingCheck();
+      componentLoaded();
     });
 
 

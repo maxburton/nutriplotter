@@ -8,26 +8,22 @@
 */
 
 import React from "react";
+import styleMap from "../themes/globalStyles";
+import styles from "../themes/homeScreenStyles";
 import List from "../components/FoodList.js";
 import Plate from "../components/Plate.js";
 import SideItem from "../components/SideItem.js";
 import firebase from "../components/Firebase.js";
 import "./LoginScreen";
-import { Button } from "react-native-elements";
-//Initialise firebase database
+
 import {
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Dimensions,
   KeyboardAvoidingView,
   Alert,
 } from "react-native";
 import Modal from "react-native-modal";
-
-var Datastore = require("react-native-local-mongodb"),
-  platedb = new Datastore({ filename: "plate", autoload: true });
 
 updateStateHome = rand => {
   this.setState({ refresh: rand });
@@ -40,27 +36,21 @@ export default class HomeScreen extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       isModalVisible: false,
-      darkTheme: false,
       refresh: 0
     };
-    this.resetGlobalTotals();
-    this.toggleTheme = this.toggleTheme.bind(this);
-  }
 
-  updateChild = rand => {
-    updateStateHome(rand);
-  };
+    this.resetGlobalTotals();
+  }
 
   componentDidMount() {
-    this.load();
-    this.props.navigation.addListener("willFocus", this.load);
+    this.props.navigation.addListener("willFocus", this.refresh);
   }
-  load = () => {
-    this.updateChild(Math.random());
-  };
+  
+  refresh = () => {
+    this.setState({ refresh: Math.random() });
+  }
 
   // Retrieve the current scores for the user from the database
   updateScore = async score => {
@@ -110,16 +100,13 @@ export default class HomeScreen extends React.Component {
       });
   };
 
-  toggleTheme() {
-    this.setState({ darkTheme: !this.state.darkTheme });
-  }
-
   _toggleModal() {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
   // Occurs when the `Submit Plate` button is touched.
   _resultsClick() {
+    console.log("Submit plate button pressed")
     // Check if there is any food on the plate to submit.
     if (global.plate.length > 0) {
       this._toggleModal();
@@ -166,7 +153,7 @@ export default class HomeScreen extends React.Component {
       let weight = 1000 / idealNutrients[key][1];
       let ideal = idealNutrients[key][1];
       let advice = "ok";
-      
+
       let acceptableRangeMultiplier = 0.15; // 15% either way
       let acceptableCustion = Math.round(acceptableRangeMultiplier * ideal);
 
@@ -315,7 +302,19 @@ export default class HomeScreen extends React.Component {
   };
 
   render() {
-    console.log("RENDERED");
+
+    console.log("Home Screen Rendering");
+
+    // global styles
+    let globalStyles = styleMap.global;
+
+    // use dark or light mode
+    let colorTheme = null;
+    if (global.settings.darkMode) {
+      colorTheme = styleMap.darkMode;
+    } else {
+      colorTheme = styleMap.lightMode;
+    }
 
     //Calculates the total nutrients of all foods added together
     var foodDocs = global.plate;
@@ -343,16 +342,16 @@ export default class HomeScreen extends React.Component {
 
     return (
       <KeyboardAvoidingView
-        style={styles.container}
+        style={[globalStyles.flex1, colorTheme.bgColor]}
         behavior="position"
-        contentContainerStyle={styles.container}
+        contentContainerStyle={globalStyles.flex1}
       >
-        <View style={styles.wholePlateView}>
-          <View style={styles.leftPlateView}>
-            <View style={styles.UL}>
+        <View style={[globalStyles.flex1, globalStyles.flexRow]}>
+          <View style={[globalStyles.flex1, globalStyles.flexCol]}>
+            <View style={[globalStyles.flex1, styles.UL]}>
               <SideItem type={"fruit"} isDown={false} />
             </View>
-            <View style={styles.DL}>
+            <View style={[globalStyles.flex1, styles.DL]}>
               <SideItem type={"dairy"} isDown={true} />
             </View>
           </View>
@@ -360,28 +359,31 @@ export default class HomeScreen extends React.Component {
             {/* Render the plate here. */}
             <Plate />
           </View>
-          <View style={styles.rightPlateView}>
-            <View style={styles.UR}>
+          <View style={[globalStyles.flex1, globalStyles.flexCol]}>
+            <View style={[globalStyles.flex1, styles.UR]}>
               <SideItem type={"bread"} isDown={false} />
             </View>
-            <View style={styles.DR}>
+            <View style={[globalStyles.flex1, styles.DR]}>
               <SideItem type={"drink"} isDown={true} />
             </View>
           </View>
         </View>
 
         {/* FoodList component including search bar and recently added food list. */}
-        <View style={[styles.list, { marginTop: "5%" }]}>
-          <List listParent={this} style={styles.list} />
+        <View style={[globalStyles.flex1, { marginTop: "5%" }]}>
+          <List listParent={this} style={globalStyles.flex1} />
         </View>
 
         {/* Plate submission button. */}
         <View>
-          <Button
-            style={styles.submitPlate}
-            title={"Submit Plate"}
+          <TouchableOpacity
+            style={[globalStyles.button, colorTheme.buttonBgColor]}
             onPress={() => this._resultsClick()}
-          />
+          >
+            <Text style={[globalStyles.buttonText, colorTheme.buttonTextColor]}>
+              Submit Plate
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Plate summary and submission modal */}
@@ -440,7 +442,7 @@ export default class HomeScreen extends React.Component {
             </View>
             <View style={{ flex: 1, alignItems: "center" }}>
               <TouchableOpacity
-                style={{ flex: 1 }}
+                style={globalStyles.flex1}
                 onPress={() => this.tweakPlate()}
               >
                 <Text
@@ -454,7 +456,7 @@ export default class HomeScreen extends React.Component {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={{ flex: 1 }}
+                style={globalStyles.flex1}
                 onPress={() => this.submitPlate()}
               >
                 <Text
@@ -498,96 +500,3 @@ export default class HomeScreen extends React.Component {
   }
 }
 
-const offset = 24;
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  list: {
-    flex: 1
-  },
-  plateView: {
-    flex: 1,
-    marginTop: "10%"
-  },
-  wholePlateView: {
-    flex: 1,
-    flexDirection: "row"
-  },
-  leftPlateView: {
-    flex: 1,
-    flexDirection: "column"
-  },
-  rightPlateView: {
-    flex: 1,
-    flexDirection: "column"
-  },
-  title: {
-    marginTop: offset,
-    marginLeft: offset,
-    fontSize: offset
-  },
-  submitPlate: {
-    alignItems: "center",
-    marginTop: 3,
-    fontSize: offset
-  },
-  buttonText: {
-    marginLeft: offset,
-    fontSize: offset
-  },
-  model: {
-    backgroundColor: "white"
-  },
-  childStyle: {
-    fontSize: 72,
-    color: "red"
-  },
-  modelContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    height: height - offset * 3,
-    backgroundColor: "white"
-  },
-  modelColumn: {
-    flex: 5,
-    flexDirection: "column",
-    marginLeft: offset * 3
-  },
-  innerView: {},
-  description: {
-    padding: 20,
-    fontSize: 18
-  },
-  outerView: {
-    flex: 1,
-    backgroundColor: "#00000080"
-  },
-  UL: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "flex-start"
-  },
-  DL: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "flex-start"
-  },
-  UR: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "flex-end"
-  },
-  DR: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "flex-end"
-  },
-  SP: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  }
-});

@@ -6,11 +6,13 @@ import * as React from 'react';
 import {
 	Text,
 	View,
-	StyleSheet,
+	ScrollView,
 	TouchableOpacity,
 	Alert,
 	Switch
 } from 'react-native';
+import styleMap from "../themes/globalStyles";
+import styles from "../themes/settingsScreenStyles";
 
 var Datastore = require("react-native-local-mongodb"),
 	savedPlatesdb = new Datastore({ filename: "savedPlates", autoload: true });
@@ -33,7 +35,7 @@ export default class SettingsScreen extends React.Component {
 		for (key in global.settings) {
 			settingsdb.update(
 				{ _id: key },
-				{ $set: { value: global.settings[key] } }, function (err, numReplaced) { 
+				{ $set: { value: global.settings[key] } }, function (err, numReplaced) {
 					console.log("Setting updated:" + numReplaced);
 				});
 		}
@@ -90,52 +92,47 @@ export default class SettingsScreen extends React.Component {
 	}
 
 	render() {
+		// global styles
+		let globalStyles = styleMap.global;
+
+		// use dark or light mode
+		let colorTheme = null;
+		if (global.settings.darkMode) {
+			colorTheme = styleMap.darkMode;
+		} else {
+			colorTheme = styleMap.lightMode;
+		}
+
+		let buttonTextStyle = [globalStyles.buttonText, colorTheme.buttonTextColor];
+		let labelTextStyle = [globalStyles.textLeft, globalStyles.textBig, globalStyles.marginFromLeft, globalStyles.flex1, colorTheme.textColor];
+		let buttonStyle = [globalStyles.button, colorTheme.buttonBgColor];
+
 		return (
-			<View style={styles.container}>
-				<View style={styles.container}>
-					<TouchableOpacity style={styles.button} onPress={() => this.deleteSavedPlates()}>
-						<Text style={styles.text}>Delete Saved Plates</Text>
-					</TouchableOpacity>
-					<TouchableOpacity style={styles.button} onPress={() => this.deleteFavs()}>
-						<Text style={styles.text}>Delete Search History</Text>
-					</TouchableOpacity>
-					<View style={styles.container}>
-						<Text style={styles.text}>Dark Mode </Text>
-						<Switch
-							onValueChange={() => this.toggleDarkMode()}
-							value={this.state.darkMode}
-						/>
+			<View style={[globalStyles.flex1, colorTheme.bgColor]}>
+				<ScrollView style={globalStyles.paddingFromTop}>
+					<View style={[globalStyles.flexRow, globalStyles.flexCenter]}>
+						<Text style={[labelTextStyle]}>Dark Mode </Text>
+						<View style={[globalStyles.flex1, globalStyles.flexRow, globalStyles.flexEnd, globalStyles.marginFromRight]}>
+							<Switch
+								onValueChange={() => this.toggleDarkMode()}
+								value={this.state.darkMode}
+							/>
+						</View>
 					</View>
-				</View>
+					<View style={globalStyles.marginFromTop}>
+						<TouchableOpacity style={buttonStyle} onPress={() => this.deleteSavedPlates()}>
+							<Text style={buttonTextStyle}>Delete Saved Plates</Text>
+						</TouchableOpacity>
+						<TouchableOpacity style={buttonStyle} onPress={() => this.deleteFavs()}>
+							<Text style={buttonTextStyle}>Delete Search History</Text>
+						</TouchableOpacity>
+					</View>
+				</ScrollView>
 				<View style={styles.bottomContainer}>
-					<Text style={styles.iconText}>Food Icons Courtesy of www.flaticon.com</Text>
+					<Text style={[globalStyles.textCenter, colorTheme.textColor]}>Food Icons Courtesy of www.flaticon.com</Text>
 				</View>
 			</View>
 		);
 	}
 }
 
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	bottomContainer: {
-		flex: 1,
-		justifyContent: "flex-end",
-		marginBottom: 5,
-	},
-	text: {
-		fontSize: 24,
-		textAlign: 'center',
-		color: "red",
-	},
-	iconText: {
-		textAlign: 'center',
-	},
-	button: {
-		flex: 1,
-		marginTop: 15,
-		justifyContent: "center",
-		alignItems: "center",
-	}
-});
