@@ -1,6 +1,6 @@
 # Nutriplotter
 -----
-#### Produced at University of Glasgow
+
 ## Purpose
 The purpose of this project was to create a healthy eating, nutritionally correct game that gave info on all essential nutrients
 
@@ -8,7 +8,7 @@ The purpose of this project was to create a healthy eating, nutritionally correc
 The package for this project is React native, this was so the project could be run on either android or IOS. All dependencies are listed in package-json.
 
 ## Setup
-For Instructions to setup, look at Handover Guide
+For Instructions to setup, look at the wiki
 
 ## Current Functionality V1.0 - Features
 - Game fully working
@@ -25,10 +25,10 @@ For Instructions to setup, look at Handover Guide
 - Push notifications
 - Sounds
 - Conclusive Settings page
-- Adjust food icons scaling and rotation to be smoother
+- Adjust food icons scaling and rotation to be smoother (completed)
 
 ## Contributers
-- Max Burton
+- Max Kirker Burton
 - Sam Owen-Hughes
 - Joe Kadi
 - Lucy Conaghan
