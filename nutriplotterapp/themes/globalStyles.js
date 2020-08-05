@@ -89,6 +89,21 @@ const globalStyles = StyleSheet.create({
         fontSize: 12,
     },
 
+    // Headers and Footers
+    header: {
+		marginTop: constants.offset * 2,
+		marginBottom: constants.offset,
+		fontSize: 24,
+		textAlign: "center",
+    },
+    header2: {
+		marginTop: constants.offset,
+		marginBottom: constants.offset,
+		marginLeft: constants.offset,
+		fontSize: 18,
+		textAlign: "left",
+	},
+
     // components
     button: {
         alignItems: "center",
@@ -102,6 +117,31 @@ const globalStyles = StyleSheet.create({
         margin: 5,
         fontSize: 24,
     },
+
+    modalContainer: {
+		flex: 1,
+		backgroundColor: "#f5f5f5",
+		borderRadius: constants.offset/2,
+		borderColor: "gray",
+		borderWidth: 2,
+		marginTop: "40%",
+		marginBottom: "10%",
+		marginLeft: -constants.offset/2,
+		marginRight: -constants.offset/2,
+	},
+	backButton: {
+		backgroundColor: constants.white,
+		borderRadius: constants.offset/2,
+		borderBottomWidth: 2,
+		borderColor: "gray",
+	},
+	backButtonText: {
+		fontSize: 18,
+		textAlign: "left",
+		marginTop: constants.offset,
+		marginBottom: constants.offset,
+		marginLeft: constants.offset
+	},
 
     // colours
     blue: {

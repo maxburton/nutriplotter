@@ -30,7 +30,7 @@ platedb = new Datastore({ filename: 'plate', autoload: true });
 savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
 sideItemsdb = new Datastore({ filename: 'sideItems', autoload: true });
 favdb = new Datastore({ filename: 'favourites', autoload: true });
-settingsdb = new Datastore({ filename: 'settings', autoload: true });
+globalSettingsdb = new Datastore({ filename: 'globalSettings', autoload: true });
 
 export default class App extends React.Component {
   state = {
@@ -77,11 +77,99 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
+    console.log("App.js mounted");
+
+    // whether or not to get a clean population of DBs
+    const flushdb = false;
+    const flushplatedb = false;
+    const flushsideItemsdb = false;
+    const flushsavedPlatesdb = false;
+    const flushfavdb = false;
+    const flushglobalSettingsdb = true;
+
+    let flushNum = 1;
+    let flushedNum = 0;
+    let finishedFlushing = false;
+
+    flushed = () => {
+      console.log("Component Flushed");
+      flushedNum++;
+      if(flushedNum >= flushNum){
+        finishedFlushing = true;
+        console.log("Finished flushing");
+      }
+    }
+
+    if(flushdb){
+      flushNum++;
+      db.remove({}, { multi: true }, function(err, numRemoved) {
+        console.log("Foods DB flushed");
+        console.log("Entries flushed: " + numRemoved);
+        flushed();
+      });
+    }
+
+    if(flushplatedb){
+      flushNum++;
+      platedb.remove({}, { multi: true }, function(err, numRemoved) {
+        console.log("Plate DB flushed");
+        console.log("Entries flushed: " + numRemoved);
+        flushed();
+      });
+    }
+
+    if(flushsideItemsdb){
+      flushNum++;
+      sideItemsdb.remove({}, { multi: true }, function(err, numRemoved) {
+        console.log("SideItems DB flushed");
+        console.log("Entries flushed: " + numRemoved);
+        flushed();
+      });
+    }
+
+    if(flushsavedPlatesdb){
+      flushNum++;
+      savedPlatesdb.remove({}, { multi: true }, function(err, numRemoved) {
+        console.log("savedPlates DB flushed");
+        console.log("Entries flushed: " + numRemoved);
+        flushed();
+      });
+    }
+
+    if(flushfavdb){
+      flushNum++;
+      favdb.remove({}, { multi: true }, function(err, numRemoved) {
+        console.log("Favs DB flushed");
+        console.log("Entries flushed: " + numRemoved);
+        flushed();
+      });
+    }
+
+    if(flushglobalSettingsdb){
+      flushNum++;
+      globalSettingsdb.remove({}, { multi: true }, function(err, numRemoved) {
+        console.log("Settings DB flushed");
+        console.log("Entries flushed: " + numRemoved);
+        flushed();
+      });
+    }
+
+    // Wait for flushing to finish
+    /*
+    flushed();
+    while(!finishedFlushing){
+      continue
+    }
+    console.log("Currently flushing DBs...");
+    */
+
+
     // Wait until all content is fetched from DBs, then render
     let loadingCount = 0;
     componentLoaded = () => {
       loadingCount++;
-      if (loadingCount >= 5) {
+      console.log("Components loaded: " + loadingCount);
+      if (loadingCount >= 6) {
         this.setState({ isLoaded: true });
         console.log("All App.js components & global variables loaded")
       }
@@ -108,6 +196,9 @@ export default class App extends React.Component {
     db.find({}, function (err, foodDB) {
       if (foodDB.length == 0) {
         new popDatabase();
+        componentLoaded();
+      } else{
+        componentLoaded();
       }
     });
 
@@ -124,22 +215,30 @@ export default class App extends React.Component {
     global.populatedSettings = false;
 
     // initialise (populate) mongoDB of settings if it's empty
-    settingsdb.find({}, function (err, settings) {
-      if (settings.length == 0) {
-        new popSettings();
+    globalSettingsdb.find({}, function (err, settingsFromDb) {
+      if(err){
+        console.log(err);
+        throw err;
+      }
+
+      if (settingsFromDb.length == 0) {
 
         // wait until settings are populated to continue
-        while (!global.populatedSettings){
-          continue;
+        /*
+        while(!settingsDB.getStatus){
+          console.log("Loading global settings");
         }
+        */
       }
 
       // convert mongodb into global json array
-      settingsdb.find({}, function (err, fetchedSettings) {
+      globalSettingsdb.find({}, function (err, fetchedSettings) {
+        if(err){
+          console.log(err);
+          throw err;
+        }
         // convert object to map
-        fetchedSettings = fetchedSettings;
-        settingsMap = {};
-
+        let settingsMap = {};
         for (let i = 0; i < fetchedSettings.length; i++) {
           let fetchedSetting = fetchedSettings[i];
           let key = fetchedSetting["_id"];
@@ -148,8 +247,8 @@ export default class App extends React.Component {
         }
         global.settings = settingsMap;
 
-        console.log("\n\nGLOBAL SETTINGS:")
-        console.log(global.settings)
+        console.log("GLOBAL SETTINGS:");
+        console.log(global.settings);
         componentLoaded();
       });
     });
@@ -302,7 +401,6 @@ export default class App extends React.Component {
       componentLoaded();
     });
 
-
     _storeData = async () => {
       try {
         await AsyncStorage.setItem("isFirstLaunch", "0");
@@ -323,6 +421,8 @@ export default class App extends React.Component {
   }
 
   render() {
+    console.log("App.js rendering...");
+
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen || !this.state.isLoaded) {
       return (
         <AppLoading

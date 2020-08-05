@@ -5,10 +5,9 @@ only require less than a certain amount - should we change this?
 
 Todo:
 *-On food edit modal, keep the "back to plate" text on screen all the time
--Change sliders in food edit modal so that they don't have an upper cap, and instead increase/decrease weight
-based on how far along the slider it is being dragged
+*-Change sliders in food edit modal so that they don't have an upper cap, and instead increase/decrease weight based on how far along the slider it is being dragged
 *-Remake score screen so that all nutrients are left aligned, and make the nutrient levels black and (perhaps) bold
--Add a score breakdown for each nutrient (i.e. how highly they scored for each nutrient out of 100)
+*-Add a score breakdown for each nutrient (i.e. how highly they scored for each nutrient out of 100)
 -Change a few icons (e.g. veg and meat) to include a variety of foods e.g. for meat use chicken, beef, lamb.
 *-Try pie chart full size and thinner (like old style)
--On score screen add icon for each nutrient that links to the website in the email
+*-On score screen add icon for each nutrient that links to the website in the email

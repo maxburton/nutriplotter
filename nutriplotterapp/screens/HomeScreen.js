@@ -8,7 +8,7 @@
 */
 
 import React from "react";
-import styleMap from "../themes/globalStyles";
+import GlobalStyles from "../components/GlobalStyles"
 import styles from "../themes/homeScreenStyles";
 import List from "../components/FoodList.js";
 import Plate from "../components/Plate.js";
@@ -25,6 +25,9 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 
+var Datastore = require("react-native-local-mongodb"),
+  globalSettingsdb = new Datastore({ filename: 'globalSettings', autoload: true });
+
 updateStateHome = rand => {
   this.setState({ refresh: rand });
 };
@@ -38,6 +41,7 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = {
       isModalVisible: false,
+      isFirstLaunchModalVisible: false,
       refresh: 0
     };
 
@@ -47,7 +51,7 @@ export default class HomeScreen extends React.Component {
   componentDidMount() {
     this.props.navigation.addListener("willFocus", this.refresh);
   }
-  
+
   refresh = () => {
     this.setState({ refresh: Math.random() });
   }
@@ -301,19 +305,27 @@ export default class HomeScreen extends React.Component {
     }
   };
 
-  render() {
+  setFirstLaunchToFalse = () => {
+    this.setState({ isFirstLaunchModalVisible: false });
+    globalSettingsdb.update(
+      { _id: "isFirstLaunch" },
+      { $set: { value: false } }, function (err, numReplaced) {
+        console.log("First launch setting updated: " + numReplaced);
+      });
+  }
 
+  render() {
     console.log("Home Screen Rendering");
 
     // global styles
-    let globalStyles = styleMap.global;
+    let globalStylesComponent = new GlobalStyles();
+    let globalStyles = globalStylesComponent.global();
+    let colorTheme = globalStylesComponent.colorTheme(global.settings.darkMode);
 
-    // use dark or light mode
-    let colorTheme = null;
-    if (global.settings.darkMode) {
-      colorTheme = styleMap.darkMode;
-    } else {
-      colorTheme = styleMap.lightMode;
+    // Launch tutorial modal if this is first launch
+    if (global.settings.isFirstLaunch) {
+      global.settings.isFirstLaunch = false;
+      this.setState({ isFirstLaunchModalVisible: true });
     }
 
     //Calculates the total nutrients of all foods added together
@@ -385,6 +397,28 @@ export default class HomeScreen extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
+
+        {/* Tutorial modal */}
+        <Modal
+          backdropOpacity={0}
+          animationType="slide"
+          isVisible={this.state.isFirstLaunchModalVisible}
+        >
+          <View style={globalStyles.modalContainer}>
+            <TouchableOpacity
+              style={globalStyles.backButton}
+              onPress={() => this.setFirstLaunchToFalse()}
+            >
+              <Text style={[globalStyles.backButtonText, globalStyles.blue]}>Back</Text>
+            </TouchableOpacity>
+            <View
+              style={[globalStyles.flex1, colorTheme.backgroundColor]}
+            >
+              <Text style={globalStyles.header}>Using the app</Text>
+              <Text style={globalStyles.header2}>This only shows up on the first launch of the app.</Text>
+            </View>
+          </View>
+        </Modal>
 
         {/* Plate summary and submission modal */}
         <Modal

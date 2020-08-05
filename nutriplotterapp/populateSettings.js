@@ -5,20 +5,27 @@
 import React from 'react';
 
 var Datastore = require('react-native-local-mongodb'),
-    settingsdb = new Datastore({ filename: 'settings', autoload: true });
+globalSettingsdb = new Datastore({ filename: 'globalSettings', autoload: true });
 
 export default class PopulateSettings extends React.Component {
+    isLoaded = false;
     constructor() {
         super();
 
-        settingsdb.insert([
-            { _id: "darkMode", value: false }
+        globalSettingsdb.insert([
+            { _id: "isFirstLaunch", value: true },
+            { _id: "darkMode", value: false },
         ], function (err, newDocs) {
+            
             if (err) {
                 console.log("Errors: " + err);
                 throw err;
             }
-            global.populatedSettings = true;
+            this.isLoaded = true;
         });
+    }
+
+    getStatus(){
+        return this.isLoaded;
     }
 }

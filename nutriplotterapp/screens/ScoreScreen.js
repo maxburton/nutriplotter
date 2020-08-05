@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import DialogInput from 'react-native-dialog-input';
 import Modal from "react-native-modal";
+import GlobalStyles from "../components/GlobalStyles"
+import styles from "../themes/scoreScreenStyles";
 
 var Datastore = require('react-native-local-mongodb');
 savedPlatesdb = new Datastore({ filename: 'savedPlates', autoload: true });
@@ -80,6 +82,11 @@ export default class ScoreScreen extends React.Component {
 	};
 
 	render() {
+		// global styles
+		let globalStylesComponent = new GlobalStyles();
+		let globalStyles = globalStylesComponent.global();
+		let colorTheme = globalStylesComponent.colorTheme(global.settings.darkMode);
+
 		const { navigation } = this.props;
 		const plate = navigation.getParam('plate', new Array());
 		const tweaks = navigation.getParam('tweaks', 0);
@@ -143,7 +150,7 @@ export default class ScoreScreen extends React.Component {
 			}
 		}
 		return (
-			<View style={styles.container}>
+			<View style={[globalStyles.flex1, colorTheme.bgColor]}>
 				<ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
 					<DialogInput isDialogVisible={this.state.isDialogVisible}
 						title={"Name Your Plate"}
@@ -153,17 +160,17 @@ export default class ScoreScreen extends React.Component {
 					</DialogInput>
 					<Text style={score < 4333 ? [styles.header, styles.textRed] : score < 8666 ? [styles.header, styles.textGrey] : [styles.header, styles.textGreen]}>You Scored: {score}/13000 points!</Text>
 					<Text style={styles.textAdjustments}>You made {tweaks} adjustment{adjustmentPlural} to your plate, and your score has been reduced by {tweaks * global.tweakPenalty} points.</Text>
-					<View style={styles.row}>
-						<View style={styles.column}>
+					<View style={[globalStyles.flex1, globalStyles.flexRow]}>
+						<View style={globalStyles.flexCol}>
 							{nutrientNames}
 						</View>
-						<View style={styles.column}>
+						<View style={globalStyles.flexCol}>
 							{renderWarnings}
 						</View>
-						<View style={styles.column}>
+						<View style={globalStyles.flexCol}>
 							{dailyRecNutrients}
 						</View>
-						<View style={styles.columnRight}>
+						<View style={globalStyles.flexCol}>
 							{nutrientScores}
 						</View>
 					</View>
@@ -177,162 +184,31 @@ export default class ScoreScreen extends React.Component {
 						<Text style={styles.buttonText}>Make A New Plate</Text>
 					</TouchableOpacity>
 				</ScrollView>
+				{/* More Info Modal */}
 				<Modal
 					backdropOpacity={0}
 					isVisible={this.state.isModalVisible}
 					animationType="slide"
 				>
-					<View style={{
-						flex: 1,
-						backgroundColor: "#f5f5f5",
-						borderRadius: 12,
-						borderColor: "gray",
-						borderWidth: 2,
-						marginTop: "40%",
-						marginBottom: "10%",
-						marginLeft: -10,
-						marginRight: -10,
-					}}>
+					<View style={globalStyles.modalContainer}>
 						<TouchableOpacity
-							style={{
-								backgroundColor: "#fff",
-								borderRadius: 12,
-								borderBottomWidth: 2,
-								borderColor: "gray",
-							}}
+							style={globalStyles.backButton}
 							onPress={() => this.setState({ isModalVisible: false })}
 						>
-							<Text style={[styles.closeModal, styles.textBlue]}>Back</Text>
+							<Text style={[globalStyles.backButtonText, globalStyles.blue]}>Back</Text>
 						</TouchableOpacity>
 						<ScrollView
-							style={{
-								flex: 1,
-								backgroundColor: "eee"
-							}}
+							style={[globalStyles.flex1, colorTheme.backgroundColor]}
 						>
 
-							<Text style={styles.header}>{this.state.modalNutrientName}</Text>
-							<Text style={styles.header2}>Why It's Important</Text>
-							<Text style={styles.header2}>Health Risks</Text>
-							<Text style={styles.header2}>Foods Rich in {this.state.modalNutrientName}</Text>
+							<Text style={globalStyles.header}>{this.state.modalNutrientName}</Text>
+							<Text style={globalStyles.header2}>Why It's Important</Text>
+							<Text style={globalStyles.header2}>Health Risks</Text>
+							<Text style={globalStyles.header2}>Foods Rich in {this.state.modalNutrientName}</Text>
 						</ScrollView>
 					</View>
 				</Modal>
 			</View >
 		);
 	};
-
-
 };
-// amber colour = #f4b342
-const offset = 16;
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-	},
-	row: {
-		flex: 1,
-		flexDirection: 'row'
-	},
-	column: {
-		flexDirection: 'column'
-	},
-	columnRight: {
-		flex: 1,
-		flexDirection: 'column'
-	},
-	header: {
-		marginTop: offset * 2,
-		marginBottom: offset,
-		fontSize: 24,
-		textAlign: "center",
-	},
-	footer: {
-		marginTop: offset,
-		marginBottom: offset,
-		fontSize: 16,
-		textAlign: "center",
-	},
-	header2: {
-		marginTop: offset,
-		marginBottom: offset,
-		marginLeft: offset,
-		fontSize: 18,
-		textAlign: "left",
-	},
-	closeModal: {
-		fontSize: 18,
-		textAlign: "left",
-		marginTop: offset,
-		marginBottom: offset,
-		marginLeft: offset
-	},
-	textAdjustments: {
-		flex: 1,
-		marginTop: offset,
-		marginBottom: offset,
-		fontSize: offset,
-		textAlign: "center",
-		marginLeft: offset,
-		marginRight: offset,
-	},
-	textCol: {
-		marginTop: offset,
-		fontSize: offset - 2,
-	},
-	textColLeft: {
-		textAlign: "left",
-		marginLeft: offset,
-		textDecorationLine: 'underline',
-		textDecorationStyle: 'dotted'
-	},
-	textColMid: {
-		textAlign: "center",
-		marginRight: offset,
-		marginLeft: offset,
-	},
-	textColRight: {
-		flex: 1,
-		textAlign: "right",
-		marginRight: offset,
-	},
-	colHeader: {
-		marginTop: offset,
-		fontSize: offset - 2,
-		fontWeight: 'bold',
-	},
-	colHeaderLeft: {
-		textAlign: "left",
-		marginLeft: offset,
-	},
-	colHeaderMid: {
-		textAlign: "center",
-		marginLeft: offset,
-		marginRight: offset,
-	},
-	colHeaderRight: {
-		flex: 1,
-		textAlign: "right",
-		marginRight: offset,
-	},
-	textGreen: {
-		color: "green",
-	},
-	textRed: {
-		color: "red",
-	},
-	textGrey: {
-		color: "gray",
-	},
-	textBlue: {
-		color: "blue",
-	},
-	buttonText: {
-		flex: 1,
-		marginTop: "3%",
-		fontSize: 24,
-		marginBottom: "3%",
-		color: "blue",
-		textAlign: "center",
-	},
-});

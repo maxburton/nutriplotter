@@ -11,8 +11,8 @@ import {
 	Alert,
 	Switch
 } from 'react-native';
-import styleMap from "../themes/globalStyles";
 import styles from "../themes/settingsScreenStyles";
+import GlobalStyles from "../components/GlobalStyles"
 
 var Datastore = require("react-native-local-mongodb"),
 	savedPlatesdb = new Datastore({ filename: "savedPlates", autoload: true });
@@ -36,7 +36,7 @@ export default class SettingsScreen extends React.Component {
 			settingsdb.update(
 				{ _id: key },
 				{ $set: { value: global.settings[key] } }, function (err, numReplaced) {
-					console.log("Setting updated:" + numReplaced);
+					console.log("Num of settings updated: " + numReplaced);
 				});
 		}
 	}
@@ -93,15 +93,9 @@ export default class SettingsScreen extends React.Component {
 
 	render() {
 		// global styles
-		let globalStyles = styleMap.global;
-
-		// use dark or light mode
-		let colorTheme = null;
-		if (global.settings.darkMode) {
-			colorTheme = styleMap.darkMode;
-		} else {
-			colorTheme = styleMap.lightMode;
-		}
+		let globalStylesComponent = new GlobalStyles();
+		let globalStyles = globalStylesComponent.global();
+		let colorTheme = globalStylesComponent.colorTheme(global.settings.darkMode);
 
 		let buttonTextStyle = [globalStyles.buttonText, colorTheme.buttonTextColor];
 		let labelTextStyle = [globalStyles.textLeft, globalStyles.textBig, globalStyles.marginFromLeft, globalStyles.flex1, colorTheme.textColor];
