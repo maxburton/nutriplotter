@@ -409,7 +409,7 @@ export default class HomeScreen extends React.Component {
               style={globalStyles.backButton}
               onPress={() => this.setFirstLaunchToFalse()}
             >
-              <Text style={[globalStyles.backButtonText, globalStyles.blue]}>Back</Text>
+              <Text style={[globalStyles.backButtonText, globalStyles.blue]}>Hide</Text>
             </TouchableOpacity>
             <View
               style={[globalStyles.flex1, colorTheme.backgroundColor]}

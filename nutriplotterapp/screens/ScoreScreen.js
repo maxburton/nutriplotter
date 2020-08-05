@@ -93,10 +93,12 @@ export default class ScoreScreen extends React.Component {
 		const score = navigation.getParam('score', 0);
 		const warnings = navigation.getParam('warnings', new Array());
 
-		let nutrientNames = new Array(<Text style={[styles.colHeader, styles.colHeaderLeft]}>Nutrient</Text>);
-		let renderWarnings = new Array(<Text style={[styles.colHeader, styles.colHeaderMid]}>Advice</Text>);
-		let dailyRecNutrients = new Array(<Text style={[styles.colHeader, styles.colHeaderMid]}>RDA</Text>);
-		let nutrientScores = new Array(<Text style={[styles.colHeader, styles.colHeaderRight]}>Score</Text>);
+		let colStyle = [globalStyles.textBold, globalStyles.textMed, colorTheme.textColor]
+
+		let nutrientNames = new Array(<Text style={[colStyle, globalStyles.textLeft, globalStyles.marginFromLeft]}>Nutrient</Text>);
+		let renderWarnings = new Array(<Text style={[colStyle, globalStyles.textCenter]}>Advice</Text>);
+		let dailyRecNutrients = new Array(<Text style={[colStyle, globalStyles.textCenter]}>RDA</Text>);
+		let nutrientScores = new Array(<Text style={[colStyle, globalStyles.textRight, globalStyles.marginFromRight]}>Score</Text>);
 		let newline = "\n";
 
 		let adjustmentPlural = "s";
@@ -106,16 +108,16 @@ export default class ScoreScreen extends React.Component {
 
 		for (let i = 0; i < warnings.length; i++) {
 			let nutrient = warnings[i][0];
-			neatNutrient = global.neatNutrients[nutrient];
+			let neatNutrient = global.neatNutrients[nutrient];
 			//nutrient = capitalizeFirstLetter(nutrient);
 			nutrientNames.push(
 				<TouchableOpacity onPress={() => this.showModal(nutrient)}>
-					<Text style={[styles.textColLeft, styles.textCol]}>{neatNutrient}:</Text>
+					<Text style={[colorTheme.textColor, globalStyles.marginFromLeft, globalStyles.textMed, globalStyles.textLeft, globalStyles.textDotted, globalStyles.marginFromTopHalf]}>{neatNutrient}:</Text>
 				</TouchableOpacity>
 			)
 			let percentage = warnings[i][2]
 			nutrientScores.push(
-				<Text style={[styles.textColRight, styles.textCol]}>{percentage}%</Text>
+				<Text style={[colorTheme.textColor, globalStyles.marginFromRight, globalStyles.textMed, globalStyles.textRight, globalStyles.marginFromTopHalf]}>{percentage}%</Text>
 			)
 
 			let scoreRating = warnings[i][1];
@@ -125,17 +127,18 @@ export default class ScoreScreen extends React.Component {
 			let unit = (global.nutrientUnits[nutrient] || "g"); // if no key, use grams (g)
 
 			dailyRecNutrients.push(
-				<Text style={[styles.textColMid, styles.textCol]}>{operator}{operatorLimit}{unit}</Text>
+				<Text style={[colorTheme.textColor, globalStyles.textMed, globalStyles.marginFromLeftHalf, globalStyles.marginFromTopHalf]}>{operator}{operatorLimit}{unit}</Text>
 			)
-
+			
+			let adviceStyle = [globalStyles.marginFromLeftHalf, globalStyles.marginFromRightHalf, globalStyles.marginFromTopHalf, globalStyles.textMed, globalStyles.textCenter]
 			if (scoreRating == "perfect") {
 				// Use renderWarnings.unshift to put new item at the beginning of the array
 				renderWarnings.push(
-					<Text style={[styles.textGreen, styles.textColMid, styles.textCol]}>Perfect!</Text>
+					<Text style={[globalStyles.green, adviceStyle]}>Perfect!</Text>
 				)
 			} else if (scoreRating == "ok") {
 				renderWarnings.push(
-					<Text style={[styles.textGrey, styles.textColMid, styles.textCol]}>Not Bad!</Text>
+					<Text style={[globalStyles.grey, adviceStyle]}>Not Bad!</Text>
 				)
 			} else {
 				// If nutrient score is bad
@@ -145,21 +148,23 @@ export default class ScoreScreen extends React.Component {
 					advice = "Very high!";
 				}
 				renderWarnings.push(
-					<Text style={[styles.textRed, styles.textColMid, styles.textCol]}>{advice}</Text>
+					<Text style={[globalStyles.red, adviceStyle]}>{advice}</Text>
 				)
 			}
 		}
+		// component styles
+		let buttonStyle = [globalStyles.textBig, globalStyles.blue, globalStyles.marginFromBottom, globalStyles.textCenter];
 		return (
-			<View style={[globalStyles.flex1, colorTheme.bgColor]}>
-				<ScrollView style={styles.container} keyboardShouldPersistTaps={'handled'}>
+			<View style={[globalStyles.flex1, colorTheme.bgColor, globalStyles.paddingFromBottom]}>
+				<ScrollView style={[globalStyles.flex1]} keyboardShouldPersistTaps={'handled'}>
 					<DialogInput isDialogVisible={this.state.isDialogVisible}
 						title={"Name Your Plate"}
 						hintInput={"Plate Name"}
 						submitInput={(inputText) => { this.savePlate(inputText, plate, score) }}
 						closeDialog={() => { this.setState({ isDialogVisible: false }) }}>
 					</DialogInput>
-					<Text style={score < 4333 ? [styles.header, styles.textRed] : score < 8666 ? [styles.header, styles.textGrey] : [styles.header, styles.textGreen]}>You Scored: {score}/13000 points!</Text>
-					<Text style={styles.textAdjustments}>You made {tweaks} adjustment{adjustmentPlural} to your plate, and your score has been reduced by {tweaks * global.tweakPenalty} points.</Text>
+					<Text style={score < 4333 ? [globalStyles.header, globalStyles.red] : score < 8666 ? [globalStyles.header, globalStyles.grey] : [globalStyles.header, globalStyles.green]}>You Scored: {score}/13000 points!</Text>
+					<Text style={[colorTheme.textColor, globalStyles.textCenter, globalStyles.marginFromLeft, globalStyles.marginFromRight, globalStyles.marginFromBottom, globalStyles.textBigMed]}>You made {tweaks} adjustment{adjustmentPlural} to your plate, and your score has been reduced by {tweaks * global.tweakPenalty} points.</Text>
 					<View style={[globalStyles.flex1, globalStyles.flexRow]}>
 						<View style={globalStyles.flexCol}>
 							{nutrientNames}
@@ -170,18 +175,18 @@ export default class ScoreScreen extends React.Component {
 						<View style={globalStyles.flexCol}>
 							{dailyRecNutrients}
 						</View>
-						<View style={globalStyles.flexCol}>
+						<View style={[globalStyles.flexCol, globalStyles.flex1]}>
 							{nutrientScores}
 						</View>
 					</View>
-					<TouchableOpacity style={styles.container} onPress={() => this.displayDialog()}>
-						<Text style={styles.buttonText}>{newline}Save Plate</Text>
+					<TouchableOpacity style={globalStyles.flex1} onPress={() => this.displayDialog()}>
+						<Text style={buttonStyle}>{newline}Save Plate</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.container} onPress={() => this.tweakPlate()}>
-						<Text style={styles.buttonText}>Tweak Your Plate</Text>
+					<TouchableOpacity style={globalStyles.flex1} onPress={() => this.tweakPlate()}>
+						<Text style={buttonStyle}>Tweak Your Plate</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.container} onPress={() => this.newPlate()}>
-						<Text style={styles.buttonText}>Make A New Plate</Text>
+					<TouchableOpacity style={globalStyles.flex1} onPress={() => this.newPlate()}>
+						<Text style={buttonStyle}>Make A New Plate</Text>
 					</TouchableOpacity>
 				</ScrollView>
 				{/* More Info Modal */}

@@ -2,8 +2,11 @@
 
 import { StyleSheet, Dimensions } from 'react-native';
 
+const height = Dimensions.get("window").height;
+const width = Dimensions.get("window").width;
+const offset = 24;
 const constants = {
-    "offset": 24,
+    "offset": offset,
     "blue": "#0091ff",
     "red": "red",
     "grey": "grey",
@@ -12,8 +15,8 @@ const constants = {
     "black": "black",
     "darkGrey": "#232323",
     "lightGrey": "#f3f3f3",
-    "width": Dimensions.get("window").width,
-    "height": Dimensions.get("window").height,
+    "width": width,
+    "height": height,
 }
 
 const globalStyles = StyleSheet.create({
@@ -54,6 +57,18 @@ const globalStyles = StyleSheet.create({
     marginFromRight: {
         marginRight: constants.offset,
     },
+    marginFromTopHalf: {
+        marginTop: constants.offset/2,
+    },
+    marginFromBottomHalf: {
+        marginBottom: constants.offset/2,
+    },
+    marginFromLeftHalf: {
+        marginLeft: constants.offset/2,
+    },
+    marginFromRightHalf: {
+        marginRight: constants.offset/2,
+    },
 
     //padding
     paddingFromTop: {
@@ -82,29 +97,39 @@ const globalStyles = StyleSheet.create({
     textBig: {
         fontSize: 24,
     },
-    textMed: {
+    textBigMed: {
         fontSize: 18,
+    },
+    textMed: {
+        fontSize: 14,
     },
     textSmall: {
         fontSize: 12,
+    },
+    textDotted: {
+        textDecorationLine: 'underline',
+		textDecorationStyle: 'dotted'
+    },
+    textBold: {
+        fontWeight: 'bold',
     },
 
     // Headers and Footers
     header: {
 		marginTop: constants.offset * 2,
 		marginBottom: constants.offset,
-		fontSize: 24,
+		fontSize: offset,
 		textAlign: "center",
     },
     header2: {
 		marginTop: constants.offset,
 		marginBottom: constants.offset,
 		marginLeft: constants.offset,
-		fontSize: 18,
+		fontSize: offset - 6,
 		textAlign: "left",
 	},
 
-    // components
+    // Components
     button: {
         alignItems: "center",
         margin: 5,
@@ -124,8 +149,8 @@ const globalStyles = StyleSheet.create({
 		borderRadius: constants.offset/2,
 		borderColor: "gray",
 		borderWidth: 2,
-		marginTop: "40%",
-		marginBottom: "10%",
+		marginTop: "30%",
+		marginBottom: "30%",
 		marginLeft: -constants.offset/2,
 		marginRight: -constants.offset/2,
 	},
@@ -190,7 +215,7 @@ const darkModeStyles = StyleSheet.create({
         backgroundColor: constants.darkGrey,
     },
     buttonBgColor: {
-        backgroundColor: constants.red,
+        backgroundColor: constants.blue,
     },
     buttonTextColor: {
         color: constants.white,

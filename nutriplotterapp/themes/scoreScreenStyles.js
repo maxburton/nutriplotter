@@ -8,17 +8,6 @@ const height = styleMap.constants.height;
 // amber colour = #f4b342
 
 const styles = StyleSheet.create({
-	row: {
-		flex: 1,
-		flexDirection: 'row'
-	},
-	column: {
-		flexDirection: 'column'
-	},
-	columnRight: {
-		flex: 1,
-		flexDirection: 'column'
-	},
 	footer: {
 		marginTop: offset,
 		marginBottom: offset,
@@ -34,16 +23,7 @@ const styles = StyleSheet.create({
 		marginLeft: offset,
 		marginRight: offset,
 	},
-	textCol: {
-		marginTop: offset,
-		fontSize: offset - 2,
-	},
-	textColLeft: {
-		textAlign: "left",
-		marginLeft: offset,
-		textDecorationLine: 'underline',
-		textDecorationStyle: 'dotted'
-	},
+
 	textColMid: {
 		textAlign: "center",
 		marginRight: offset,
@@ -72,26 +52,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		textAlign: "right",
 		marginRight: offset,
-	},
-	textGreen: {
-		color: "green",
-	},
-	textRed: {
-		color: "red",
-	},
-	textGrey: {
-		color: "gray",
-	},
-	textBlue: {
-		color: "blue",
-	},
-	buttonText: {
-		flex: 1,
-		marginTop: "3%",
-		fontSize: 24,
-		marginBottom: "3%",
-		color: "blue",
-		textAlign: "center",
 	},
 });
 

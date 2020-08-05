@@ -21,4 +21,8 @@ export default class GlobalStyles extends React.Component {
     global(){
         return styleMap.global;
     }
+
+    constants(){
+        return styleMap.constants;
+    }
 }
