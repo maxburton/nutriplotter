@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'column'
 	},
-
 	footer: {
 		marginTop: offset,
 		marginBottom: offset,

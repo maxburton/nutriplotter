@@ -76,100 +76,55 @@ export default class App extends React.Component {
       });
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     console.log("App.js mounted");
 
     // whether or not to get a clean population of DBs
-    const flushdb = false;
-    const flushplatedb = false;
-    const flushsideItemsdb = false;
-    const flushsavedPlatesdb = false;
-    const flushfavdb = false;
-    const flushglobalSettingsdb = true;
+    const dbs = {
+      foods: {
+        db: db,
+        flush: false
+      },
+      plate: {
+        db: platedb,
+        flush: false
+      },
+      sideItems: {
+        db: sideItemsdb,
+        flush: false
+      },
+      savedPlates: {
+        db: savedPlatesdb,
+        flush: false
+      },
+      fav: {
+        db: favdb,
+        flush: false
+      },
+      globalSettings: {
+        db: globalSettingsdb,
+        flush: true
+      },
+    }
 
-    let flushNum = 1;
-    let flushedNum = 0;
-    let finishedFlushing = false;
+    let awaitingFlushed = [];
 
-    flushed = () => {
-      console.log("Component Flushed");
-      flushedNum++;
-      if(flushedNum >= flushNum){
-        finishedFlushing = true;
-        console.log("Finished flushing");
+    for(let [key, value] of Object.entries(dbs)){
+      if (dbs[key]["flush"]) {
+        let awaiting = dbs[key]["db"].remove({}, { multi: true }, function (err, numRemoved) {
+          console.log(key + " DB flushed (" + numRemoved + (" entries)"));
+        });
+        awaitingFlushed.push(awaiting);
       }
     }
 
-    if(flushdb){
-      flushNum++;
-      db.remove({}, { multi: true }, function(err, numRemoved) {
-        console.log("Foods DB flushed");
-        console.log("Entries flushed: " + numRemoved);
-        flushed();
-      });
-    }
-
-    if(flushplatedb){
-      flushNum++;
-      platedb.remove({}, { multi: true }, function(err, numRemoved) {
-        console.log("Plate DB flushed");
-        console.log("Entries flushed: " + numRemoved);
-        flushed();
-      });
-    }
-
-    if(flushsideItemsdb){
-      flushNum++;
-      sideItemsdb.remove({}, { multi: true }, function(err, numRemoved) {
-        console.log("SideItems DB flushed");
-        console.log("Entries flushed: " + numRemoved);
-        flushed();
-      });
-    }
-
-    if(flushsavedPlatesdb){
-      flushNum++;
-      savedPlatesdb.remove({}, { multi: true }, function(err, numRemoved) {
-        console.log("savedPlates DB flushed");
-        console.log("Entries flushed: " + numRemoved);
-        flushed();
-      });
-    }
-
-    if(flushfavdb){
-      flushNum++;
-      favdb.remove({}, { multi: true }, function(err, numRemoved) {
-        console.log("Favs DB flushed");
-        console.log("Entries flushed: " + numRemoved);
-        flushed();
-      });
-    }
-
-    if(flushglobalSettingsdb){
-      flushNum++;
-      globalSettingsdb.remove({}, { multi: true }, function(err, numRemoved) {
-        console.log("Settings DB flushed");
-        console.log("Entries flushed: " + numRemoved);
-        flushed();
-      });
-    }
-
-    // Wait for flushing to finish
-    /*
-    flushed();
-    while(!finishedFlushing){
-      continue
-    }
-    console.log("Currently flushing DBs...");
-    */
-
-
     // Wait until all content is fetched from DBs, then render
     let loadingCount = 0;
+    const numComponents = 6;
     componentLoaded = () => {
       loadingCount++;
-      console.log("Components loaded: " + loadingCount);
-      if (loadingCount >= 6) {
+      console.log("Components loaded: " + loadingCount + "/" + numComponents);
+      if (loadingCount >= numComponents) {
         this.setState({ isLoaded: true });
         console.log("All App.js components & global variables loaded")
       }
@@ -193,13 +148,11 @@ export default class App extends React.Component {
 
 
     // populate mongoDB of all foods if it's empty
-    db.find({}, function (err, foodDB) {
+    db.find({}, async function (err, foodDB) {
       if (foodDB.length == 0) {
         new popDatabase();
-        componentLoaded();
-      } else{
-        componentLoaded();
       }
+      componentLoaded();
     });
 
     new popArray();
@@ -214,26 +167,35 @@ export default class App extends React.Component {
     global.settings = {};
     global.populatedSettings = false;
 
-    // initialise (populate) mongoDB of settings if it's empty
-    globalSettingsdb.find({}, function (err, settingsFromDb) {
-      if(err){
+    for(awaitingFlush in awaitingFlushed){
+      await awaitingFlush;
+    }
+
+    // initialise (populate) mongoDB of settings if it's empty, otherwise load it
+    let settingsLoading = globalSettingsdb.find({}, async function (err, settingsFromDb) {
+      if (err) {
         console.log(err);
         throw err;
       }
 
       if (settingsFromDb.length == 0) {
+        let populatingSettings = globalSettingsdb.insert([
+          { _id: "isFirstLaunch", value: true },
+          { _id: "darkMode", value: false },
+        ], async function (err, newDocs) {
+          if (err) {
+            console.log(err);
+            throw err;
+          }
+        });
 
         // wait until settings are populated to continue
-        /*
-        while(!settingsDB.getStatus){
-          console.log("Loading global settings");
-        }
-        */
+        await populatingSettings;
       }
 
       // convert mongodb into global json array
       globalSettingsdb.find({}, function (err, fetchedSettings) {
-        if(err){
+        if (err) {
           console.log(err);
           throw err;
         }
@@ -252,6 +214,9 @@ export default class App extends React.Component {
         componentLoaded();
       });
     });
+
+    // wait until settings loaded
+    await settingsLoading;
 
     savedPlatesdb.find({}, function (err, savedPlates) {
       if (savedPlates.length > 0) {
