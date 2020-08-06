@@ -8,7 +8,6 @@
 */
 
 import React from "react";
-import GlobalStyles from "../components/GlobalStyles"
 import styles from "../themes/homeScreenStyles";
 import List from "../components/FoodList.js";
 import Plate from "../components/Plate.js";
@@ -33,9 +32,11 @@ updateStateHome = rand => {
 };
 
 export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    title: "Build a Plate"
-  };
+  static navigationOptions = () => ({
+    title: "Build a Plate",
+    headerStyle: {backgroundColor: global.colorTheme.navHeader.backgroundColor},
+		headerTintColor: global.colorTheme.navHeader.color
+  });
 
   constructor(props) {
     super(props);
@@ -54,6 +55,8 @@ export default class HomeScreen extends React.Component {
 
   refresh = () => {
     this.setState({ refresh: Math.random() });
+    // refresh header
+		this.props.navigation.setParams({});
   }
 
   // Retrieve the current scores for the user from the database
@@ -317,11 +320,6 @@ export default class HomeScreen extends React.Component {
   render() {
     console.log("Home Screen Rendering");
 
-    // global styles
-    let globalStylesComponent = new GlobalStyles();
-    let globalStyles = globalStylesComponent.global();
-    let colorTheme = globalStylesComponent.colorTheme(global.settings.darkMode);
-
     // Launch tutorial modal if this is first launch
     if (global.settings.isFirstLaunch) {
       global.settings.isFirstLaunch = false;
@@ -354,16 +352,16 @@ export default class HomeScreen extends React.Component {
 
     return (
       <KeyboardAvoidingView
-        style={[globalStyles.flex1, colorTheme.bgColor]}
+        style={[global.styles.flex1, global.colorTheme.bgColor]}
         behavior="position"
-        contentContainerStyle={globalStyles.flex1}
+        contentContainerStyle={global.styles.flex1}
       >
-        <View style={[globalStyles.flex1, globalStyles.flexRow]}>
-          <View style={[globalStyles.flex1, globalStyles.flexCol]}>
-            <View style={[globalStyles.flex1, styles.UL]}>
+        <View style={[global.styles.flex1, global.styles.flexRow]}>
+          <View style={[global.styles.flex1, global.styles.flexCol]}>
+            <View style={[global.styles.flex1, styles.UL]}>
               <SideItem type={"fruit"} isDown={false} />
             </View>
-            <View style={[globalStyles.flex1, styles.DL]}>
+            <View style={[global.styles.flex1, styles.DL]}>
               <SideItem type={"dairy"} isDown={true} />
             </View>
           </View>
@@ -371,28 +369,28 @@ export default class HomeScreen extends React.Component {
             {/* Render the plate here. */}
             <Plate />
           </View>
-          <View style={[globalStyles.flex1, globalStyles.flexCol]}>
-            <View style={[globalStyles.flex1, styles.UR]}>
+          <View style={[global.styles.flex1, global.styles.flexCol]}>
+            <View style={[global.styles.flex1, styles.UR]}>
               <SideItem type={"bread"} isDown={false} />
             </View>
-            <View style={[globalStyles.flex1, styles.DR]}>
+            <View style={[global.styles.flex1, styles.DR]}>
               <SideItem type={"drink"} isDown={true} />
             </View>
           </View>
         </View>
 
         {/* FoodList component including search bar and recently added food list. */}
-        <View style={[globalStyles.flex1, { marginTop: "5%" }]}>
-          <List listParent={this} style={globalStyles.flex1} />
+        <View style={[global.styles.flex1, { marginTop: "5%" }]}>
+          <List listParent={this} style={global.styles.flex1} />
         </View>
 
         {/* Plate submission button. */}
         <View>
           <TouchableOpacity
-            style={[globalStyles.button, colorTheme.buttonBgColor]}
+            style={[global.styles.button, global.colorTheme.buttonBgColor]}
             onPress={() => this._resultsClick()}
           >
-            <Text style={[globalStyles.buttonText, colorTheme.buttonTextColor]}>
+            <Text style={[global.styles.buttonText, global.colorTheme.buttonTextColor]}>
               Submit Plate
             </Text>
           </TouchableOpacity>
@@ -404,18 +402,18 @@ export default class HomeScreen extends React.Component {
           animationType="slide"
           isVisible={this.state.isFirstLaunchModalVisible}
         >
-          <View style={globalStyles.modalContainer}>
+          <View style={global.styles.modalContainer}>
             <TouchableOpacity
-              style={globalStyles.backButton}
+              style={global.styles.backButton}
               onPress={() => this.setFirstLaunchToFalse()}
             >
-              <Text style={[globalStyles.backButtonText, globalStyles.blue]}>Hide</Text>
+              <Text style={[global.styles.backButtonText, global.styles.blue]}>Hide</Text>
             </TouchableOpacity>
             <View
-              style={[globalStyles.flex1, colorTheme.backgroundColor]}
+              style={[global.styles.flex1, global.colorTheme.backgroundColor]}
             >
-              <Text style={globalStyles.header}>Using the app</Text>
-              <Text style={globalStyles.header2}>This only shows up on the first launch of the app.</Text>
+              <Text style={global.styles.header}>Using the app</Text>
+              <Text style={global.styles.header2}>This only shows up on the first launch of the app.</Text>
             </View>
           </View>
         </Modal>
@@ -476,7 +474,7 @@ export default class HomeScreen extends React.Component {
             </View>
             <View style={{ flex: 1, alignItems: "center" }}>
               <TouchableOpacity
-                style={globalStyles.flex1}
+                style={global.styles.flex1}
                 onPress={() => this.tweakPlate()}
               >
                 <Text
@@ -490,7 +488,7 @@ export default class HomeScreen extends React.Component {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={globalStyles.flex1}
+                style={global.styles.flex1}
                 onPress={() => this.submitPlate()}
               >
                 <Text

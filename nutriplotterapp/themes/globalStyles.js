@@ -15,6 +15,8 @@ const constants = {
     "black": "black",
     "darkGrey": "#232323",
     "lightGrey": "#f3f3f3",
+    "lighterDarkGrey": "#434343",
+    "lighterGrey": "#fbfbfb",
     "width": width,
     "height": height,
 }
@@ -208,6 +210,10 @@ const lightModeStyles = StyleSheet.create({
     textColor: {
         color: constants.black,
     },
+    navHeader: {
+        backgroundColor: constants.lighterGrey,
+        color: constants.black,
+    }
 });
 
 const darkModeStyles = StyleSheet.create({
@@ -223,6 +229,10 @@ const darkModeStyles = StyleSheet.create({
     textColor: {
         color: constants.white,
     },
+    navHeader: {
+        backgroundColor: constants.lighterDarkGrey,
+        color: constants.white,
+    }
 });
 
 let styleMap = {

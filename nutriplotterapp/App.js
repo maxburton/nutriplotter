@@ -21,7 +21,7 @@ import popArray from "./populateArray";
 import popList from "./populateNameList";
 import popSideItems from "./populateSideItems";
 import popSavedPlates from "./populateSavedPlates";
-import popSettings from "./populateSettings";
+import GlobalStyles from "./components/GlobalStyles"
 import firebase from "./components/Firebase.js";
 
 var Datastore = require('react-native-local-mongodb'),
@@ -79,6 +79,14 @@ export default class App extends React.Component {
   async componentDidMount() {
     console.log("App.js mounted");
 
+    // load global styles into global
+    const globalStyles = new GlobalStyles();
+    global.styles = globalStyles.global();
+
+    global.darkTheme = globalStyles.darkTheme();
+    global.lightTheme = globalStyles.lightTheme();
+    global.colorTheme = global.lightTheme;
+
     // whether or not to get a clean population of DBs
     const dbs = {
       foods: {
@@ -109,7 +117,7 @@ export default class App extends React.Component {
 
     let awaitingFlushed = [];
 
-    for(let [key, value] of Object.entries(dbs)){
+    for (let [key, value] of Object.entries(dbs)) {
       if (dbs[key]["flush"]) {
         let awaiting = dbs[key]["db"].remove({}, { multi: true }, function (err, numRemoved) {
           console.log(key + " DB flushed (" + numRemoved + (" entries)"));
@@ -167,7 +175,7 @@ export default class App extends React.Component {
     global.settings = {};
     global.populatedSettings = false;
 
-    for(awaitingFlush in awaitingFlushed){
+    for (awaitingFlush in awaitingFlushed) {
       await awaitingFlush;
     }
 
@@ -208,6 +216,13 @@ export default class App extends React.Component {
           settingsMap[key] = value;
         }
         global.settings = settingsMap;
+
+        // load colorThemes into global
+        if (global.settings.darkMode) {
+          global.colorTheme = global.darkTheme;
+        } else {
+          global.colorTheme = global.lightTheme;
+        }
 
         console.log("GLOBAL SETTINGS:");
         console.log(global.settings);

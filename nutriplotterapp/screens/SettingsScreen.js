@@ -12,7 +12,6 @@ import {
 	Switch
 } from 'react-native';
 import styles from "../themes/settingsScreenStyles";
-import GlobalStyles from "../components/GlobalStyles"
 
 var Datastore = require("react-native-local-mongodb"),
 	savedPlatesdb = new Datastore({ filename: "savedPlates", autoload: true });
@@ -20,9 +19,11 @@ favdb = new Datastore({ filename: 'favourites', autoload: true });
 settingsdb = new Datastore({ filename: 'settings', autoload: true });
 
 export default class SettingsScreen extends React.Component {
-	static navigationOptions = {
+	static navigationOptions = () => ({
 		title: "Settings",
-	};
+		headerStyle: {backgroundColor: global.colorTheme.navHeader.backgroundColor},
+		headerTintColor: global.colorTheme.navHeader.color
+	});
 
 	constructor(props) {
 		super(props);
@@ -86,34 +87,38 @@ export default class SettingsScreen extends React.Component {
 	toggleDarkMode = () => {
 		let newSetting = !global.settings["darkMode"];
 		global.settings["darkMode"] = newSetting;
+		if(global.settings.darkMode){
+			global.colorTheme = global.darkTheme;
+		  }else{
+			global.colorTheme = global.lightTheme;
+		  }
 		this.setState({ darkMode: newSetting });
 		this.saveSettings();
-		console.log("Dark mode toggled: " + newSetting);
+		
+		//refresh header
+		this.props.navigation.setParams({});
+		console.log("Dark mode is now: " + newSetting);
 	}
 
 	render() {
-		// global styles
-		let globalStylesComponent = new GlobalStyles();
-		let globalStyles = globalStylesComponent.global();
-		let colorTheme = globalStylesComponent.colorTheme(global.settings.darkMode);
 
-		let buttonTextStyle = [globalStyles.buttonText, colorTheme.buttonTextColor];
-		let labelTextStyle = [globalStyles.textLeft, globalStyles.textBig, globalStyles.marginFromLeft, globalStyles.flex1, colorTheme.textColor];
-		let buttonStyle = [globalStyles.button, colorTheme.buttonBgColor];
+		let buttonTextStyle = [global.styles.buttonText, global.colorTheme.buttonTextColor];
+		let labelTextStyle = [global.styles.textLeft, global.styles.textBig, global.styles.marginFromLeft, global.styles.flex1, global.colorTheme.textColor];
+		let buttonStyle = [global.styles.button, global.colorTheme.buttonBgColor];
 
 		return (
-			<View style={[globalStyles.flex1, colorTheme.bgColor]}>
-				<ScrollView style={globalStyles.paddingFromTop}>
-					<View style={[globalStyles.flexRow, globalStyles.flexCenter]}>
+			<View style={[global.styles.flex1, global.colorTheme.bgColor]}>
+				<ScrollView style={global.styles.paddingFromTop}>
+					<View style={[global.styles.flexRow, global.styles.flexCenter]}>
 						<Text style={[labelTextStyle]}>Dark Mode </Text>
-						<View style={[globalStyles.flex1, globalStyles.flexRow, globalStyles.flexEnd, globalStyles.marginFromRight]}>
+						<View style={[global.styles.flex1, global.styles.flexRow, global.styles.flexEnd, global.styles.marginFromRight]}>
 							<Switch
 								onValueChange={() => this.toggleDarkMode()}
 								value={this.state.darkMode}
 							/>
 						</View>
 					</View>
-					<View style={globalStyles.marginFromTop}>
+					<View style={global.styles.marginFromTop}>
 						<TouchableOpacity style={buttonStyle} onPress={() => this.deleteSavedPlates()}>
 							<Text style={buttonTextStyle}>Delete Saved Plates</Text>
 						</TouchableOpacity>
@@ -123,7 +128,7 @@ export default class SettingsScreen extends React.Component {
 					</View>
 				</ScrollView>
 				<View style={styles.bottomContainer}>
-					<Text style={[globalStyles.textCenter, colorTheme.textColor]}>Food Icons Courtesy of www.flaticon.com</Text>
+					<Text style={[global.styles.textCenter, global.colorTheme.textColor]}>Food Icons Courtesy of www.flaticon.com</Text>
 				</View>
 			</View>
 		);

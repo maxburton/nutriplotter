@@ -17,7 +17,15 @@ export default class GlobalStyles extends React.Component {
 			return styleMap.lightMode;
 		}
     }
+
+    darkTheme(){
+        return styleMap.darkMode;
+    }
     
+    lightTheme(){
+        return styleMap.lightMode;
+    }
+
     global(){
         return styleMap.global;
     }
