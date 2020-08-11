@@ -112,7 +112,7 @@ export default class App extends React.Component {
       },
       globalSettings: {
         db: globalSettingsdb,
-        flush: true
+        flush: false
       },
     }
 
