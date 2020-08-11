@@ -8,9 +8,11 @@ import { View} from 'react-native';
 
 
 export default class HelpScreen extends React.Component {
-  static navigationOptions = {
+  static navigationOptions = () => ({
     title: "How to Play",
-  };
+    headerStyle: { backgroundColor: global.colorTheme.navHeader.backgroundColor },
+		headerTintColor: global.colorTheme.navHeader.color
+	});
 
   constructor(props) {
     super(props);
@@ -18,9 +20,19 @@ export default class HelpScreen extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.props.navigation.addListener("willFocus", this.refresh);
+  }
+
+  refresh = () => {
+    this.setState({ refresh: Math.random() });
+    // refresh header
+    this.props.navigation.setParams({});
+  }
+
   render() {
     return (
-      <View style={global.styles.flex1}>
+      <View style={[global.styles.flex1, global.colorTheme.bgColor]}>
         < TutorialCarousel />
       </View>
     )

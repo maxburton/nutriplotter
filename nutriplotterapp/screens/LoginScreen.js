@@ -3,27 +3,21 @@
   to the leaderboard screen or logout. 
 */
 
-import { ExpoConfigView } from "@expo/samples";
 import React, { Component } from "react";
 import { TouchableOpacity } from "react-native";
 import { SocialIcon } from "react-native-elements";
-import { createStackNavigator, createAppContainer } from "react-navigation";
 import firebase from "../components/Firebase.js";
 
 import {
   Keyboard,
   Text,
   View,
-  TextInput,
   TouchableWithoutFeedback,
-  Alert,
   StyleSheet,
   KeyboardAvoidingView,
-  Button,
   ScrollView,
   Image
 } from "react-native";
-import * as Expo from "expo";
 
 import * as Facebook from 'expo-facebook';
 
@@ -37,8 +31,10 @@ global.isLoggedIn = null;
 
 export default class LoginScreen extends Component {
   static navigationOptions = () => ({
-    title: "My Profile"
-  });
+    title: "My Profile",
+    headerStyle: { backgroundColor: global.colorTheme.navHeader.backgroundColor },
+		headerTintColor: global.colorTheme.navHeader.color
+	});
 
   // Handle any Component props as they are defined in React
   constructor(props) {
