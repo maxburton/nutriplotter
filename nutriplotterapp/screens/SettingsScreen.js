@@ -16,7 +16,7 @@ import styles from "../themes/settingsScreenStyles";
 var Datastore = require("react-native-local-mongodb"),
 	savedPlatesdb = new Datastore({ filename: "savedPlates", autoload: true });
 favdb = new Datastore({ filename: 'favourites', autoload: true });
-settingsdb = new Datastore({ filename: 'settings', autoload: true });
+settingsdb = new Datastore({ filename: 'globalSettings', autoload: true });
 
 export default class SettingsScreen extends React.Component {
 	static navigationOptions = () => ({
@@ -34,10 +34,11 @@ export default class SettingsScreen extends React.Component {
 
 	saveSettings = () => {
 		for (key in global.settings) {
+			console.log("Updating setting: " + key);
 			settingsdb.update(
 				{ _id: key },
 				{ $set: { value: global.settings[key] } }, function (err, numReplaced) {
-					console.log("Num of settings updated: " + numReplaced);
+					console.log("Did it update? " + numReplaced);
 				});
 		}
 	}
