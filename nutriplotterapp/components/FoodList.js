@@ -491,7 +491,7 @@ class List extends Component {
       }
     }
     this.setState({
-      test: "Recently Searched:",
+      test: "Previously added:",
       names: foods
     });
   };

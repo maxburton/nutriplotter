@@ -7,4 +7,6 @@
 -Customisable goals (e.g. high protein, low carb (keto), carb cycling, fasting, etc.) perhaps have sliders so user's can set custom goals?
 -Allergen filters (removes all items containing certain allergens, and also filters for religious reasons e.g. halal, kosher, etc.)
 -Sideitems have modals with many food choices.
--Have meals for breakfast, lunch and dinner, and use those to score cumulatively -- OR -- each day your highest scored plate is used as your daily score, and this adds up over time to give overall score.
+-Have meals for breakfast, lunch and dinner, and use those to score cumulatively -- OR -- each day your highest scored plate is used as your daily score, and this adds up over time to give overall score. (weekly history)
+-compare entire plates (from score screen and saved plates)
+-

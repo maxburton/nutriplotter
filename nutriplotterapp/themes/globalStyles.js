@@ -27,6 +27,9 @@ const globalStyles = StyleSheet.create({
     flex1: {
         flex: 1
     },
+    flex7: {
+        flex: 7
+    },
     flexCol: {
         flexDirection: "column"
     },
@@ -34,7 +37,7 @@ const globalStyles = StyleSheet.create({
         flexDirection: "row",
     },
     flexCenter: {
-        alignContent: "center",
+        alignItems: "center",
         justifyContent: "center"
     },
     flexEnd: {
@@ -129,7 +132,11 @@ const globalStyles = StyleSheet.create({
 		marginLeft: constants.offset,
 		fontSize: offset - 6,
 		textAlign: "left",
-	},
+    },
+    imageWide: {
+        width: "100%",
+        height: 64
+    },
 
     // Components
     button: {
@@ -144,7 +151,6 @@ const globalStyles = StyleSheet.create({
         margin: 5,
         fontSize: 24,
     },
-
     modalContainer: {
 		flex: 1,
 		backgroundColor: "#f5f5f5",
@@ -155,7 +161,22 @@ const globalStyles = StyleSheet.create({
 		marginBottom: "30%",
 		marginLeft: -constants.offset/2,
 		marginRight: -constants.offset/2,
-	},
+    },
+    carouselContainer: {
+		flex: 1,
+		backgroundColor: constants.white,
+		borderRadius: constants.offset/2,
+		marginTop: constants.offset,
+		marginBottom: constants.offset,
+		marginLeft: constants.offset,
+		marginRight: constants.offset,
+    },
+    carouselDotStyle: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        marginHorizontal: 8,
+    },
 	backButton: {
 		backgroundColor: constants.white,
 		borderRadius: constants.offset/2,

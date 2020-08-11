@@ -11,6 +11,7 @@ import React from "react";
 import styles from "../themes/homeScreenStyles";
 import List from "../components/FoodList.js";
 import Plate from "../components/Plate.js";
+import TutorialCarousel from "../components/TutorialCarousel.js"
 import SideItem from "../components/SideItem.js";
 import firebase from "../components/Firebase.js";
 import "./LoginScreen";
@@ -34,8 +35,8 @@ updateStateHome = rand => {
 export default class HomeScreen extends React.Component {
   static navigationOptions = () => ({
     title: "Build a Plate",
-    headerStyle: {backgroundColor: global.colorTheme.navHeader.backgroundColor},
-		headerTintColor: global.colorTheme.navHeader.color
+    headerStyle: { backgroundColor: global.colorTheme.navHeader.backgroundColor },
+    headerTintColor: global.colorTheme.navHeader.color
   });
 
   constructor(props) {
@@ -56,7 +57,7 @@ export default class HomeScreen extends React.Component {
   refresh = () => {
     this.setState({ refresh: Math.random() });
     // refresh header
-		this.props.navigation.setParams({});
+    this.props.navigation.setParams({});
   }
 
   // Retrieve the current scores for the user from the database
@@ -317,6 +318,7 @@ export default class HomeScreen extends React.Component {
       });
   }
 
+
   render() {
     console.log("Home Screen Rendering");
 
@@ -349,6 +351,7 @@ export default class HomeScreen extends React.Component {
     for (var key in global.totals) {
       global.totals[key] = Math.round(global.totals[key] * 10) / 10;
     }
+
 
     return (
       <KeyboardAvoidingView
@@ -409,12 +412,7 @@ export default class HomeScreen extends React.Component {
             >
               <Text style={[global.styles.backButtonText, global.styles.blue]}>Hide</Text>
             </TouchableOpacity>
-            <View
-              style={[global.styles.flex1, global.colorTheme.backgroundColor]}
-            >
-              <Text style={global.styles.header}>Using the app</Text>
-              <Text style={global.styles.header2}>This only shows up on the first launch of the app.</Text>
-            </View>
+            <TutorialCarousel />
           </View>
         </Modal>
 

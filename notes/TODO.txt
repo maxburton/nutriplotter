@@ -1,0 +1,4 @@
+Add other vitamins and nutrients
+Finish modals
+delete individual saved plates
+Figure out why food items on plate dont always stick around on relaunch (theyre not saving at the right time for some reason)

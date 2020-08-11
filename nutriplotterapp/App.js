@@ -82,6 +82,7 @@ export default class App extends React.Component {
     // load global styles into global
     const globalStyles = new GlobalStyles();
     global.styles = globalStyles.global();
+    global.styleConstants = globalStyles.constants();
 
     global.darkTheme = globalStyles.darkTheme();
     global.lightTheme = globalStyles.lightTheme();
@@ -99,7 +100,7 @@ export default class App extends React.Component {
       },
       sideItems: {
         db: sideItemsdb,
-        flush: false
+        flush: true
       },
       savedPlates: {
         db: savedPlatesdb,
