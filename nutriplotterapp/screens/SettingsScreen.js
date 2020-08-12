@@ -52,6 +52,7 @@ export default class SettingsScreen extends React.Component {
 				{
 					text: 'OK', onPress: () => {
 						savedPlatesdb.remove({}, { multi: true }, function (err, numRemoved) {
+							console.log("All saved plates deleted")
 							deletePlate();
 						});
 					}
@@ -73,6 +74,7 @@ export default class SettingsScreen extends React.Component {
 				{
 					text: 'OK', onPress: () => {
 						favdb.remove({}, { multi: true }, function (err, numRemoved) {
+							console.log("Item history deleted")
 							deleteFavs();
 						});
 					}

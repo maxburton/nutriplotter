@@ -214,7 +214,8 @@ class List extends Component {
                 index={index}
               />);
             }}
-            keyExtractor={(item) => item.id.toString()}
+            // Get key using foods unique foodname
+            keyExtractor={(item) => item.name.toString()}
           />
         </View>
       </View>

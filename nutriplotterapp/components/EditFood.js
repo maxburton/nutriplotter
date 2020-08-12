@@ -354,6 +354,8 @@ export default class EditFoodScreen extends Component {
                 <FlatListItem item={item} index={index} flatListParent={this} />
               );
             }}
+            // Get key using allFoods unique foodname
+            keyExtractor={(item) => item.name[0].toString()}
           />
         </View>
         <TouchableOpacity onPress={() => this.onClearClick()}>

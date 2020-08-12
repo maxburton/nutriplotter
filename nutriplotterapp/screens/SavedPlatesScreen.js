@@ -45,20 +45,20 @@ export default class SavedPlatesScreen extends React.Component {
 		let newline = "\n\n";
 		if (global.savedPlates.length > 0) {
 			return (
-				<ScrollView style={[global.styles.flex1, global.colorTheme.bgColor]}>
-					<View style={styles.container}>
-						<FlatList
-							data={global.savedPlates}
-							renderItem={({ item, index }) => {
-								return (
-									<FlatListItem flatListParent={this} item={item} index={index}>
-									</FlatListItem>
-								);
-							}}
-						>
-						</FlatList>
-					</View>
-				</ScrollView>
+				<FlatList
+					style={[global.styles.flex1, global.colorTheme.bgColor]}
+					data={global.savedPlates}
+					renderItem={({ item, index }) => {
+						return (
+							<FlatListItem flatListParent={this} item={item} index={index}>
+							</FlatListItem>
+						);
+					}}
+					// Get key using global savedPlates unique platename
+					keyExtractor={(item) => item.plateName.toString()}
+				>
+				</FlatList>
+
 			);
 		} else {
 			return (<Text style={styles.nothingText}>Nothing here!{newline} Try creating a plate and saving it from the score screen.</Text>);
@@ -119,7 +119,7 @@ class FlatListItem extends React.Component {
 			}
 			let group = plate[i].group
 			renderImages.push(
-				<Image
+				<Image key={group}
 					source={foodImages[group]}
 					style={styles.image}
 				/>

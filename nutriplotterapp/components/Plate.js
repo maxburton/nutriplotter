@@ -326,9 +326,7 @@ export default class Plate extends Component {
               <Text style={styles.backButton}>Back to Plate</Text>
             </TouchableOpacity>
 
-            <ScrollView>
-              <EditFood />
-            </ScrollView>
+            <EditFood />
           </View>
         </Modal>
       </View>

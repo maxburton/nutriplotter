@@ -42,16 +42,27 @@ export default class ScoreScreen extends React.Component {
 	}
 
 	savePlate = (plateName, plate, score) => {
-		this.setState({ isDialogVisible: false });
-		if (!this.state.plateSaved) {
+
+		let plateNames = [];
+		for (let savedPlate of global.savedPlates) {
+			plateNames.push(savedPlate.plateName.toLowerCase());
+		}
+		console.log(plateNames);
+		if (!plateName) {
+			Alert.alert("Please name your plate!");
+		} else if (plateNames.includes(plateName.toLowerCase())) {
+			Alert.alert("You've already saved a plate with this name!");
+		} else if (this.state.plateSaved) {
+			Alert.alert("You've already saved this plate!");
+		} else {
 			this.setState({ plateSaved: true });
 			global.savedPlates.push({ plateName: plateName, plate: plate, score: score });
+			this.setState({ isDialogVisible: false });
+			Alert.alert("Plate Saved");
 			savedPlatesdb.insert({ plateName: plateName, plate: plate, score: score }, function (err, newDoc) {
-				Alert.alert("Plate Saved");
 				console.log("Saved Plates: " + global.savedPlates[0]["plate"]);
+				
 			});
-		} else {
-			Alert.alert("You've already saved this plate!");
 		}
 	}
 
@@ -60,15 +71,14 @@ export default class ScoreScreen extends React.Component {
 		this.props.navigation.navigate("Home");
 	}
 
-	newPlate = () => {
-		platedb.remove({}, { multi: true }, function (err, numRemoved) {
-			global.tweaks = 0;
-			global.plate = [];
-			this.goHome();
+	newPlate = async () => {
+		let cleanedPlate = platedb.remove({}, { multi: true }, function (err, numRemoved) {
 		});
-		goHome = () => {
-			this.props.navigation.navigate("Home");
-		}
+		await cleanedPlate;
+		global.tweaks = 0;
+		global.plate = [];
+		this.props.navigation.navigate("Home");
+
 	}
 
 	componentDidMount() {
