@@ -83,12 +83,14 @@ export default class TutorialCarousel extends React.Component {
 	};
 
 	render() {
+		// wait for carousel ref to be available for pagination
+		const {tutRef} = this.state;
+		
 		return (
 			<View style={[global.styles.flex1, global.styles.flexCenter]}>
 				<Carousel
 					layout={"default"}
-					enableMomentum={true}
-					ref={ref => this.carousel = ref}
+					ref={(c) => { if (!this.state.tutRef) { this.setState({ tutRef: c }); } }}
 					data={this.state.carouselItems}
 					// This is dependant on how wide the modal container is in globalstyles (i.e. may need to update if that style changes its horizontal margins)
 					sliderWidth={global.styleConstants.width - global.styleConstants.offset}
@@ -104,7 +106,8 @@ export default class TutorialCarousel extends React.Component {
 						inactiveDotStyle={global.styles.carouselDotStyle}
 						inactiveDotOpacity={0.4}
 						inactiveDotScale={0.6}
-						tappableDots={true}
+						carouselRef={tutRef}
+						tappableDots={!!tutRef}
 					/>
 				</View>
 			</View>
