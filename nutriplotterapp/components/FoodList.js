@@ -214,6 +214,7 @@ class List extends Component {
                 index={index}
               />);
             }}
+            keyExtractor={(item) => item.id.toString()}
           />
         </View>
       </View>
