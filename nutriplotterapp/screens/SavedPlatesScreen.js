@@ -111,19 +111,28 @@ class FlatListItem extends React.Component {
 			grains: require('../assets/images/grains.png'),
 		};
 
-		renderImages = []
+		let renderImages = []
 		let plate = this.props.item.plate
+		let groupsOn = [];
+		const maximumIcons = 4;
 		for (let i = 0; i < plate.length; i++) {
-			if (i > 3) {
+			if (groupsOn.length >= maximumIcons) {
 				break;
 			}
 			let group = plate[i].group
-			renderImages.push(
-				<Image key={group}
-					source={foodImages[group]}
-					style={styles.image}
-				/>
-			)
+
+			// If group icon not already on plate
+			if(!groupsOn.includes(group)){
+				groupsOn.push(group);
+
+				// Add group icon to savedPlate item
+				renderImages.push(
+					<Image key={group}
+						source={foodImages[group]}
+						style={styles.image}
+					/>
+				)
+			}
 		}
 		let plateName = this.props.item.plateName;
 
