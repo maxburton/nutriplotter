@@ -21,7 +21,7 @@ export default class PopulateDatabase extends React.Component {
 		await clearingDb;
 
 		// May need to await this to finish first
-		db.insert([
+		let insertingDb = db.insert([
 			{ _id: "ackee, canned, drained", calories: 151, carbs: 0.8, fats: 15.2, protein: 2.9, sugar: 0.8, satfat: 0, fibre: 0.00, omega3: 0, group: "dg", calcium: 0, vitA: 0.00, vitB1: 0.03, vitB9: 41, vitC: 30 },
 			{ _id: "agar, dried", calories: 16, carbs: 0, fats: 1.2, protein: 1.3, sugar: 0, satfat: 0.30, fibre: 81.10, omega3: 0.40, group: "dg", calcium: 0, vitA: 0.00, vitB1: 0.01, vitB9: 0, vitC: 0 },
 			{ _id: "agar, dried, soaked and drained", calories: 2, carbs: 0, fats: 0.1, protein: 0.2, sugar: 0, satfat: 0, fibre: 15.00, omega3: 0, group: "dg", calcium: 0, vitA: 0.00, vitB1: 0.01, vitB9: 0, vitC: 0 },
@@ -2922,5 +2922,6 @@ export default class PopulateDatabase extends React.Component {
 			console.log("Food DB repopulated");;
 		});
 
+		await insertingDb;
 	}
 }

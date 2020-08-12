@@ -92,7 +92,7 @@ export default class App extends React.Component {
     const dbs = {
       foods: {
         db: db,
-        flush: false
+        flush: true
       },
       plate: {
         db: platedb,
@@ -100,7 +100,7 @@ export default class App extends React.Component {
       },
       sideItems: {
         db: sideItemsdb,
-        flush: true
+        flush: false
       },
       savedPlates: {
         db: savedPlatesdb,
