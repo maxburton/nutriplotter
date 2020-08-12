@@ -477,7 +477,6 @@ class List extends Component {
       try {
         let entry = global.favourites[i]._id.toLowerCase();
         var data = global.foods[entry];
-        console.log(data);
         var formattedString = entry.replace(/['"]+/g, "");
         formattedString = capitalizeFirstLetter(formattedString);
         var group = this.determineGroup(data["group"].toLowerCase());

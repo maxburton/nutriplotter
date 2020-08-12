@@ -90,7 +90,7 @@ export default class HomeScreen extends React.Component {
 
     // Get score for the user if there is one, update their current score.
     if (name in global.orgDict) {
-      currentscore = global.orgDict[name];
+      currentscore = global.orgDict.name;
       if (score > currentscore) {
         newscore = score;
       } else {
@@ -156,7 +156,6 @@ export default class HomeScreen extends React.Component {
     let warnings = new Array();
 
     for (var key in global.totals) {
-      console.log(score);
       let nutrientTotal = global.totals[key];
       let operator = idealNutrients[key][0];
       let weight = 1000 / idealNutrients[key][1];
@@ -315,7 +314,7 @@ export default class HomeScreen extends React.Component {
     globalSettingsdb.update(
       { _id: "isFirstLaunch" },
       { $set: { value: false } }, function (err, numReplaced) {
-        console.log("First launch setting updated: " + numReplaced);
+        console.log("First launch set to false: " + numReplaced);
       });
   }
 
