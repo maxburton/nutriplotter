@@ -14,10 +14,8 @@
 
 import React from "react";
 import { Platform } from "react-native";
-import {
-  createStackNavigator,
-  createBottomTabNavigator
-} from "react-navigation";
+import {createBottomTabNavigator} from "react-navigation-tabs";
+import { createStackNavigator } from 'react-navigation-stack'
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import TabBarIcon from "../components/TabBarIcon";
