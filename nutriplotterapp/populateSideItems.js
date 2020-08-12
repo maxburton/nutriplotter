@@ -23,6 +23,7 @@ export default class PopulateSideItems extends React.Component {
 
 		global.sideItems = [];
 
+		console.log("Populating Side Items DB...");
 		for (let i = 0; i < sideItemFoods.length; i++) {
 			db.find({ _id: sideItemFoods[i] }, function (err, foodItem) {
 				if (err) {

@@ -92,7 +92,7 @@ export default class App extends React.Component {
     const dbs = {
       foods: {
         db: db,
-        flush: true
+        flush: false
       },
       plate: {
         db: platedb,
@@ -157,12 +157,13 @@ export default class App extends React.Component {
 
 
     // populate mongoDB of all foods if it's empty
-    db.find({}, async function (err, foodDB) {
+    let dbCheck = db.find({}, async function (err, foodDB) {
       if (foodDB.length == 0) {
-        new popDatabase();
+        await new popDatabase().populate();
       }
       componentLoaded();
     });
+    await dbCheck;
 
     new popArray();
     new popList();
