@@ -246,7 +246,7 @@ export default class Plate extends Component {
       // Draw the food group icon alongside the segment of the pie chart it relates to
       // and draw the segments of the pie chart. 
       renderFoods.push(
-        <View
+        <View key={group}
           style={{
             zIndex: 20,
             position: "absolute",
