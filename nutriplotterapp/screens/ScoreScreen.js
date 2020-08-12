@@ -10,9 +10,9 @@ import {
 	View,
 	Button,
 	Alert,
+	Modal
 } from 'react-native';
 import DialogInput from 'react-native-dialog-input';
-import Modal from "react-native-modal";
 import styles from "../themes/scoreScreenStyles";
 
 var Datastore = require('react-native-local-mongodb');
@@ -195,8 +195,8 @@ export default class ScoreScreen extends React.Component {
 				</ScrollView>
 				{/* More Info Modal */}
 				<Modal
-					backdropOpacity={0}
-					isVisible={this.state.isModalVisible}
+					transparent={true}
+					visible={this.state.isModalVisible}
 					animationType="slide"
 				>
 					<View style={global.styles.modalContainer}>

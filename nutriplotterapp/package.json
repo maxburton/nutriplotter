@@ -38,7 +38,6 @@
     "react-native-gesture-handler": "^1.6.1",
     "react-native-leaderboard": "^1.0.6",
     "react-native-local-mongodb": "^2.2.9",
-    "react-native-modal": "^7.0.2",
     "react-native-reanimated": "~1.9.0",
     "react-native-safe-area-context": "~3.0.7",
     "react-native-screens": "~2.9.0",

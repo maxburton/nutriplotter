@@ -22,8 +22,9 @@ import {
   View,
   KeyboardAvoidingView,
   Alert,
+  Modal
 } from "react-native";
-import Modal from "react-native-modal";
+
 
 var Datastore = require("react-native-local-mongodb"),
   globalSettingsdb = new Datastore({ filename: 'globalSettings', autoload: true });
@@ -401,9 +402,9 @@ export default class HomeScreen extends React.Component {
 
         {/* Tutorial modal */}
         <Modal
-          backdropOpacity={0}
+          transparent={true}
           animationType="slide"
-          isVisible={this.state.isFirstLaunchModalVisible}
+          visible={this.state.isFirstLaunchModalVisible}
         >
           <View style={global.styles.modalContainer}>
             <TouchableOpacity
@@ -418,10 +419,11 @@ export default class HomeScreen extends React.Component {
 
         {/* Plate summary and submission modal */}
         <Modal
-          backdropOpacity={0.5}
-          swipeDirection="down"
-          onSwipe={() => this.tweakPlate()}
-          isVisible={this.state.isModalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => this.tweakPlate()}
+          onDismiss={() => this.tweakPlate()}
+          visible={this.state.isModalVisible}
         >
           <View
             style={{

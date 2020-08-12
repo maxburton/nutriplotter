@@ -11,10 +11,10 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Modal
 } from "react-native";
 
 import { PieChart } from 'react-native-svg-charts'
-import Modal from "react-native-modal";
 import EditFood from "./EditFood";
 import styles from "../themes/plateStyle";
 
@@ -307,7 +307,10 @@ export default class Plate extends Component {
             </View>
           </TouchableOpacity>
         </View>
-        <Modal backdropOpacity={0} isVisible={this.state.isModalVisible}>
+        <Modal
+          transparent={true}
+          visible={this.state.isModalVisible}
+          animationType={"slide"}>
           <View
             style={{
               flex: 1,
