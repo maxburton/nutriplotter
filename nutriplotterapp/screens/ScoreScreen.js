@@ -31,7 +31,7 @@ export default class ScoreScreen extends React.Component {
 	static navigationOptions = ({ navigation }) => ({
 		//header: null,
 		title: 'Score',
-		headerLeft: <Button title='Back' onPress={() => { navigation.navigate('Home', { plate: this.plate }) }} />,
+		headerLeft: () => <Button title='Back' onPress={() => { navigation.navigate('Home', { plate: this.plate }) }} />,
 		headerStyle: { backgroundColor: global.colorTheme.navHeader.backgroundColor },
 		headerTintColor: global.colorTheme.navHeader.color
 	}
@@ -109,10 +109,10 @@ export default class ScoreScreen extends React.Component {
 
 		let colStyle = [global.styles.textBold, global.styles.textMed, global.colorTheme.textColor]
 
-		let nutrientNames = new Array(<Text style={[colStyle, global.styles.textLeft, global.styles.marginFromLeft]}>Nutrient</Text>);
-		let renderWarnings = new Array(<Text style={[colStyle, global.styles.textCenter]}>Advice</Text>);
-		let dailyRecNutrients = new Array(<Text style={[colStyle, global.styles.textCenter]}>RDA</Text>);
-		let nutrientScores = new Array(<Text style={[colStyle, global.styles.textRight, global.styles.marginFromRight]}>Score</Text>);
+		let nutrientNames = new Array(<Text key={"colName"} style={[colStyle, global.styles.textLeft, global.styles.marginFromLeft]}>Nutrient</Text>);
+		let renderWarnings = new Array(<Text key={"colName"} style={[colStyle, global.styles.textCenter]}>Advice</Text>);
+		let dailyRecNutrients = new Array(<Text key={"colName"} style={[colStyle, global.styles.textCenter]}>RDA</Text>);
+		let nutrientScores = new Array(<Text key={"colName"} style={[colStyle, global.styles.textRight, global.styles.marginFromRight]}>Score</Text>);
 		let newline = "\n";
 
 		let adjustmentPlural = "s";
@@ -125,13 +125,13 @@ export default class ScoreScreen extends React.Component {
 			let neatNutrient = global.neatNutrients[nutrient];
 			//nutrient = capitalizeFirstLetter(nutrient);
 			nutrientNames.push(
-				<TouchableOpacity onPress={() => this.showModal(nutrient)}>
+				<TouchableOpacity key={nutrient} onPress={() => this.showModal(nutrient)}>
 					<Text style={[global.colorTheme.textColor, global.styles.marginFromLeft, global.styles.textMed, global.styles.textLeft, global.styles.textDotted, global.styles.marginFromTopHalf]}>{neatNutrient}:</Text>
 				</TouchableOpacity>
 			)
 			let percentage = warnings[i][2]
 			nutrientScores.push(
-				<Text style={[global.colorTheme.textColor, global.styles.marginFromRight, global.styles.textMed, global.styles.textRight, global.styles.marginFromTopHalf]}>{percentage}%</Text>
+				<Text key={nutrient} style={[global.colorTheme.textColor, global.styles.marginFromRight, global.styles.textMed, global.styles.textRight, global.styles.marginFromTopHalf]}>{percentage}%</Text>
 			)
 
 			let scoreRating = warnings[i][1];
@@ -141,18 +141,18 @@ export default class ScoreScreen extends React.Component {
 			let unit = (global.nutrientUnits[nutrient] || "g"); // if no key, use grams (g)
 
 			dailyRecNutrients.push(
-				<Text style={[global.colorTheme.textColor, global.styles.textMed, global.styles.marginFromLeftHalf, global.styles.marginFromTopHalf]}>{operator}{operatorLimit}{unit}</Text>
+				<Text key={nutrient} style={[global.colorTheme.textColor, global.styles.textMed, global.styles.marginFromLeftHalf, global.styles.marginFromTopHalf]}>{operator}{operatorLimit}{unit}</Text>
 			)
 
 			let adviceStyle = [global.styles.marginFromLeftHalf, global.styles.marginFromRightHalf, global.styles.marginFromTopHalf, global.styles.textMed, global.styles.textCenter]
 			if (scoreRating == "perfect") {
 				// Use renderWarnings.unshift to put new item at the beginning of the array
 				renderWarnings.push(
-					<Text style={[global.styles.green, adviceStyle]}>Perfect!</Text>
+					<Text key={nutrient} style={[global.styles.green, adviceStyle]}>Perfect!</Text>
 				)
 			} else if (scoreRating == "ok") {
 				renderWarnings.push(
-					<Text style={[global.styles.grey, adviceStyle]}>Not Bad!</Text>
+					<Text key={nutrient} style={[global.styles.grey, adviceStyle]}>Not Bad!</Text>
 				)
 			} else {
 				// If nutrient score is bad
@@ -162,7 +162,7 @@ export default class ScoreScreen extends React.Component {
 					advice = "Very high!";
 				}
 				renderWarnings.push(
-					<Text style={[global.styles.red, adviceStyle]}>{advice}</Text>
+					<Text key={nutrient} style={[global.styles.red, adviceStyle]}>{advice}</Text>
 				)
 			}
 		}

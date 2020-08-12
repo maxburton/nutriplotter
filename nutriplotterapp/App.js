@@ -142,6 +142,8 @@ export default class App extends React.Component {
     //Disables warning messages: TRUE FOR DEMOS
     console.disableYellowBox = false;
     global.isLoggedIn = false;
+    // leaderboard scores
+    global.orgDict = {};
     var isFirstLaunch = "1";
     _retrieveData = async () => {
       try {

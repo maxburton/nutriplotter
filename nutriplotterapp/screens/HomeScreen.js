@@ -84,13 +84,13 @@ export default class HomeScreen extends React.Component {
         });
 
         for (var i = 0; i < returnArr.length; i++) {
-          orgDict[returnArr[i].key] = returnArr[i]["userscore"];
+          global.orgDict[returnArr[i].key] = returnArr[i]["userscore"];
         }
       });
 
     // Get score for the user if there is one, update their current score.
-    if (orgDict[name]) {
-      currentscore = orgDict[name];
+    if (name in global.orgDict) {
+      currentscore = global.orgDict[name];
       if (score > currentscore) {
         newscore = score;
       } else {

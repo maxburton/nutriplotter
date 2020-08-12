@@ -55,7 +55,7 @@ export default class LeaderboardScreen extends React.Component {
             userName: returnArr[i]["key"],
             highScore: returnArr[i]["userscore"]
           });
-          orgDict[returnArr[i]["key"]] = returnArr[i]["userscore"];
+          global.orgDict[returnArr[i]["key"]] = returnArr[i]["userscore"];
         }
 
         self.setState({ promiseIsResolved: true });
